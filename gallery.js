@@ -114,13 +114,47 @@ function renderGallery() {
     galleryWrapper.addEventListener('mouseleave', function () {
       galleryTrack.classList.remove('paused');
     });
-    galleryWrapper.addEventListener('touchstart', function () {
-      galleryTrack.classList.add('paused');
-    });
-    galleryWrapper.addEventListener('touchend', function () {
-      setTimeout(function () { galleryTrack.classList.remove('paused'); }, 2000);
-    });
   }
+
+  // Touch swipe support for mobile
+  setupTouchSwipe();
+}
+
+var touchStartX = 0;
+var touchOffset = 0;
+var trackTranslateX = 0;
+var animationFrame = null;
+
+function setupTouchSwipe() {
+  if (!galleryTrack) return;
+
+  galleryTrack.addEventListener('touchstart', function (e) {
+    galleryTrack.classList.add('paused');
+    touchStartX = e.touches[0].clientX;
+    // Snapshot current computed transform
+    var style = window.getComputedStyle(galleryTrack);
+    var matrix = new DOMMatrixReadOnly(style.transform);
+    trackTranslateX = matrix.m41;
+    cancelAnimationFrame(animationFrame);
+  }, { passive: true });
+
+  galleryTrack.addEventListener('touchmove', function (e) {
+    var dx = e.touches[0].clientX - touchStartX;
+    touchOffset = trackTranslateX + dx;
+    // Clamp: don't scroll beyond bounds (0 to -halfWidth for each set)
+    var halfW = galleryTrack.scrollWidth / 2;
+    while (touchOffset < -halfW) touchOffset += halfW;
+    while (touchOffset > 0) touchOffset -= halfW;
+    galleryTrack.style.transform = 'translateX(' + touchOffset + 'px)';
+  }, { passive: true });
+
+  galleryTrack.addEventListener('touchend', function () {
+    // Resume CSS animation after a delay
+    galleryTrack.style.transform = '';
+    setTimeout(function () {
+      galleryTrack.classList.remove('paused');
+    }, 2000);
+  });
 }
 
 // ============================================================
