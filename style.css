@@ -173,246 +173,35 @@ button:focus-visible {
   border-color: rgba(37,99,235,0.25);
 }
 
-/* Puzzle slider */
+/* Puzzle: temperature slider */
 #tempSlider {
   -webkit-appearance: none;
   appearance: none;
-  height: 6px;
-  border-radius: 3px;
+  height: 8px;
+  border-radius: 4px;
   outline: none;
+  cursor: pointer;
 }
 #tempSlider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: #2563eb;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(37,99,235,0.3);
+  box-shadow: 0 2px 8px rgba(37,99,235,0.35);
   transition: transform 0.15s ease;
 }
 #tempSlider::-webkit-slider-thumb:hover {
   transform: scale(1.2);
 }
 #tempSlider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: #2563eb;
   cursor: pointer;
   border: none;
-  box-shadow: 0 2px 6px rgba(37,99,235,0.3);
-}
-
-/* === 4D Puzzle === */
-
-.puzzle-bed {
-  --stimulus: 0;
-  --stimulus-pct: 0%;
-  --heat-r: 59;
-  --heat-g: 130;
-  --heat-b: 246;
-  --heat-color: rgb(var(--heat-r), var(--heat-g), var(--heat-b));
-  --uv-alpha: 0;
-  min-height: 340px;
-  position: relative;
-}
-
-/* Shapes grid */
-.puzzle-shapes-wrapper {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  gap: 8px;
-  padding: 24px;
-  position: absolute;
-  inset: 0;
-}
-@media (min-width: 768px) {
-  .puzzle-bed { min-height: 420px; }
-  .puzzle-shapes-wrapper { padding: 32px; }
-}
-
-/* Print bed label */
-.puzzle-bed-label {
-  position: absolute;
-  top: 12px;
-  left: 16px;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(0,0,0,0.15);
-  pointer-events: none;
-}
-.dark .puzzle-bed-label {
-  color: rgba(255,255,255,0.15);
-}
-
-/* UV overlay */
-.puzzle-bed::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: rgba(147,51,234, var(--uv-alpha));
-  border-radius: inherit;
-  transition: background 0.3s ease;
-}
-
-/* Water ripple */
-.puzzle-bed.water-active::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-radial-gradient(circle at 30% 40%, rgba(20,184,166,0.06) 0px, transparent 18px);
-  border-radius: inherit;
-}
-
-/* --- Individual shapes --- */
-.puzzle-shape {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.puzzle-shape .shape-label {
-  position: absolute;
-  bottom: -2px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 9px;
-  color: rgba(0,0,0,0.18);
-  white-space: nowrap;
-  pointer-events: none;
-  transition: color 0.3s ease;
-}
-.dark .puzzle-shape .shape-label {
-  color: rgba(255,255,255,0.18);
-}
-
-/* Star — grid col 2, row 2 */
-.puzzle-star {
-  grid-column: 2;
-  grid-row: 2;
-}
-.puzzle-star .shape-inner {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--heat-color);
-  transform: scale(calc(1 + var(--stimulus) * 1.5));
-  box-shadow: 0 0 0 calc(var(--stimulus) * 8px) rgba(var(--heat-r), var(--heat-g), var(--heat-b), 0.15),
-              0 0 0 calc(var(--stimulus) * 18px) rgba(var(--heat-r), var(--heat-g), var(--heat-b), 0.06);
-  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
-}
-
-/* Coil — grid col 5, row 2 */
-.puzzle-coil {
-  grid-column: 5;
-  grid-row: 2;
-}
-.puzzle-coil .shape-inner {
-  width: 50px;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--heat-color);
-  transform: rotate(calc(var(--stimulus) * 720deg)) scaleX(calc(1 - var(--stimulus) * 0.5));
-  border-radius: calc(3px + var(--stimulus) * 20px);
-  transition: transform 0.1s ease, border-radius 0.1s ease, background 0.1s ease;
-}
-
-/* Bloom — grid col 4, row 3 */
-.puzzle-bloom {
-  grid-column: 4;
-  grid-row: 3;
-}
-.puzzle-bloom .shape-inner {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--heat-color);
-  transform: scale(calc(1 + var(--stimulus) * 2.5));
-  box-shadow:
-    calc(var(--stimulus) * -12px) calc(var(--stimulus) * -8px) 0 calc(var(--stimulus) * 3px) rgba(var(--heat-r), var(--heat-g), var(--heat-b), 0.7),
-    calc(var(--stimulus) * 12px) calc(var(--stimulus) * -8px) 0 calc(var(--stimulus) * 3px) rgba(var(--heat-r), var(--heat-g), var(--heat-b), 0.7),
-    calc(var(--stimulus) * -14px) calc(var(--stimulus) * 8px) 0 calc(var(--stimulus) * 3px) rgba(var(--heat-r), var(--heat-g), var(--heat-b), 0.7),
-    calc(var(--stimulus) * 14px) calc(var(--stimulus) * 8px) 0 calc(var(--stimulus) * 3px) rgba(var(--heat-r), var(--heat-g), var(--heat-b), 0.7);
-  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
-}
-
-/* Hinge — grid col 3, row 4 */
-.puzzle-hinge {
-  grid-column: 3 / 5;
-  grid-row: 4;
-}
-.puzzle-hinge .shape-inner {
-  width: 60px;
-  height: 8px;
-  position: relative;
-}
-.puzzle-hinge .shape-inner::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 45%;
-  height: 100%;
-  border-radius: 2px;
-  background: var(--heat-color);
-  opacity: calc(0.6 + var(--stimulus) * 0.4);
-}
-.puzzle-hinge .shape-inner::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 55%;
-  height: 100%;
-  border-radius: 2px;
-  background: var(--heat-color);
-  transform-origin: left center;
-  transform: rotate(calc(var(--stimulus) * -75deg));
-  transition: transform 0.1s ease, background 0.1s ease;
-}
-.puzzle-hinge .hinge-panel {
-  display: none;
-}
-
-/* Lattice — grid col 2, row 3 */
-.puzzle-lattice {
-  grid-column: 2;
-  grid-row: 3;
-}
-.puzzle-lattice .shape-inner {
-  display: flex;
-  flex-direction: column;
-  gap: calc(3px + var(--stimulus) * 14px);
-  transition: gap 0.1s ease;
-}
-.puzzle-lattice .lattice-row {
-  display: flex;
-  gap: calc(3px + var(--stimulus) * 14px);
-  transition: gap 0.1s ease;
-}
-.puzzle-lattice .lattice-row span {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--heat-color);
-  display: block;
-  transform: scale(calc(1 + var(--stimulus) * 0.4));
-  transition: transform 0.1s ease, background 0.1s ease;
-}
-
-/* Grid dot pattern overlay (combined with bg gradient from Tailwind) */
-.puzzle-bed {
-  background-image: radial-gradient(circle, rgba(37,99,235,0.07) 1px, transparent 1px), linear-gradient(to bottom, #f9fafb, #f3f4f6);
-  background-size: 24px 24px, 100% 100%;
-}
-.dark .puzzle-bed {
-  background-image: radial-gradient(circle, rgba(148,163,184,0.1) 1px, transparent 1px), linear-gradient(to bottom, #111827, #0f172a);
-  background-size: 24px 24px, 100% 100%;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.35);
 }
