@@ -3,7 +3,7 @@
 // Each entry: { type: "image"|"video", src: "path", thumb: "path", title: "...", desc: "..." }
 // - For YouTube/Vimeo videos, use the full embed URL as src
 // - For local video files (.mp4 etc.), use the relative path as src
-// - "thumb" is optional for videos; a play icon placeholder is shown if omitted
+// - "thumb" is optional for videos; a play icon is shown regardless
 // - Place media files in the "gallery/" folder
 // ============================================================
 
@@ -46,62 +46,81 @@ const galleryData = [
 ];
 
 // ============================================================
-// RENDERING — Do not modify below this line
+// RENDERING
 // ============================================================
 
-const galleryGrid = document.getElementById('galleryGrid');
+var galleryTrack = document.getElementById('galleryTrack');
+var galleryWrapper = document.getElementById('galleryWrapper');
 
 function isExternalVideo(src) {
   return /^(https?:)?\/\/(www\.)?(youtube\.com|youtu\.be|vimeo\.com)/.test(src);
 }
 
 function renderGallery() {
-  if (!galleryGrid) return;
+  if (!galleryTrack) return;
 
   if (galleryData.length === 0) {
-    galleryGrid.innerHTML = '\
+    galleryTrack.innerHTML = '\
       <div class="w-full text-center py-16 text-gray-400 dark:text-gray-500">\
         <i class="fa-solid fa-images text-5xl mb-4 block"></i>\
         <p class="text-lg">No media yet.</p>\
-        <p class="text-sm mt-1">Add photos and videos by editing <code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-xs">galleryData</code> in <code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-xs">gallery.js</code>.</p>\
       </div>';
+    galleryTrack.classList.remove('gallery-marquee');
     return;
   }
 
   var itemsHTML = galleryData
     .map(function (item, index) {
+      var inner;
       if (item.type === 'video') {
-        return '\
-    <div class="gallery-item group relative shrink-0 w-72 md:w-80 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer shadow-sm hover:shadow-lg transition-all duration-300 snap-center" style="aspect-ratio: 16/9" data-index="' + index + '">\
-      <div class="absolute inset-0 bg-gray-300 dark:bg-gray-700"' + (item.thumb ? ' style="background-image:url(' + item.thumb + ');background-size:cover;background-position:center"' : '') + '></div>\
-      <div class="absolute inset-0 flex items-center justify-center">\
-        <span class="w-14 h-14 rounded-full bg-black/60 flex items-center justify-center text-white text-xl"><i class="fa-solid fa-play"></i></span>\
-      </div>\
-      <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
-        <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
-      </div>\
-    </div>';
+        inner = '\
+      <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-lg transition-shadow duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
+        <div class="absolute inset-0"' + (item.thumb ? ' style="background-image:url(' + item.thumb + ');background-size:cover;background-position:center"' : '') + '></div>\
+        <div class="absolute inset-0 flex items-center justify-center">\
+          <span class="w-16 h-16 rounded-full bg-black/60 flex items-center justify-center text-white text-2xl group-hover:bg-primary group-hover:scale-110 transition-all duration-300"><i class="fa-solid fa-play ml-0.5"></i></span>\
+        </div>\
+        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
+          <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
+        </div>\
+      </div>';
       } else {
-        return '\
-    <div class="gallery-item group relative shrink-0 w-72 md:w-80 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer shadow-sm hover:shadow-lg transition-all duration-300 snap-center" style="aspect-ratio: 16/9" data-index="' + index + '">\
-      <img src="' + item.src + '" alt="' + item.title + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">\
-      <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
-        <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
-      </div>\
-    </div>';
+        inner = '\
+      <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-lg transition-shadow duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
+        <img src="' + item.src + '" alt="' + item.title + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">\
+        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
+          <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
+        </div>\
+      </div>';
       }
+      return inner;
     })
     .join('');
 
-  // Duplicate for seamless infinite loop
-  galleryGrid.innerHTML = itemsHTML + itemsHTML;
+  // Duplicate for seamless loop
+  galleryTrack.innerHTML = itemsHTML + itemsHTML;
 
   // Click handlers
-  galleryGrid.querySelectorAll('.gallery-item').forEach(function (item) {
+  galleryTrack.querySelectorAll('.gallery-item').forEach(function (item) {
     item.addEventListener('click', function () {
       openLightbox(parseInt(item.dataset.index));
     });
   });
+
+  // Pause/resume animation on hover
+  if (galleryWrapper) {
+    galleryWrapper.addEventListener('mouseenter', function () {
+      galleryTrack.classList.add('paused');
+    });
+    galleryWrapper.addEventListener('mouseleave', function () {
+      galleryTrack.classList.remove('paused');
+    });
+    galleryWrapper.addEventListener('touchstart', function () {
+      galleryTrack.classList.add('paused');
+    });
+    galleryWrapper.addEventListener('touchend', function () {
+      setTimeout(function () { galleryTrack.classList.remove('paused'); }, 2000);
+    });
+  }
 }
 
 // ============================================================
@@ -188,40 +207,7 @@ function handleKeydown(e) {
 }
 
 // ============================================================
-// AUTO-SCROLL — continuous left-scrolling loop
-// ============================================================
-
-var autoScrollInterval;
-var halfWidth = 0;
-
-function startAutoScroll() {
-  if (!galleryGrid || galleryData.length <= 1) return;
-  halfWidth = galleryGrid.scrollWidth / 2;
-  autoScrollInterval = setInterval(function () {
-    galleryGrid.scrollLeft += 0.6;
-    // Seamless reset: when we pass the first full set, jump back
-    if (galleryGrid.scrollLeft >= halfWidth) {
-      galleryGrid.scrollLeft -= halfWidth;
-    }
-  }, 16);
-}
-
-function stopAutoScroll() {
-  clearInterval(autoScrollInterval);
-}
-
-if (galleryGrid) {
-  galleryGrid.addEventListener('mouseenter', stopAutoScroll);
-  galleryGrid.addEventListener('mouseleave', startAutoScroll);
-  galleryGrid.addEventListener('touchstart', stopAutoScroll);
-  galleryGrid.addEventListener('touchend', function () {
-    setTimeout(startAutoScroll, 2000);
-  });
-}
-
-// ============================================================
 // INIT
 // ============================================================
 
 renderGallery();
-startAutoScroll();

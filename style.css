@@ -83,22 +83,18 @@ button:focus-visible {
   border-radius: 4px;
 }
 
-/* Gallery horizontal scroll */
-.scrollbar-hide::-webkit-scrollbar {
-  height: 6px;
+/* Gallery filmstrip marquee */
+.gallery-marquee {
+  animation: marquee 30s linear infinite;
 }
 
-.scrollbar-hide::-webkit-scrollbar-track {
-  background: transparent;
+.gallery-marquee.paused {
+  animation-play-state: paused;
 }
 
-.scrollbar-hide::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-}
-
-.dark .scrollbar-hide::-webkit-scrollbar-thumb {
-  background: #475569;
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* Lightbox fade-in animation */

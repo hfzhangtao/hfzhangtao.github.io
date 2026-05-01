@@ -552,9 +552,11 @@
         <p class="text-center text-gray-500 dark:text-gray-400 mb-12 text-sm">Photos and videos from my research and conferences</p>
       </div>
 
-      <!-- Gallery horizontal scroll -->
-      <div id="galleryGrid" class="flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory scrollbar-hide fade-in" style="scrollbar-width: thin;">
-        <!-- Populated by JavaScript -->
+      <!-- Gallery filmstrip -->
+      <div id="galleryWrapper" class="overflow-hidden rounded-xl fade-in">
+        <div id="galleryTrack" class="flex gap-4 gallery-marquee">
+          <!-- Populated by JavaScript -->
+        </div>
       </div>
 
     </div>
