@@ -44,8 +44,8 @@ const galleryData = [
 // RENDERING
 // ============================================================
 
-var galleryTrack = document.getElementById('galleryTrack');
 var galleryWrapper = document.getElementById('galleryWrapper');
+var galleryTrack = document.getElementById('galleryTrack');
 
 function isExternalVideo(src) {
   return /^(https?:)?\/\/(www\.)?(youtube\.com|youtu\.be|vimeo\.com)/.test(src);
@@ -83,7 +83,6 @@ function renderGallery() {
         <i class="fa-solid fa-images text-5xl mb-4 block"></i>\
         <p class="text-lg">No media yet.</p>\
       </div>';
-    galleryTrack.classList.remove('gallery-marquee');
     return;
   }
 
@@ -101,140 +100,75 @@ function renderGallery() {
     });
   });
 
-  // Hover pause
-  if (galleryWrapper) {
-    galleryWrapper.addEventListener('mouseenter', function () {
-      galleryTrack.classList.add('paused');
-    });
-    galleryWrapper.addEventListener('mouseleave', function () {
-      galleryTrack.classList.remove('paused');
-    });
-  }
-
-  // Start JS-based animation
-  startMarquee();
-  // Touch swipe
-  bindTouch();
+  // Bind hover/touch pause
+  bindPause();
+  // Start auto-scroll
+  startAutoScroll();
 }
 
 // ============================================================
-// JS MARQUEE — smooth infinite left-scroll, no CSS anim
+// AUTO-SCROLL — scrollLeft based, works with native touch scroll
 // ============================================================
 
-var offset = 0;
-var marqueeRaf = null;
-var speed = 0.8; // px per frame
+var scrollRaf = null;
+var autoScrollPaused = false;
+var halfWidth = 0;
 
-function marqueeLoop() {
-  if (!galleryTrack.classList.contains('paused')) {
-    offset -= speed;
-    // Seamless wrap
-    var halfW = galleryTrack.scrollWidth / 2;
-    if (offset <= -halfW) {
-      offset += halfW;
+function scrollLoop() {
+  if (!autoScrollPaused && galleryTrack) {
+    galleryTrack.parentElement.scrollLeft += 0.6;
+    // Seamless loop: when past half, jump back
+    var el = galleryTrack.parentElement;
+    halfWidth = galleryTrack.scrollWidth / 2;
+    if (el.scrollLeft >= halfWidth) {
+      el.scrollLeft -= halfWidth;
     }
-    if (offset > 0) {
-      offset -= halfW;
-    }
-    galleryTrack.style.transform = 'translateX(' + offset + 'px)';
   }
-  marqueeRaf = requestAnimationFrame(marqueeLoop);
+  scrollRaf = requestAnimationFrame(scrollLoop);
 }
 
-function startMarquee() {
-  if (marqueeRaf) return;
-  // Sync offset from current CSS transform
-  var style = window.getComputedStyle(galleryTrack);
-  var m = style.transform;
-  if (m && m !== 'none') {
-    // Parse matrix
-    var nums = m.match(/matrix.*\((.+)\)/);
-    if (nums) {
-      var parts = nums[1].split(',');
-      offset = parseFloat(parts[4]) || 0;
-    }
+function startAutoScroll() {
+  if (scrollRaf) return;
+  // Start in the middle so user can scroll both directions
+  var el = galleryTrack.parentElement;
+  halfWidth = galleryTrack.scrollWidth / 2;
+  if (el.scrollLeft < 1) {
+    el.scrollLeft = halfWidth * 0.5;
   }
-  marqueeRaf = requestAnimationFrame(marqueeLoop);
+  scrollRaf = requestAnimationFrame(scrollLoop);
 }
 
 // ============================================================
-// TOUCH SWIPE — mobile finger-drag support
+// PAUSE — mouse hover / touch
 // ============================================================
 
-var dragging = false;
-var startX = 0;
-var startOffset = 0;
-var lastX = 0;
-var lastTime = 0;
-var velocity = 0;
+function bindPause() {
+  var el = galleryWrapper || galleryTrack.parentElement;
 
-function bindTouch() {
-  var el = galleryWrapper || galleryTrack;
+  el.addEventListener('mouseenter', function () {
+    autoScrollPaused = true;
+  });
+  el.addEventListener('mouseleave', function () {
+    autoScrollPaused = false;
+  });
 
-  el.addEventListener('touchstart', function (e) {
-    dragging = true;
-    startX = e.touches[0].clientX;
-    startOffset = offset;
-    lastX = startX;
-    lastTime = Date.now();
-    velocity = 0;
-    galleryTrack.classList.add('paused');
-  }, { passive: false });
-
-  el.addEventListener('touchmove', function (e) {
-    if (!dragging) return;
-    e.preventDefault(); // block page scroll
-    var dx = e.touches[0].clientX - startX;
-    offset = startOffset + dx;
-
-    // Clamp loop
-    var halfW = galleryTrack.scrollWidth / 2;
-    while (offset < -halfW) offset += halfW;
-    while (offset > 0) offset -= halfW;
-
-    galleryTrack.style.transform = 'translateX(' + offset + 'px');
-
-    var now = Date.now();
-    var dt = now - lastTime;
-    if (dt > 0) {
-      velocity = (e.touches[0].clientX - lastX) / dt;
-    }
-    lastX = e.touches[0].clientX;
-    lastTime = now;
-  }, { passive: false });
+  el.addEventListener('touchstart', function () {
+    autoScrollPaused = true;
+  }, { passive: true });
 
   el.addEventListener('touchend', function () {
-    dragging = false;
-    // Inertia
-    if (Math.abs(velocity) > 0.3) {
-      var decel = 0.95;
-      function inertia() {
-        if (dragging) return;
-        velocity *= decel;
-        if (Math.abs(velocity) < 0.05) {
-          autoResume();
-          return;
-        }
-        offset += velocity * 16;
-        var halfW = galleryTrack.scrollWidth / 2;
-        if (offset <= -halfW) offset += halfW;
-        if (offset > 0) offset -= halfW;
-        galleryTrack.style.transform = 'translateX(' + offset + 'px)';
-        requestAnimationFrame(inertia);
+    setTimeout(function () {
+      autoScrollPaused = false;
+      // Fix scroll position: if user scrolled past half, wrap
+      var e = galleryTrack.parentElement;
+      halfWidth = galleryTrack.scrollWidth / 2;
+      if (e.scrollLeft >= halfWidth) {
+        e.scrollLeft -= halfWidth;
+      } else if (e.scrollLeft < 0) {
+        e.scrollLeft += halfWidth;
       }
-      requestAnimationFrame(inertia);
-    } else {
-      autoResume();
-    }
+    }, 1500);
   });
-}
-
-function autoResume() {
-  setTimeout(function () {
-    if (!dragging) {
-      galleryTrack.classList.remove('paused');
-    }
-  }, 1500);
 }
 
 // ============================================================

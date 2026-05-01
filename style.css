@@ -83,9 +83,13 @@ button:focus-visible {
   border-radius: 4px;
 }
 
-/* Gallery track — JS-driven animation, no CSS keyframes needed */
-.gallery-marquee {
-  will-change: transform;
+/* Gallery wrapper — hide scrollbar, keep scroll function */
+#galleryWrapper {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+#galleryWrapper::-webkit-scrollbar {
+  display: none;
 }
 
 /* Lightbox fade-in animation */
