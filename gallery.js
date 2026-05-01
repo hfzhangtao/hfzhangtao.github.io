@@ -39,7 +39,7 @@ const galleryData = [
   {
     type: "video",
     src: "gallery/Film1.mp4",
-    thumb: "",
+    thumb: "gallery/Film1-thumb.jpg",
     title: "Film 1",
     desc: ""
   },
