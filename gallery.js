@@ -23,6 +23,13 @@ const galleryData = [
     desc: ""
   },
   {
+    type: "video",
+    src: "gallery/Film1.mp4",
+    thumb: "gallery/Film1-thumb.jpg",
+    title: "Film 1",
+    desc: ""
+  },
+  {
     type: "image",
     src: "gallery/Fig3.jpg",
     thumb: "gallery/Fig3.jpg",
@@ -34,13 +41,6 @@ const galleryData = [
     src: "gallery/Fig4.jpg",
     thumb: "gallery/Fig4.jpg",
     title: "Figure 4",
-    desc: ""
-  },
-  {
-    type: "video",
-    src: "gallery/Film1.mp4",
-    thumb: "gallery/Film1-thumb.jpg",
-    title: "Film 1",
     desc: ""
   },
 ];
@@ -184,7 +184,42 @@ function handleKeydown(e) {
 }
 
 // ============================================================
+// AUTO-SCROLL
+// ============================================================
+
+var autoScrollInterval;
+var scrollDirection = 1;
+
+function startAutoScroll() {
+  if (!galleryGrid || galleryData.length <= 2) return;
+  autoScrollInterval = setInterval(function () {
+    var maxScroll = galleryGrid.scrollWidth - galleryGrid.clientWidth;
+    if (galleryGrid.scrollLeft >= maxScroll - 2) {
+      scrollDirection = -1;
+    } else if (galleryGrid.scrollLeft <= 2) {
+      scrollDirection = 1;
+    }
+    galleryGrid.scrollLeft += scrollDirection;
+  }, 40);
+}
+
+function stopAutoScroll() {
+  clearInterval(autoScrollInterval);
+}
+
+if (galleryGrid) {
+  galleryGrid.addEventListener('mouseenter', stopAutoScroll);
+  galleryGrid.addEventListener('mouseleave', startAutoScroll);
+  // Pause on touch
+  galleryGrid.addEventListener('touchstart', stopAutoScroll);
+  galleryGrid.addEventListener('touchend', function () {
+    setTimeout(startAutoScroll, 2000);
+  });
+}
+
+// ============================================================
 // INIT
 // ============================================================
 
 renderGallery();
+startAutoScroll();
