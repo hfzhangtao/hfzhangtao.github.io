@@ -16,6 +16,27 @@ const galleryData = [
     desc: ""
   },
   {
+    type: "image",
+    src: "gallery/Fig2.jpg",
+    thumb: "gallery/Fig2.jpg",
+    title: "Figure 2",
+    desc: ""
+  },
+  {
+    type: "image",
+    src: "gallery/Fig3.jpg",
+    thumb: "gallery/Fig3.jpg",
+    title: "Figure 3",
+    desc: ""
+  },
+  {
+    type: "image",
+    src: "gallery/Fig4.jpg",
+    thumb: "gallery/Fig4.jpg",
+    title: "Figure 4",
+    desc: ""
+  },
+  {
     type: "video",
     src: "gallery/Film1.mp4",
     thumb: "",
