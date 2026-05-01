@@ -83,6 +83,24 @@ button:focus-visible {
   border-radius: 4px;
 }
 
+/* Gallery horizontal scroll */
+.scrollbar-hide::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scrollbar-hide::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-hide::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.dark .scrollbar-hide::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
 /* Lightbox fade-in animation */
 @keyframes fadeIn {
   from { opacity: 0; }

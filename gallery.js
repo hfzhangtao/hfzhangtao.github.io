@@ -60,7 +60,7 @@ function renderGallery() {
 
   if (galleryData.length === 0) {
     galleryGrid.innerHTML = '\
-      <div class="col-span-full text-center py-16 text-gray-400 dark:text-gray-500">\
+      <div class="w-full text-center py-16 text-gray-400 dark:text-gray-500">\
         <i class="fa-solid fa-images text-5xl mb-4 block"></i>\
         <p class="text-lg">No media yet.</p>\
         <p class="text-sm mt-1">Add photos and videos by editing <code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-xs">galleryData</code> in <code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-xs">gallery.js</code>.</p>\
@@ -72,7 +72,7 @@ function renderGallery() {
     .map(function (item, index) {
       if (item.type === 'video') {
         return '\
-    <div class="gallery-item group relative rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer shadow-sm hover:shadow-lg transition-all duration-300" style="aspect-ratio: 1/1" data-index="' + index + '">\
+    <div class="gallery-item group relative shrink-0 w-72 md:w-80 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer shadow-sm hover:shadow-lg transition-all duration-300 snap-center" style="aspect-ratio: 16/9" data-index="' + index + '">\
       <div class="absolute inset-0 flex items-center justify-center bg-gray-300 dark:bg-gray-700"' + (item.thumb ? ' style="background-image:url(' + item.thumb + ');background-size:cover;background-position:center"' : '') + '>' + (item.thumb ? '' : '\
         <span class="w-14 h-14 rounded-full bg-black/60 flex items-center justify-center text-white text-xl"><i class="fa-solid fa-play"></i></span>') + '\
       </div>\
@@ -82,7 +82,7 @@ function renderGallery() {
     </div>';
       } else {
         return '\
-    <div class="gallery-item group relative rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer shadow-sm hover:shadow-lg transition-all duration-300" style="aspect-ratio: 1/1" data-index="' + index + '">\
+    <div class="gallery-item group relative shrink-0 w-72 md:w-80 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer shadow-sm hover:shadow-lg transition-all duration-300 snap-center" style="aspect-ratio: 16/9" data-index="' + index + '">\
       <img src="' + item.src + '" alt="' + item.title + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">\
       <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
         <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
