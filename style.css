@@ -83,18 +83,9 @@ button:focus-visible {
   border-radius: 4px;
 }
 
-/* Gallery filmstrip marquee */
+/* Gallery track — JS-driven animation, no CSS keyframes needed */
 .gallery-marquee {
-  animation: marquee 30s linear infinite;
-}
-
-.gallery-marquee.paused {
-  animation-play-state: paused;
-}
-
-@keyframes marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  will-change: transform;
 }
 
 /* Lightbox fade-in animation */

@@ -1,10 +1,5 @@
 // ============================================================
-// GALLERY DATA — Add your photos and videos here
-// Each entry: { type: "image"|"video", src: "path", thumb: "path", title: "...", desc: "..." }
-// - For YouTube/Vimeo videos, use the full embed URL as src
-// - For local video files (.mp4 etc.), use the relative path as src
-// - "thumb" is optional for videos; a play icon is shown regardless
-// - Place media files in the "gallery/" folder
+// GALLERY DATA
 // ============================================================
 
 const galleryData = [
@@ -56,6 +51,29 @@ function isExternalVideo(src) {
   return /^(https?:)?\/\/(www\.)?(youtube\.com|youtu\.be|vimeo\.com)/.test(src);
 }
 
+function buildItem(item, index) {
+  if (item.type === 'video') {
+    return '\
+    <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-lg transition-shadow duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
+      <div class="absolute inset-0"' + (item.thumb ? ' style="background-image:url(' + item.thumb + ');background-size:cover;background-position:center"' : '') + '></div>\
+      <div class="absolute inset-0 flex items-center justify-center">\
+        <span class="w-16 h-16 rounded-full bg-black/60 flex items-center justify-center text-white text-2xl group-hover:bg-primary group-hover:scale-110 transition-all duration-300"><i class="fa-solid fa-play ml-0.5"></i></span>\
+      </div>\
+      <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
+        <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
+      </div>\
+    </div>';
+  } else {
+    return '\
+    <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-lg transition-shadow duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
+      <img src="' + item.src + '" alt="' + item.title + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">\
+      <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
+        <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
+      </div>\
+    </div>';
+  }
+}
+
 function renderGallery() {
   if (!galleryTrack) return;
 
@@ -69,44 +87,21 @@ function renderGallery() {
     return;
   }
 
-  var itemsHTML = galleryData
-    .map(function (item, index) {
-      var inner;
-      if (item.type === 'video') {
-        inner = '\
-      <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-lg transition-shadow duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
-        <div class="absolute inset-0"' + (item.thumb ? ' style="background-image:url(' + item.thumb + ');background-size:cover;background-position:center"' : '') + '></div>\
-        <div class="absolute inset-0 flex items-center justify-center">\
-          <span class="w-16 h-16 rounded-full bg-black/60 flex items-center justify-center text-white text-2xl group-hover:bg-primary group-hover:scale-110 transition-all duration-300"><i class="fa-solid fa-play ml-0.5"></i></span>\
-        </div>\
-        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
-          <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
-        </div>\
-      </div>';
-      } else {
-        inner = '\
-      <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-lg transition-shadow duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
-        <img src="' + item.src + '" alt="' + item.title + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">\
-        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
-          <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
-        </div>\
-      </div>';
-      }
-      return inner;
-    })
-    .join('');
+  var itemsHTML = galleryData.map(function (item, i) {
+    return buildItem(item, i);
+  }).join('');
 
-  // Duplicate for seamless loop
+  // Duplicate x2 for seamless loop
   galleryTrack.innerHTML = itemsHTML + itemsHTML;
 
-  // Click handlers
-  galleryTrack.querySelectorAll('.gallery-item').forEach(function (item) {
-    item.addEventListener('click', function () {
-      openLightbox(parseInt(item.dataset.index));
+  // Click → lightbox
+  galleryTrack.querySelectorAll('.gallery-item').forEach(function (el) {
+    el.addEventListener('click', function () {
+      openLightbox(parseInt(el.dataset.index));
     });
   });
 
-  // Pause/resume animation on hover
+  // Hover pause
   if (galleryWrapper) {
     galleryWrapper.addEventListener('mouseenter', function () {
       galleryTrack.classList.add('paused');
@@ -116,45 +111,130 @@ function renderGallery() {
     });
   }
 
-  // Touch swipe support for mobile
-  setupTouchSwipe();
+  // Start JS-based animation
+  startMarquee();
+  // Touch swipe
+  bindTouch();
 }
 
-var touchStartX = 0;
-var touchOffset = 0;
-var trackTranslateX = 0;
-var animationFrame = null;
+// ============================================================
+// JS MARQUEE — smooth infinite left-scroll, no CSS anim
+// ============================================================
 
-function setupTouchSwipe() {
-  if (!galleryTrack) return;
+var offset = 0;
+var marqueeRaf = null;
+var speed = 0.8; // px per frame
 
-  galleryTrack.addEventListener('touchstart', function (e) {
-    galleryTrack.classList.add('paused');
-    touchStartX = e.touches[0].clientX;
-    // Snapshot current computed transform
-    var style = window.getComputedStyle(galleryTrack);
-    var matrix = new DOMMatrixReadOnly(style.transform);
-    trackTranslateX = matrix.m41;
-    cancelAnimationFrame(animationFrame);
-  }, { passive: true });
-
-  galleryTrack.addEventListener('touchmove', function (e) {
-    var dx = e.touches[0].clientX - touchStartX;
-    touchOffset = trackTranslateX + dx;
-    // Clamp: don't scroll beyond bounds (0 to -halfWidth for each set)
+function marqueeLoop() {
+  if (!galleryTrack.classList.contains('paused')) {
+    offset -= speed;
+    // Seamless wrap
     var halfW = galleryTrack.scrollWidth / 2;
-    while (touchOffset < -halfW) touchOffset += halfW;
-    while (touchOffset > 0) touchOffset -= halfW;
-    galleryTrack.style.transform = 'translateX(' + touchOffset + 'px)';
-  }, { passive: true });
+    if (offset <= -halfW) {
+      offset += halfW;
+    }
+    if (offset > 0) {
+      offset -= halfW;
+    }
+    galleryTrack.style.transform = 'translateX(' + offset + 'px)';
+  }
+  marqueeRaf = requestAnimationFrame(marqueeLoop);
+}
 
-  galleryTrack.addEventListener('touchend', function () {
-    // Resume CSS animation after a delay
-    galleryTrack.style.transform = '';
-    setTimeout(function () {
-      galleryTrack.classList.remove('paused');
-    }, 2000);
+function startMarquee() {
+  if (marqueeRaf) return;
+  // Sync offset from current CSS transform
+  var style = window.getComputedStyle(galleryTrack);
+  var m = style.transform;
+  if (m && m !== 'none') {
+    // Parse matrix
+    var nums = m.match(/matrix.*\((.+)\)/);
+    if (nums) {
+      var parts = nums[1].split(',');
+      offset = parseFloat(parts[4]) || 0;
+    }
+  }
+  marqueeRaf = requestAnimationFrame(marqueeLoop);
+}
+
+// ============================================================
+// TOUCH SWIPE — mobile finger-drag support
+// ============================================================
+
+var dragging = false;
+var startX = 0;
+var startOffset = 0;
+var lastX = 0;
+var lastTime = 0;
+var velocity = 0;
+
+function bindTouch() {
+  var el = galleryWrapper || galleryTrack;
+
+  el.addEventListener('touchstart', function (e) {
+    dragging = true;
+    startX = e.touches[0].clientX;
+    startOffset = offset;
+    lastX = startX;
+    lastTime = Date.now();
+    velocity = 0;
+    galleryTrack.classList.add('paused');
+  }, { passive: false });
+
+  el.addEventListener('touchmove', function (e) {
+    if (!dragging) return;
+    e.preventDefault(); // block page scroll
+    var dx = e.touches[0].clientX - startX;
+    offset = startOffset + dx;
+
+    // Clamp loop
+    var halfW = galleryTrack.scrollWidth / 2;
+    while (offset < -halfW) offset += halfW;
+    while (offset > 0) offset -= halfW;
+
+    galleryTrack.style.transform = 'translateX(' + offset + 'px');
+
+    var now = Date.now();
+    var dt = now - lastTime;
+    if (dt > 0) {
+      velocity = (e.touches[0].clientX - lastX) / dt;
+    }
+    lastX = e.touches[0].clientX;
+    lastTime = now;
+  }, { passive: false });
+
+  el.addEventListener('touchend', function () {
+    dragging = false;
+    // Inertia
+    if (Math.abs(velocity) > 0.3) {
+      var decel = 0.95;
+      function inertia() {
+        if (dragging) return;
+        velocity *= decel;
+        if (Math.abs(velocity) < 0.05) {
+          autoResume();
+          return;
+        }
+        offset += velocity * 16;
+        var halfW = galleryTrack.scrollWidth / 2;
+        if (offset <= -halfW) offset += halfW;
+        if (offset > 0) offset -= halfW;
+        galleryTrack.style.transform = 'translateX(' + offset + 'px)';
+        requestAnimationFrame(inertia);
+      }
+      requestAnimationFrame(inertia);
+    } else {
+      autoResume();
+    }
   });
+}
+
+function autoResume() {
+  setTimeout(function () {
+    if (!dragging) {
+      galleryTrack.classList.remove('paused');
+    }
+  }, 1500);
 }
 
 // ============================================================
@@ -220,8 +300,8 @@ function openLightbox(index) {
 function closeLightbox() {
   var overlay = document.getElementById('lightbox');
   if (overlay) {
-    var video = overlay.querySelector('video');
-    if (video) video.pause();
+    var v = overlay.querySelector('video');
+    if (v) v.pause();
     overlay.remove();
   }
   document.body.style.overflow = '';
@@ -241,7 +321,7 @@ function handleKeydown(e) {
 }
 
 // ============================================================
-// INIT — wait for DOM to be ready
+// INIT
 // ============================================================
 
 if (document.readyState === 'loading') {
