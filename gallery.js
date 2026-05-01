@@ -55,7 +55,7 @@ function buildItem(item, index) {
   var media;
   if (item.type === 'video') {
     media = '\
-    <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-lg transition-shadow duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
+    <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-1 hover:ring-2 hover:ring-primary/40 transition-all duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
       <div class="absolute inset-0 bg-gray-300 dark:bg-gray-700"' + (item.thumb ? ' style="background-image:url(' + item.thumb + ');background-size:cover;background-position:center"' : '') + '></div>\
       <div class="absolute inset-0 flex items-center justify-center">\
         <span class="w-16 h-16 rounded-full bg-black/60 flex items-center justify-center text-white text-2xl group-hover:bg-primary group-hover:scale-110 transition-all duration-300"><i class="fa-solid fa-play ml-0.5"></i></span>\
@@ -66,7 +66,7 @@ function buildItem(item, index) {
     </div>';
   } else {
     media = '\
-    <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-lg transition-shadow duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
+    <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-1 hover:ring-2 hover:ring-primary/40 transition-all duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
       <img src="' + item.src + '" alt="' + item.title + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">\
       <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
         <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
@@ -89,12 +89,57 @@ function renderGallery() {
     return;
   }
 
-  var itemsHTML = galleryData.map(function (item, i) {
-    return buildItem(item, i);
-  }).join('');
+  // Render many copies: user can scroll freely in either direction without hitting an edge
+  var oneSet = galleryData.map(function (item, i) { return buildItem(item, i); }).join('');
+  galleryTrack.innerHTML = oneSet.repeat(6); // 30 items, plenty for infinite scroll
 
-  // Duplicate for seamless loop
-  galleryTrack.innerHTML = itemsHTML + itemsHTML;
+  var oneSetWidth = 0;
+  var speed = 0.8; // px per frame
+  var paused = false;
+  var lastTime = 0;
+  var animId = null;
+  var jumping = false; // guard to prevent recursive scroll events during jump
+
+  function measure() {
+    var items = galleryTrack.querySelectorAll('.gallery-item');
+    if (items.length === 0) return;
+    var n = galleryData.length;
+    var startX = items[0].getBoundingClientRect().left;
+    var endX = items[n].getBoundingClientRect().left;
+    oneSetWidth = endX - startX;
+  }
+
+  // --- Infinite scroll: jump by one set when approaching edges ---
+  function handleScroll() {
+    if (jumping) return;
+    var sl = galleryWrapper.scrollLeft;
+    var maxSl = galleryTrack.scrollWidth - galleryWrapper.clientWidth;
+    var buffer = oneSetWidth * 0.5;
+
+    if (sl <= buffer) {
+      jumping = true;
+      galleryWrapper.scrollLeft = sl + oneSetWidth * 2;
+      jumping = false;
+    } else if (sl >= maxSl - buffer) {
+      jumping = true;
+      galleryWrapper.scrollLeft = sl - oneSetWidth * 2;
+      jumping = false;
+    }
+  }
+
+  // --- Auto-scroll loop ---
+  function autoScroll(timestamp) {
+    if (!lastTime) lastTime = timestamp;
+    var delta = timestamp - lastTime;
+    lastTime = timestamp;
+
+    if (!paused) {
+      galleryWrapper.scrollLeft += speed * (delta / 16.67);
+      handleScroll();
+    }
+
+    animId = requestAnimationFrame(autoScroll);
+  }
 
   // Click events
   galleryTrack.querySelectorAll('.gallery-item').forEach(function (el) {
@@ -103,24 +148,24 @@ function renderGallery() {
     });
   });
 
-  // Hover pause
-  galleryWrapper.addEventListener('mouseenter', function () {
-    galleryTrack.classList.add('paused');
-  });
-  galleryWrapper.addEventListener('mouseleave', function () {
-    galleryTrack.classList.remove('paused');
-  });
+  // Pause on hover
+  galleryWrapper.addEventListener('mouseenter', function () { paused = true; });
+  galleryWrapper.addEventListener('mouseleave', function () { paused = false; lastTime = 0; });
 
-  // Touch pause + resume
-  galleryWrapper.addEventListener('touchstart', function () {
-    galleryTrack.classList.add('paused');
-  }, { passive: true });
+  // Pause on touch — user can swipe freely; resume after 1.5s idle
+  galleryWrapper.addEventListener('touchstart', function () { paused = true; }, { passive: true });
   galleryWrapper.addEventListener('touchend', function () {
     clearTimeout(galleryTrack._resumeTimer);
-    galleryTrack._resumeTimer = setTimeout(function () {
-      galleryTrack.classList.remove('paused');
-    }, 1500);
+    galleryTrack._resumeTimer = setTimeout(function () { paused = false; lastTime = 0; }, 1500);
   });
+
+  // Also handle scroll events from user swipe to keep the loop seamless
+  galleryWrapper.addEventListener('scroll', handleScroll, { passive: true });
+
+  // Kick off
+  measure();
+  galleryWrapper.scrollLeft = oneSetWidth * 2; // start at 3rd copy
+  animId = requestAnimationFrame(autoScroll);
 }
 
 // ============================================================
