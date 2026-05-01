@@ -2,25 +2,26 @@
 // GALLERY DATA — Add your photos and videos here
 // Each entry: { type: "image"|"video", src: "path", thumb: "path", title: "...", desc: "..." }
 // - For YouTube/Vimeo videos, use the full embed URL as src
+// - For local video files (.mp4 etc.), use the relative path as src
+// - "thumb" is optional for videos; a play icon placeholder is shown if omitted
 // - Place media files in the "gallery/" folder
 // ============================================================
 
 const galleryData = [
-  // === ADD YOUR PHOTOS/VIDEOS BELOW ===
-  // {
-  //   type: "image",
-  //   src: "gallery/example.jpg",
-  //   thumb: "gallery/example.jpg",
-  //   title: "Example Photo",
-  //   desc: "Description of the photo"
-  // },
-  // {
-  //   type: "video",
-  //   src: "https://www.youtube.com/embed/VIDEO_ID",
-  //   thumb: "gallery/video-thumb.jpg",
-  //   title: "Example Video",
-  //   desc: "Description of the video"
-  // },
+  {
+    type: "image",
+    src: "gallery/Fig1.jpg",
+    thumb: "gallery/Fig1.jpg",
+    title: "Figure 1",
+    desc: ""
+  },
+  {
+    type: "video",
+    src: "gallery/Film1.mp4",
+    thumb: "",
+    title: "Film 1",
+    desc: ""
+  },
 ];
 
 // ============================================================
@@ -28,6 +29,10 @@ const galleryData = [
 // ============================================================
 
 const galleryGrid = document.getElementById('galleryGrid');
+
+function isExternalVideo(src) {
+  return /^(https?:)?\/\/(www\.)?(youtube\.com|youtu\.be|vimeo\.com)/.test(src);
+}
 
 function renderGallery() {
   if (!galleryGrid) return;
@@ -47,8 +52,8 @@ function renderGallery() {
       (item, index) => `
     <div class="gallery-item group relative rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer shadow-sm hover:shadow-lg transition-all duration-300 aspect-square" data-index="${index}">
       ${item.type === 'video'
-        ? `<img src="${item.thumb || ''}" alt="${item.title}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center\\'><i class=\\'fa-solid fa-video text-4xl text-gray-400\\'></i></div>'">
-           <div class="absolute inset-0 flex items-center justify-center">
+        ? `<img src="${item.thumb || ''}" alt="${item.title}" class="w-full h-full object-cover" onerror="this.style.display='none'">
+           <div class="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
              <span class="w-14 h-14 rounded-full bg-black/60 flex items-center justify-center text-white text-xl"><i class="fa-solid fa-play"></i></span>
            </div>`
         : `<img src="${item.src}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">`
@@ -76,6 +81,19 @@ function openLightbox(index) {
   currentIndex = index;
   const item = galleryData[index];
 
+  let mediaHTML;
+  if (item.type === 'video') {
+    if (isExternalVideo(item.src)) {
+      mediaHTML = `<div class="relative w-full aspect-video max-h-[80vh]">
+        <iframe src="${item.src}" class="w-full h-full rounded-lg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>`;
+    } else {
+      mediaHTML = `<video src="${item.src}" controls class="max-w-full max-h-[80vh] rounded-lg" autoplay></video>`;
+    }
+  } else {
+    mediaHTML = `<img src="${item.src}" alt="${item.title}" class="max-w-full max-h-[80vh] object-contain rounded-lg">`;
+  }
+
   const overlay = document.createElement('div');
   overlay.id = 'lightbox';
   overlay.className =
@@ -91,12 +109,7 @@ function openLightbox(index) {
       <i class="fa-solid fa-chevron-right"></i>
     </button>
     <div class="max-w-5xl max-h-[85vh] w-full flex flex-col items-center">
-      ${item.type === 'video'
-        ? `<div class="relative w-full aspect-video max-h-[80vh]">
-             <iframe src="${item.src}" class="w-full h-full rounded-lg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-           </div>`
-        : `<img src="${item.src}" alt="${item.title}" class="max-w-full max-h-[80vh] object-contain rounded-lg">`
-      }
+      ${mediaHTML}
       <div class="mt-4 text-center text-white max-w-lg">
         <h3 class="text-lg font-bold">${item.title}</h3>
         ${item.desc ? `<p class="text-sm text-gray-300 mt-1">${item.desc}</p>` : ''}
@@ -120,7 +133,12 @@ function openLightbox(index) {
 
 function closeLightbox() {
   const overlay = document.getElementById('lightbox');
-  if (overlay) overlay.remove();
+  if (overlay) {
+    // Stop any playing video
+    const video = overlay.querySelector('video');
+    if (video) video.pause();
+    overlay.remove();
+  }
   document.body.style.overflow = '';
   document.removeEventListener('keydown', handleKeydown);
 }
