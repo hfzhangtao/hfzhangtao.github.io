@@ -52,10 +52,11 @@ function isExternalVideo(src) {
 }
 
 function buildItem(item, index) {
+  var media;
   if (item.type === 'video') {
-    return '\
+    media = '\
     <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-lg transition-shadow duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
-      <div class="absolute inset-0"' + (item.thumb ? ' style="background-image:url(' + item.thumb + ');background-size:cover;background-position:center"' : '') + '></div>\
+      <div class="absolute inset-0 bg-gray-300 dark:bg-gray-700"' + (item.thumb ? ' style="background-image:url(' + item.thumb + ');background-size:cover;background-position:center"' : '') + '></div>\
       <div class="absolute inset-0 flex items-center justify-center">\
         <span class="w-16 h-16 rounded-full bg-black/60 flex items-center justify-center text-white text-2xl group-hover:bg-primary group-hover:scale-110 transition-all duration-300"><i class="fa-solid fa-play ml-0.5"></i></span>\
       </div>\
@@ -64,18 +65,19 @@ function buildItem(item, index) {
       </div>\
     </div>';
   } else {
-    return '\
+    media = '\
     <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-lg transition-shadow duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
-      <img src="' + item.src + '" alt="' + item.title + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">\
+      <img src="' + item.src + '" alt="' + item.title + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">\
       <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
         <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
       </div>\
     </div>';
   }
+  return media;
 }
 
 function renderGallery() {
-  if (!galleryTrack) return;
+  if (!galleryTrack || !galleryWrapper) return;
 
   if (galleryData.length === 0) {
     galleryTrack.innerHTML = '\
@@ -83,6 +85,7 @@ function renderGallery() {
         <i class="fa-solid fa-images text-5xl mb-4 block"></i>\
         <p class="text-lg">No media yet.</p>\
       </div>';
+    galleryWrapper.className = 'rounded-xl';
     return;
   }
 
@@ -90,83 +93,32 @@ function renderGallery() {
     return buildItem(item, i);
   }).join('');
 
-  // Duplicate x2 for seamless loop
+  // Duplicate for seamless loop
   galleryTrack.innerHTML = itemsHTML + itemsHTML;
 
-  // Click → lightbox
+  // Click events
   galleryTrack.querySelectorAll('.gallery-item').forEach(function (el) {
     el.addEventListener('click', function () {
       openLightbox(parseInt(el.dataset.index));
     });
   });
 
-  // Bind hover/touch pause
-  bindPause();
-  // Start auto-scroll
-  startAutoScroll();
-}
-
-// ============================================================
-// AUTO-SCROLL — scrollLeft based, works with native touch scroll
-// ============================================================
-
-var scrollRaf = null;
-var autoScrollPaused = false;
-var halfWidth = 0;
-
-function scrollLoop() {
-  if (!autoScrollPaused && galleryTrack) {
-    galleryTrack.parentElement.scrollLeft += 0.6;
-    // Seamless loop: when past half, jump back
-    var el = galleryTrack.parentElement;
-    halfWidth = galleryTrack.scrollWidth / 2;
-    if (el.scrollLeft >= halfWidth) {
-      el.scrollLeft -= halfWidth;
-    }
-  }
-  scrollRaf = requestAnimationFrame(scrollLoop);
-}
-
-function startAutoScroll() {
-  if (scrollRaf) return;
-  // Start in the middle so user can scroll both directions
-  var el = galleryTrack.parentElement;
-  halfWidth = galleryTrack.scrollWidth / 2;
-  if (el.scrollLeft < 1) {
-    el.scrollLeft = halfWidth * 0.5;
-  }
-  scrollRaf = requestAnimationFrame(scrollLoop);
-}
-
-// ============================================================
-// PAUSE — mouse hover / touch
-// ============================================================
-
-function bindPause() {
-  var el = galleryWrapper || galleryTrack.parentElement;
-
-  el.addEventListener('mouseenter', function () {
-    autoScrollPaused = true;
+  // Hover pause
+  galleryWrapper.addEventListener('mouseenter', function () {
+    galleryTrack.classList.add('paused');
   });
-  el.addEventListener('mouseleave', function () {
-    autoScrollPaused = false;
+  galleryWrapper.addEventListener('mouseleave', function () {
+    galleryTrack.classList.remove('paused');
   });
 
-  el.addEventListener('touchstart', function () {
-    autoScrollPaused = true;
+  // Touch pause + resume
+  galleryWrapper.addEventListener('touchstart', function () {
+    galleryTrack.classList.add('paused');
   }, { passive: true });
-
-  el.addEventListener('touchend', function () {
-    setTimeout(function () {
-      autoScrollPaused = false;
-      // Fix scroll position: if user scrolled past half, wrap
-      var e = galleryTrack.parentElement;
-      halfWidth = galleryTrack.scrollWidth / 2;
-      if (e.scrollLeft >= halfWidth) {
-        e.scrollLeft -= halfWidth;
-      } else if (e.scrollLeft < 0) {
-        e.scrollLeft += halfWidth;
-      }
+  galleryWrapper.addEventListener('touchend', function () {
+    clearTimeout(galleryTrack._resumeTimer);
+    galleryTrack._resumeTimer = setTimeout(function () {
+      galleryTrack.classList.remove('paused');
     }, 1500);
   });
 }

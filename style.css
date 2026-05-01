@@ -83,13 +83,30 @@ button:focus-visible {
   border-radius: 4px;
 }
 
-/* Gallery wrapper — hide scrollbar, keep scroll function */
+/* Gallery wrapper — scrollable, no visible scrollbar */
 #galleryWrapper {
-  -ms-overflow-style: none;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 #galleryWrapper::-webkit-scrollbar {
   display: none;
+}
+
+/* Gallery track — CSS marquee animation */
+#galleryTrack {
+  animation: marquee 40s linear infinite;
+  width: max-content;
+}
+
+#galleryTrack.paused {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* Lightbox fade-in animation */
@@ -101,4 +118,3 @@ button:focus-visible {
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
 }
-
