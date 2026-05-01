@@ -207,7 +207,11 @@ function handleKeydown(e) {
 }
 
 // ============================================================
-// INIT
+// INIT — wait for DOM to be ready
 // ============================================================
 
-renderGallery();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderGallery);
+} else {
+  renderGallery();
+}
