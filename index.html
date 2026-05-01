@@ -35,6 +35,7 @@
         <a href="#education" class="nav-link text-sm font-medium hover:text-primary transition-colors">Education</a>
         <a href="#publications" class="nav-link text-sm font-medium hover:text-primary transition-colors">Publications</a>
         <a href="#skills" class="nav-link text-sm font-medium hover:text-primary transition-colors">Skills</a>
+        <a href="#gallery" class="nav-link text-sm font-medium hover:text-primary transition-colors">Gallery</a>
         <a href="#contact" class="nav-link text-sm font-medium hover:text-primary transition-colors">Contact</a>
         <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="Toggle theme">
           <i id="themeIcon" class="fa-solid fa-moon text-lg"></i>
@@ -53,6 +54,7 @@
         <a href="#education" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors">Education</a>
         <a href="#publications" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors">Publications</a>
         <a href="#skills" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors">Skills</a>
+        <a href="#gallery" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors">Gallery</a>
         <a href="#contact" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors">Contact</a>
         <button id="mobileThemeToggle" class="self-start p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="Toggle theme">
           <i id="mobileThemeIcon" class="fa-solid fa-moon text-lg"></i>
@@ -66,7 +68,7 @@
     <div class="max-w-5xl mx-auto px-6 text-center">
       <div class="fade-in">
         <div class="w-32 h-32 mx-auto mb-8 rounded-full bg-gradient-to-br from-primary to-secondary p-1">
-          <img src="Tao.jpeg" alt="Dr. Tao Zhang" class="w-full h-full rounded-full object-cover">
+          <img src="Tao.jpeg" alt="Dr. Tao Zhang" class="w-full h-full rounded-full object-cover" style="object-position: center 25%;">
         </div>
         <h1 class="text-4xl md:text-6xl font-bold mb-4">Dr. Tao Zhang</h1>
         <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-2">Postdoctoral Researcher</p>
@@ -526,6 +528,30 @@
     </div>
   </section>
 
+  <!-- Gallery -->
+  <section id="gallery" class="py-24 transition-colors">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="fade-in">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center">Gallery</h2>
+        <div class="w-16 h-1 bg-primary mx-auto mb-2 rounded-full"></div>
+        <p class="text-center text-gray-500 dark:text-gray-400 mb-12 text-sm">Photos and videos from my research and conferences</p>
+      </div>
+
+      <!-- Gallery grid -->
+      <div id="galleryGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 fade-in">
+        <!-- Populated by JavaScript -->
+      </div>
+
+      <!-- Upload guide -->
+      <div class="mt-12 text-center fade-in">
+        <p class="text-sm text-gray-400 dark:text-gray-500">
+          To add more photos or videos, place files in the <code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-xs">gallery/</code> folder
+          and add entries to the <code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-xs">galleryData</code> array in <code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-xs">gallery.js</code>.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <!-- Contact -->
   <section id="contact" class="py-24 transition-colors">
     <div class="max-w-5xl mx-auto px-6">
@@ -586,6 +612,7 @@
     </div>
   </footer>
 
+  <script src="gallery.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
