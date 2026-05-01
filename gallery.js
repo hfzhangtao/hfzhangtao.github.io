@@ -68,13 +68,14 @@ function renderGallery() {
     return;
   }
 
-  galleryGrid.innerHTML = galleryData
+  var itemsHTML = galleryData
     .map(function (item, index) {
       if (item.type === 'video') {
         return '\
     <div class="gallery-item group relative shrink-0 w-72 md:w-80 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer shadow-sm hover:shadow-lg transition-all duration-300 snap-center" style="aspect-ratio: 16/9" data-index="' + index + '">\
-      <div class="absolute inset-0 flex items-center justify-center bg-gray-300 dark:bg-gray-700"' + (item.thumb ? ' style="background-image:url(' + item.thumb + ');background-size:cover;background-position:center"' : '') + '>' + (item.thumb ? '' : '\
-        <span class="w-14 h-14 rounded-full bg-black/60 flex items-center justify-center text-white text-xl"><i class="fa-solid fa-play"></i></span>') + '\
+      <div class="absolute inset-0 bg-gray-300 dark:bg-gray-700"' + (item.thumb ? ' style="background-image:url(' + item.thumb + ');background-size:cover;background-position:center"' : '') + '></div>\
+      <div class="absolute inset-0 flex items-center justify-center">\
+        <span class="w-14 h-14 rounded-full bg-black/60 flex items-center justify-center text-white text-xl"><i class="fa-solid fa-play"></i></span>\
       </div>\
       <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
         <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
@@ -91,6 +92,9 @@ function renderGallery() {
       }
     })
     .join('');
+
+  // Duplicate for seamless infinite loop
+  galleryGrid.innerHTML = itemsHTML + itemsHTML;
 
   // Click handlers
   galleryGrid.querySelectorAll('.gallery-item').forEach(function (item) {
@@ -184,23 +188,22 @@ function handleKeydown(e) {
 }
 
 // ============================================================
-// AUTO-SCROLL
+// AUTO-SCROLL — continuous left-scrolling loop
 // ============================================================
 
 var autoScrollInterval;
-var scrollDirection = 1;
+var halfWidth = 0;
 
 function startAutoScroll() {
-  if (!galleryGrid || galleryData.length <= 2) return;
+  if (!galleryGrid || galleryData.length <= 1) return;
+  halfWidth = galleryGrid.scrollWidth / 2;
   autoScrollInterval = setInterval(function () {
-    var maxScroll = galleryGrid.scrollWidth - galleryGrid.clientWidth;
-    if (galleryGrid.scrollLeft >= maxScroll - 2) {
-      scrollDirection = -1;
-    } else if (galleryGrid.scrollLeft <= 2) {
-      scrollDirection = 1;
+    galleryGrid.scrollLeft += 0.6;
+    // Seamless reset: when we pass the first full set, jump back
+    if (galleryGrid.scrollLeft >= halfWidth) {
+      galleryGrid.scrollLeft -= halfWidth;
     }
-    galleryGrid.scrollLeft += scrollDirection;
-  }, 40);
+  }, 16);
 }
 
 function stopAutoScroll() {
@@ -210,7 +213,6 @@ function stopAutoScroll() {
 if (galleryGrid) {
   galleryGrid.addEventListener('mouseenter', stopAutoScroll);
   galleryGrid.addEventListener('mouseleave', startAutoScroll);
-  // Pause on touch
   galleryGrid.addEventListener('touchstart', stopAutoScroll);
   galleryGrid.addEventListener('touchend', function () {
     setTimeout(startAutoScroll, 2000);
