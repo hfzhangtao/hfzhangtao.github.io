@@ -545,49 +545,42 @@
     </div>
   </section>
 
-  <!-- 4D Printing Simulator -->
+  <!-- Polymer Breakout Game -->
   <section id="puzzle" class="py-24 bg-white dark:bg-gray-900 transition-colors">
     <div class="max-w-5xl mx-auto px-6">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center text-gray-800 dark:text-gray-100">4D Printing Simulator</h2>
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center text-gray-800 dark:text-gray-100">Polymer Breakout</h2>
       <div class="w-16 h-1 bg-primary mx-auto mb-2 rounded-full"></div>
-      <p class="text-center text-gray-500 dark:text-gray-400 mb-10 text-sm max-w-xl mx-auto">Each object is printed in a <em>temporary</em> flat shape. As the heated bed reaches the glass transition temperature (T<sub>g</sub>), they recover their programmed permanent form.</p>
+      <p class="text-center text-gray-500 dark:text-gray-400 mb-10 text-sm max-w-xl mx-auto">Break through reaction barriers to build polymer chains. Use your paddle (catalyst) to bounce the monomer and clear all energy barriers!</p>
 
       <div class="max-w-2xl mx-auto">
-        <!-- Build plate -->
-        <canvas id="puzzleCanvas" class="w-full rounded-xl shadow-lg border dark:border-gray-700" style="aspect-ratio:4/3; background:#2d2d2d;"></canvas>
-
-        <!-- Temperature control -->
-        <div class="mt-6 px-1">
-          <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-3 font-mono">
-            <span>25°C</span>
-            <span style="color:#f59e0b;">T<sub>g</sub> 65°C</span>
-            <span>120°C</span>
+        <!-- Game canvas -->
+        <div class="relative rounded-xl overflow-hidden shadow-lg border dark:border-gray-700" style="background:#0f172a;">
+          <canvas id="puzzleCanvas" class="w-full block" style="aspect-ratio:4/3;cursor:none;"></canvas>
+          <!-- Overlay messages -->
+          <div id="gameOverlay" class="absolute inset-0 flex items-center justify-center pointer-events-none" style="background:rgba(0,0,0,0.6);display:none;">
+            <div class="text-center">
+              <div id="overlayTitle" class="text-2xl font-bold text-white mb-2"></div>
+              <div id="overlaySub" class="text-sm text-gray-300 mb-4"></div>
+              <button id="overlayBtn" class="pointer-events-auto px-6 py-2 bg-primary text-white rounded-full font-medium hover:bg-blue-700 transition-colors"></button>
+            </div>
           </div>
-          <div class="relative">
-            <input type="range" id="tempSlider" min="0" max="100" value="0" class="w-full cursor-pointer" style="height:8px;border-radius:4px;appearance:none;background:linear-gradient(to right, #3b82f6 0%, #3b82f6 40%, #f59e0b 40%, #f59e0b 42%, #ef4444 42%, #ef4444 100%);outline:none;">
+        </div>
+
+        <!-- Score bar -->
+        <div class="flex items-center justify-between mt-4 px-2">
+          <div class="flex items-center gap-4">
+            <span class="text-sm text-gray-500 dark:text-gray-400"><i class="fa-solid fa-flask mr-1"></i>Score: <b id="gameScore" class="text-gray-800 dark:text-gray-200">0</b></span>
+            <span class="text-sm text-gray-500 dark:text-gray-400"><i class="fa-solid fa-fire mr-1"></i>Combo: <b id="gameCombo" class="text-gray-800 dark:text-gray-200">x1</b></span>
           </div>
-          <div id="tempLabel" class="text-center mt-2 text-lg font-bold" style="color:#3b82f6;">25°C — As-Printed</div>
-          <div id="tempStatus" class="text-center text-xs text-gray-500 dark:text-gray-400 mt-1">Below T<sub>g</sub> · shapes remain in temporary form</div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-400">Level <b id="gameLevel">1</b></span>
+            <span id="gameLives" class="text-xs">❤️❤️❤️</span>
+          </div>
         </div>
 
-        <!-- Action buttons -->
-        <div class="flex justify-center gap-4 mt-6">
-          <button id="autoBtn" class="px-5 py-2.5 rounded-full text-sm font-medium border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-primary hover:text-primary transition-all duration-300">
-            <i class="fa-solid fa-play mr-1.5"></i>Auto Cycle
-          </button>
-          <button id="resetBtn" class="px-5 py-2.5 rounded-full text-sm font-medium border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-primary hover:text-primary transition-all duration-300">
-            <i class="fa-solid fa-rotate-right mr-1.5"></i>Re-Print
-          </button>
-        </div>
-
-        <!-- Legend -->
-        <div class="flex justify-center gap-6 mt-6 text-xs text-gray-400 dark:text-gray-500 flex-wrap">
-          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#60a5fa;margin-right:4px;vertical-align:middle;"></span> Gripper</span>
-          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#34d399;margin-right:4px;vertical-align:middle;"></span> Spring</span>
-          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#f472b6;margin-right:4px;vertical-align:middle;"></span> Origami Box</span>
-          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#fbbf24;margin-right:4px;vertical-align:middle;"></span> Mesh</span>
-          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#c084fc;margin-right:4px;vertical-align:middle;"></span> Bloom</span>
-        </div>
+        <p class="text-center text-xs text-gray-400 dark:text-gray-500 mt-2">
+          <i class="fa-solid fa-arrow-left mr-1"></i> Move mouse / touch to control paddle &nbsp;|&nbsp; Press <b>Space</b> to launch
+        </p>
       </div>
     </div>
   </section>
