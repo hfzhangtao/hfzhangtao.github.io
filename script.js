@@ -101,3 +101,19 @@ pubToggle?.addEventListener('click', () => {
     ? '<i class="fa-solid fa-chevron-up mr-2"></i>Show Less'
     : '<i class="fa-solid fa-chevron-down mr-2"></i>Show All 12 Publications';
 });
+
+// Visitor counter
+(function () {
+  var el = document.getElementById('visitorCount');
+  if (!el) return;
+  var namespace = 'hfzhangtao-github-io';
+  var key = 'page-visits';
+  fetch('https://api.countapi.xyz/hit/' + namespace + '/' + key)
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      el.textContent = 'Visitors: ' + (data.value || 1);
+    })
+    .catch(function () {
+      el.textContent = '';
+    });
+})();
