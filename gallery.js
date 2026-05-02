@@ -109,28 +109,37 @@ function renderGallery() {
     oneSetWidth = endX - startX;
   }
 
-  // --- Infinite scroll: jump by one set when approaching edges ---
+  // --- Infinite scroll: jump when approaching edges ---
   function handleScroll() {
-    if (jumping) return;
+    if (jumping || oneSetWidth <= 0) return;
     var sl = galleryWrapper.scrollLeft;
     var maxSl = galleryTrack.scrollWidth - galleryWrapper.clientWidth;
-    var buffer = oneSetWidth * 0.5;
+    var buffer = oneSetWidth * 0.4;
 
     if (sl <= buffer) {
       jumping = true;
       galleryWrapper.scrollLeft = sl + oneSetWidth * 2;
       jumping = false;
-    } else if (sl >= maxSl - buffer) {
+    } else if (maxSl > 0 && sl >= maxSl - buffer) {
       jumping = true;
       galleryWrapper.scrollLeft = sl - oneSetWidth * 2;
       jumping = false;
     }
   }
 
+  var scrollFrameId = null;
+  function scheduleHandleScroll() {
+    if (scrollFrameId) return;
+    scrollFrameId = requestAnimationFrame(function () {
+      scrollFrameId = null;
+      handleScroll();
+    });
+  }
+
   // --- Auto-scroll loop ---
   function autoScroll(timestamp) {
     if (!lastTime) lastTime = timestamp;
-    var delta = timestamp - lastTime;
+    var delta = Math.min(timestamp - lastTime, 50); // cap delta to avoid huge jumps
     lastTime = timestamp;
 
     if (!paused) {
@@ -152,20 +161,51 @@ function renderGallery() {
   galleryWrapper.addEventListener('mouseenter', function () { paused = true; });
   galleryWrapper.addEventListener('mouseleave', function () { paused = false; lastTime = 0; });
 
-  // Pause on touch — user can swipe freely; resume after 1.5s idle
+  // Pause on touch
   galleryWrapper.addEventListener('touchstart', function () { paused = true; }, { passive: true });
   galleryWrapper.addEventListener('touchend', function () {
     clearTimeout(galleryTrack._resumeTimer);
     galleryTrack._resumeTimer = setTimeout(function () { paused = false; lastTime = 0; }, 1500);
   });
 
-  // Also handle scroll events from user swipe to keep the loop seamless
-  galleryWrapper.addEventListener('scroll', handleScroll, { passive: true });
+  // Scroll listener debounced via rAF to avoid fighting with autoScroll
+  galleryWrapper.addEventListener('scroll', scheduleHandleScroll, { passive: true });
 
-  // Kick off
-  measure();
-  galleryWrapper.scrollLeft = oneSetWidth * 2; // start at 3rd copy
-  animId = requestAnimationFrame(autoScroll);
+  // Pause when tab not visible
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      paused = true;
+    } else {
+      paused = false;
+      lastTime = 0;
+    }
+  });
+
+  // --- Kick off: defer until layout is stable ---
+  function startGallery() {
+    measure();
+    if (oneSetWidth <= 0) {
+      // Layout not ready yet, retry
+      requestAnimationFrame(startGallery);
+      return;
+    }
+    galleryWrapper.scrollLeft = oneSetWidth * 2;
+    animId = requestAnimationFrame(autoScroll);
+  }
+
+  // Wait 2 frames for images + layout to settle, then start
+  requestAnimationFrame(function () {
+    requestAnimationFrame(startGallery);
+  });
+
+  // Re-measure on resize (debounced)
+  window.addEventListener('resize', function () {
+    clearTimeout(galleryWrapper._resizeTimer);
+    galleryWrapper._resizeTimer = setTimeout(function () {
+      measure();
+      handleScroll();
+    }, 200);
+  });
 }
 
 // ============================================================
