@@ -38,6 +38,20 @@ const galleryData = [
     title: "Figure 4",
     desc: ""
   },
+  {
+    type: "image",
+    src: "gallery/Fig5.png",
+    thumb: "gallery/Fig5.png",
+    title: "Figure 5",
+    desc: ""
+  },
+  {
+    type: "image",
+    src: "gallery/Fig6.png",
+    thumb: "gallery/Fig6.png",
+    title: "Figure 6",
+    desc: ""
+  },
 ];
 
 // ============================================================
