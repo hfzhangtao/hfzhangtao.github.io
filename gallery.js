@@ -52,6 +52,20 @@ const galleryData = [
     title: "Figure 6",
     desc: ""
   },
+  {
+    type: "video",
+    src: "gallery/ACEL.mp4",
+    thumb: "",
+    title: "ACEL Device",
+    desc: ""
+  },
+  {
+    type: "image",
+    src: "gallery/Fig7.png",
+    thumb: "gallery/Fig7.png",
+    title: "Figure 7",
+    desc: ""
+  },
 ];
 
 // ============================================================
