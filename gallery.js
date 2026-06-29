@@ -55,7 +55,7 @@ const galleryData = [
   {
     type: "video",
     src: "gallery/ACEL.mp4",
-    thumb: "",
+    thumb: "gallery/ACEL-thumb.jpg",
     title: "ACEL Device",
     desc: ""
   },
