@@ -99,5 +99,5 @@ pubToggle?.addEventListener('click', () => {
   const isExpanded = !morePubs.classList.contains('hidden');
   pubToggle.innerHTML = isExpanded
     ? '<i class="fa-solid fa-chevron-up mr-2"></i>Show Less'
-    : '<i class="fa-solid fa-chevron-down mr-2"></i>Show All 12 Publications';
+    : '<i class="fa-solid fa-chevron-down mr-2"></i>Show All 13 Publications';
 });
