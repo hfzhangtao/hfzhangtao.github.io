@@ -237,6 +237,11 @@
   }
 
   // --- Overlay ---
+  function t(key) {
+    var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+    return translations[lang][key] || key;
+  }
+
   function showOverlay(title, sub, btnText, btnAction) {
     var overlay = document.getElementById('gameOverlay');
     var ot = document.getElementById('overlayTitle');
@@ -268,7 +273,7 @@
 
     if (lives <= 0) {
       state = STATE.OVER;
-      showOverlay('Game Over', 'Final Score: ' + score + ' · Level ' + level + ' · Max Combo x' + maxCombo, 'Try Again', resetGame);
+      showOverlay(t('game.gameOver'), t('game.finalScore') + ': ' + score + ' · ' + t('game.level') + ' ' + level + ' · ' + t('game.maxCombo') + ' x' + maxCombo, t('game.tryAgain'), resetGame);
     } else {
       state = STATE.IDLE;
       paddle.x = W / 2 - paddle.w / 2;
@@ -283,9 +288,9 @@
     if (!anyAlive) {
       state = STATE.WIN;
       if (level >= levels.length) {
-        showOverlay('You Win!', 'All polymers synthesized! Final Score: ' + score, 'Play Again', resetGame);
+        showOverlay(t('game.youWin'), t('game.allSynth') + ' ' + t('game.finalScore') + ': ' + score, t('game.playAgain'), resetGame);
       } else {
-        showOverlay(levels[level - 1].name + ' Complete!', 'Score: ' + score + ' · Next: ' + levels[Math.min(level, levels.length - 1)].name, 'Next Level →', nextLevel);
+        showOverlay(levels[level - 1].name + ' ' + t('game.complete'), t('game.score') + ': ' + score + ' · ' + t('game.next') + ': ' + levels[Math.min(level, levels.length - 1)].name, t('game.nextLevel'), nextLevel);
       }
     }
   }
@@ -605,13 +610,13 @@
     ctx.font = '11px system-ui';
     ctx.textAlign = 'center';
     var lvlName = levels[Math.min(level - 1, levels.length - 1)].name;
-    ctx.fillText(lvlName + ' · Score: ' + score, W / 2, 22);
+    ctx.fillText(lvlName + ' · ' + t('game.score') + ': ' + score, W / 2, 22);
 
     // Idle hint
     if (state === STATE.IDLE) {
       ctx.fillStyle = 'rgba(255,255,255,0.5)';
       ctx.font = '14px system-ui';
-      ctx.fillText('Press SPACE or click to launch monomer', W / 2, H / 2 + 30);
+      ctx.fillText(t('game.launchHint'), W / 2, H / 2 + 30);
     }
 
     // Active power indicator
@@ -680,7 +685,7 @@
     hideOverlay();
 
     var lvlName = levels[0].name;
-    showOverlay('Polymer Breakout', lvlName + ' — Break all barriers to polymerize!', 'Start Game', function () {
+    showOverlay(t('game.idleOverlayTitle'), lvlName + ' ' + t('game.idleOverlaySub'), t('game.startGame'), function () {
       launchBall();
     });
 

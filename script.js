@@ -1,3 +1,48 @@
+// Language toggle
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function resolveTranslation(key, lang) {
+  return key.split('.').reduce(function (o, k) { return o ? o[k] : undefined; }, translations[lang]);
+}
+
+function applyLanguage(lang) {
+  document.querySelectorAll('[data-i18n]').forEach(function (el) {
+    var val = resolveTranslation(el.getAttribute('data-i18n'), lang);
+    if (val !== undefined) el.textContent = val;
+  });
+  // Update toggle button text
+  document.querySelectorAll('#langToggle, #mobileLangToggle').forEach(function (el) {
+    el.textContent = lang === 'en' ? 'CN' : 'EN';
+  });
+  // Update HTML lang attribute
+  document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+  // Update page title
+  document.title = translations[lang].pageTitle;
+  // Update the publication toggle button (dynamically generated text)
+  var pubToggle = document.getElementById('pubToggle');
+  if (pubToggle) {
+    var morePubs = document.getElementById('morePubs');
+    var isExpanded = morePubs && !morePubs.classList.contains('hidden');
+    if (isExpanded) {
+      pubToggle.innerHTML = '<i class="fa-solid fa-chevron-up mr-2"></i>' + translations[lang]['publications.showLess'];
+    } else {
+      pubToggle.innerHTML = '<i class="fa-solid fa-chevron-down mr-2"></i>' + translations[lang]['publications.showMore'];
+    }
+  }
+  localStorage.setItem('lang', lang);
+  currentLang = lang;
+}
+
+function toggleLanguage() {
+  applyLanguage(currentLang === 'en' ? 'zh' : 'en');
+}
+
+document.getElementById('langToggle')?.addEventListener('click', toggleLanguage);
+document.getElementById('mobileLangToggle')?.addEventListener('click', toggleLanguage);
+
+// Apply saved language on page load
+applyLanguage(currentLang);
+
 // Theme toggle
 const themeToggle = document.getElementById('themeToggle');
 const mobileThemeToggle = document.getElementById('mobileThemeToggle');
@@ -97,7 +142,8 @@ const morePubs = document.getElementById('morePubs');
 pubToggle?.addEventListener('click', () => {
   morePubs.classList.toggle('hidden');
   const isExpanded = !morePubs.classList.contains('hidden');
+  var lang = localStorage.getItem('lang') || 'en';
   pubToggle.innerHTML = isExpanded
-    ? '<i class="fa-solid fa-chevron-up mr-2"></i>Show Less'
-    : '<i class="fa-solid fa-chevron-down mr-2"></i>Show All 13 Publications';
+    ? '<i class="fa-solid fa-chevron-up mr-2"></i>' + translations[lang]['publications.showLess']
+    : '<i class="fa-solid fa-chevron-down mr-2"></i>' + translations[lang]['publications.showMore'];
 });
