@@ -238,10 +238,8 @@
 
   // --- Overlay ---
   function t(key) {
-    var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
-    var dict = (typeof translations !== 'undefined') ? translations[lang] : null;
-    if (!dict) return key;
-    return key.split('.').reduce(function (o, k) { return o ? o[k] : undefined; }, dict) || key;
+    var val = window.__getTranslation ? window.__getTranslation(key) : undefined;
+    return val || key;
   }
 
   function showOverlay(title, sub, btnText, btnAction) {

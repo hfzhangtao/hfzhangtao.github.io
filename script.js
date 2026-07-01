@@ -1,60 +1,65 @@
 // Language toggle
-let currentLang = localStorage.getItem('lang') || 'en';
+window.__currentLang = localStorage.getItem('lang') || 'en';
 
-function resolveTranslation(key, lang) {
-  var dict = (typeof translations !== 'undefined') ? translations[lang] : null;
-  if (!dict) return undefined;
-  return key.split('.').reduce(function (o, k) { return o ? o[k] : undefined; }, dict);
-}
+window.__getTranslation = function (key, lang) {
+  var dict = window.TRANS || {};
+  var d = dict[lang || window.__currentLang];
+  if (!d) return undefined;
+  var parts = key.split('.');
+  var val = d;
+  for (var i = 0; i < parts.length; i++) {
+    if (val == null) return undefined;
+    val = val[parts[i]];
+  }
+  return val;
+};
 
-function applyLanguage(lang) {
-  try {
-    document.querySelectorAll('[data-i18n]').forEach(function (el) {
-      var val = resolveTranslation(el.getAttribute('data-i18n'), lang);
-      if (val !== undefined) el.textContent = val;
-    });
-    // Update toggle button text
-    document.querySelectorAll('#langToggle, #mobileLangToggle').forEach(function (el) {
-      el.textContent = lang === 'en' ? 'CN' : 'EN';
-    });
-    // Update HTML lang attribute
-    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
-    // Update page title
-    if (typeof translations !== 'undefined' && translations[lang]) {
-      document.title = translations[lang].pageTitle;
-    }
-    // Update the publication toggle button (dynamically generated text)
-    var pubToggle = document.getElementById('pubToggle');
-    if (pubToggle && typeof translations !== 'undefined' && translations[lang]) {
-      var morePubs = document.getElementById('morePubs');
-      var isExpanded = morePubs && !morePubs.classList.contains('hidden');
-      if (isExpanded) {
-        pubToggle.innerHTML = '<i class="fa-solid fa-chevron-up mr-2"></i>' + translations[lang]['publications.showLess'];
-      } else {
-        pubToggle.innerHTML = '<i class="fa-solid fa-chevron-down mr-2"></i>' + translations[lang]['publications.showMore'];
-      }
-    }
-  } catch (e) {
-    console.error('applyLanguage error:', e);
+window.applyLanguage = function (lang) {
+  lang = lang || window.__currentLang;
+  // Update all [data-i18n] elements
+  var els = document.querySelectorAll('[data-i18n]');
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i];
+    var key = el.getAttribute('data-i18n');
+    var val = window.__getTranslation(key, lang);
+    if (val !== undefined) el.textContent = val;
+  }
+  // Update toggle button text
+  var toggles = document.querySelectorAll('#langToggle, #mobileLangToggle');
+  for (var j = 0; j < toggles.length; j++) {
+    toggles[j].textContent = lang === 'en' ? 'CN' : 'EN';
+  }
+  // Update HTML lang attribute
+  document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+  // Update page title
+  var t = window.__getTranslation('pageTitle', lang);
+  if (t) document.title = t;
+  // Update publication toggle button
+  var pubToggle = document.getElementById('pubToggle');
+  if (pubToggle) {
+    var morePubs = document.getElementById('morePubs');
+    var isExpanded = morePubs && !morePubs.classList.contains('hidden');
+    var showMore = window.__getTranslation('publications.showMore', lang) || 'Show All';
+    var showLess = window.__getTranslation('publications.showLess', lang) || 'Show Less';
+    pubToggle.innerHTML = isExpanded
+      ? '<i class="fa-solid fa-chevron-up mr-2"></i>' + showLess
+      : '<i class="fa-solid fa-chevron-down mr-2"></i>' + showMore;
   }
   localStorage.setItem('lang', lang);
-  currentLang = lang;
-}
+  window.__currentLang = lang;
+};
 
-function toggleLanguage() {
-  applyLanguage(currentLang === 'en' ? 'zh' : 'en');
-}
+window.toggleLanguage = function () {
+  window.applyLanguage(window.__currentLang === 'en' ? 'zh' : 'en');
+};
 
-document.getElementById('langToggle')?.addEventListener('click', toggleLanguage);
-document.getElementById('mobileLangToggle')?.addEventListener('click', toggleLanguage);
-
-// Apply saved language on page load (defer until translations are definitely ready)
-if (typeof translations !== 'undefined') {
-  applyLanguage(currentLang);
-} else {
-  window.addEventListener('DOMContentLoaded', function () {
-    applyLanguage(currentLang);
+// Apply saved language on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function () {
+    window.applyLanguage(window.__currentLang);
   });
+} else {
+  window.applyLanguage(window.__currentLang);
 }
 
 // Theme toggle
@@ -156,8 +161,9 @@ const morePubs = document.getElementById('morePubs');
 pubToggle?.addEventListener('click', () => {
   morePubs.classList.toggle('hidden');
   const isExpanded = !morePubs.classList.contains('hidden');
-  var lang = localStorage.getItem('lang') || 'en';
+  var showMore = window.__getTranslation('publications.showMore') || 'Show All 13 Publications';
+  var showLess = window.__getTranslation('publications.showLess') || 'Show Less';
   pubToggle.innerHTML = isExpanded
-    ? '<i class="fa-solid fa-chevron-up mr-2"></i>' + translations[lang]['publications.showLess']
-    : '<i class="fa-solid fa-chevron-down mr-2"></i>' + translations[lang]['publications.showMore'];
+    ? '<i class="fa-solid fa-chevron-up mr-2"></i>' + showLess
+    : '<i class="fa-solid fa-chevron-down mr-2"></i>' + showMore;
 });

@@ -2,7 +2,7 @@
 // LANGUAGE TRANSLATIONS — EN / CN
 // ============================================================
 
-const translations = {
+window.TRANS = {
   en: {
     pageTitle: 'Dr. Tao Zhang - Personal Website',
 
