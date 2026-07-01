@@ -16,14 +16,21 @@ window.__getTranslation = function (key, lang) {
 
 window.applyLanguage = function (lang) {
   lang = lang || window.__currentLang;
+  console.log('applyLanguage called, lang=' + lang, 'TRANS keys:', window.TRANS ? Object.keys(window.TRANS) : 'MISSING');
   // Update all [data-i18n] elements
   var els = document.querySelectorAll('[data-i18n]');
+  console.log('Found ' + els.length + ' [data-i18n] elements');
+  var changed = 0;
   for (var i = 0; i < els.length; i++) {
     var el = els[i];
     var key = el.getAttribute('data-i18n');
     var val = window.__getTranslation(key, lang);
-    if (val !== undefined) el.textContent = val;
+    if (val !== undefined) {
+      el.textContent = val;
+      changed++;
+    }
   }
+  console.log('Changed ' + changed + ' elements');
   // Update toggle button text
   var toggles = document.querySelectorAll('#langToggle, #mobileLangToggle');
   for (var j = 0; j < toggles.length; j++) {
