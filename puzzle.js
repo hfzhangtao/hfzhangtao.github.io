@@ -239,7 +239,9 @@
   // --- Overlay ---
   function t(key) {
     var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
-    return translations[lang][key] || key;
+    var dict = (typeof translations !== 'undefined') ? translations[lang] : null;
+    if (!dict) return key;
+    return key.split('.').reduce(function (o, k) { return o ? o[k] : undefined; }, dict) || key;
   }
 
   function showOverlay(title, sub, btnText, btnAction) {
