@@ -5,32 +5,20 @@ window.__getTranslation = function (key, lang) {
   var dict = window.TRANS || {};
   var d = dict[lang || window.__currentLang];
   if (!d) return undefined;
-  var parts = key.split('.');
-  var val = d;
-  for (var i = 0; i < parts.length; i++) {
-    if (val == null) return undefined;
-    val = val[parts[i]];
-  }
-  return val;
+  // Keys are flat strings like 'nav.about', not nested objects
+  return d[key];
 };
 
 window.applyLanguage = function (lang) {
   lang = lang || window.__currentLang;
-  console.log('applyLanguage called, lang=' + lang, 'TRANS keys:', window.TRANS ? Object.keys(window.TRANS) : 'MISSING');
   // Update all [data-i18n] elements
   var els = document.querySelectorAll('[data-i18n]');
-  console.log('Found ' + els.length + ' [data-i18n] elements');
-  var changed = 0;
   for (var i = 0; i < els.length; i++) {
     var el = els[i];
     var key = el.getAttribute('data-i18n');
     var val = window.__getTranslation(key, lang);
-    if (val !== undefined) {
-      el.textContent = val;
-      changed++;
-    }
+    if (val !== undefined) el.textContent = val;
   }
-  console.log('Changed ' + changed + ' elements');
   // Update toggle button text
   var toggles = document.querySelectorAll('#langToggle, #mobileLangToggle');
   for (var j = 0; j < toggles.length; j++) {
