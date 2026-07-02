@@ -37,6 +37,7 @@ window.TRANS = {
 
     // Research
     'research.heading': 'Research Interests',
+    'research.demoCaption': '4D Printed Stimulus-Responsive Material — UV / Thermal Dual-Response Demo',
 
     'research.card1.title': '4D Printing & Smart Materials',
     'research.card1.desc': 'Transition from conventional 3D printing to 4D materials via vat photopolymerization and two-photon polymerization — developing smart materials with dynamic covalent chemistry, preset shape memory, and color-changing effects that respond to external stimuli such as UV light and temperature, expanding their potential in intelligent and adaptive applications.',
@@ -187,6 +188,7 @@ window.TRANS = {
 
     // Research
     'research.heading': '研究方向',
+    'research.demoCaption': '4D打印刺激响应材料 — 紫外光/热双响应演示',
 
     'research.card1.title': '4D打印与智能材料',
     'research.card1.desc': '通过光固化3D打印和双光子聚合技术，从传统3D打印过渡到4D材料——开发具有动态共价化学、预设形状记忆和颜色变化效果的智能材料，能够响应紫外光和温度等外部刺激，拓展其在智能自适应应用中的潜力。',

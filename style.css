@@ -178,6 +178,14 @@ button:focus-visible {
   border-color: rgba(37,99,235,0.25);
 }
 
+/* Research demo video */
+#research video {
+  transition: opacity 0.3s ease;
+}
+#research video:hover {
+  opacity: 0.95;
+}
+
 /* Puzzle: temperature slider */
 #tempSlider {
   -webkit-appearance: none;

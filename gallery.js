@@ -19,6 +19,13 @@ const galleryData = [
   },
   {
     type: "video",
+    src: "gallery/4D_printed_stimulus_response.mp4",
+    thumb: "gallery/Film1-thumb.jpg",
+    title: "4D Stimulus Response",
+    desc: "4D printed smart material — UV/thermal dual-response"
+  },
+  {
+    type: "video",
     src: "gallery/Film1.mp4",
     thumb: "gallery/Film1-thumb.jpg",
     title: "Film 1",
