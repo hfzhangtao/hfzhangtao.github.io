@@ -184,18 +184,14 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
 
     if (filter !== 'all') {
       // Show all matching items (including hidden ones), hide the toggle button
-      if (morePubs) morePubs.style.display = '';
+      if (morePubs) { morePubs.style.display = ''; morePubs.classList.remove('hidden'); }
       if (pubToggle) pubToggle.style.display = 'none';
     } else {
       // "All" selected: restore normal toggle behavior
-      if (morePubs) morePubs.style.display = '';
-      if (pubToggle) pubToggle.style.display = '';
-      var isExpanded = !morePubs.classList.contains('hidden');
-      if (isExpanded) {
-        morePubs.classList.add('hidden');
-        var showMore = window.__getTranslation('publications.showMore') || 'Show All 13 Publications';
-        if (pubToggle) pubToggle.innerHTML = '<i class="fa-solid fa-chevron-down mr-2"></i>' + showMore;
-      }
+      if (morePubs) { morePubs.style.display = ''; morePubs.classList.add('hidden'); }
+      if (pubToggle) { pubToggle.style.display = ''; }
+      var showMore = window.__getTranslation('publications.showMore') || 'Show All 13 Publications';
+      pubToggle.innerHTML = '<i class="fa-solid fa-chevron-down mr-2"></i>' + showMore;
     }
   });
 });
