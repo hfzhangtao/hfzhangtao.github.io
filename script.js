@@ -173,6 +173,8 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
     btn.classList.add('active');
 
     var filter = btn.getAttribute('data-filter');
+    var morePubsDiv = document.getElementById('morePubs');
+    var pubToggleBtn = document.getElementById('pubToggle');
 
     // Show/hide individual pub items
     document.querySelectorAll('.pub-item').forEach(function(item) {
@@ -185,15 +187,21 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
 
     // Handle the "morePubs" container and toggle button
     if (filter !== 'all') {
-      // Expand hidden section so all matching items are visible
-      if (morePubs) morePubs.classList.remove('hidden');
-      if (pubToggle) pubToggle.style.display = 'none';
+      // Force-expand hidden section using inline style (bypasses Tailwind hidden class)
+      if (morePubsDiv) {
+        morePubsDiv.classList.remove('hidden');
+        morePubsDiv.style.display = 'block';
+      }
+      if (pubToggleBtn) pubToggleBtn.style.display = 'none';
     } else {
       // Collapse back to default state
-      if (morePubs) morePubs.classList.add('hidden');
-      if (pubToggle) {
-        pubToggle.style.display = '';
-        pubToggle.innerHTML = '<i class="fa-solid fa-chevron-down mr-2"></i>' +
+      if (morePubsDiv) {
+        morePubsDiv.classList.add('hidden');
+        morePubsDiv.style.display = '';
+      }
+      if (pubToggleBtn) {
+        pubToggleBtn.style.display = '';
+        pubToggleBtn.innerHTML = '<i class="fa-solid fa-chevron-down mr-2"></i>' +
           (window.__getTranslation('publications.showMore') || 'Show All 13 Publications');
       }
     }
