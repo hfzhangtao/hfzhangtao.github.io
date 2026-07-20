@@ -31,11 +31,11 @@
 
       <div class="hidden md:flex items-center gap-8">
         <a href="#about" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.about">About</a>
-        <a href="#news" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.news">News</a>
         <a href="#research" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.research">Research</a>
         <a href="#education" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.education">Education</a>
         <a href="#publications" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.publications">Publications</a>
         <a href="#skills" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.skills">Skills</a>
+        <a href="#puzzle" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.puzzle">4D Puzzle</a>
         <a href="#gallery" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.gallery">Gallery</a>
         <a href="#contact" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.contact">Contact</a>
         <button id="langToggle" onclick="toggleLanguage()" class="text-xs font-medium px-2.5 py-1.5 rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" aria-label="Switch language">CN</button>
@@ -52,11 +52,11 @@
     <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-900 border-t dark:border-gray-700 shadow-lg">
       <div class="px-6 py-4 flex flex-col gap-4">
         <a href="#about" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.about">About</a>
-        <a href="#news" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.news">News</a>
         <a href="#research" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.research">Research</a>
         <a href="#education" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.education">Education</a>
         <a href="#publications" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.publications">Publications</a>
         <a href="#skills" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.skills">Skills</a>
+        <a href="#puzzle" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.puzzle">4D Puzzle</a>
         <a href="#gallery" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.gallery">Gallery</a>
         <a href="#contact" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.contact">Contact</a>
         <button id="mobileLangToggle" onclick="toggleLanguage()" class="self-start text-xs font-medium px-2.5 py-1.5 rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" aria-label="Switch language">CN</button>
@@ -97,25 +97,6 @@
           <a href="https://nl.linkedin.com/in/tao-zhang-094980294" target="_blank" rel="noopener" class="text-gray-500 hover:text-primary transition-colors text-2xl" title="LinkedIn">
             <i class="fa-brands fa-linkedin-in"></i>
           </a>
-        </div>
-      </div>
-      <!-- Metrics Bar -->
-      <div class="flex justify-center gap-6 sm:gap-10 mt-10 flex-wrap fade-in">
-        <div class="text-center">
-          <div class="text-2xl md:text-3xl font-bold text-primary">12</div>
-          <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1" data-i18n="hero.metric1">h-index</div>
-        </div>
-        <div class="text-center">
-          <div class="text-2xl md:text-3xl font-bold text-primary">900+</div>
-          <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1" data-i18n="hero.metric2">Citations</div>
-        </div>
-        <div class="text-center">
-          <div class="text-2xl md:text-3xl font-bold text-primary">13</div>
-          <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1" data-i18n="hero.metric3">Publications</div>
-        </div>
-        <div class="text-center">
-          <div class="text-2xl md:text-3xl font-bold text-primary">9+</div>
-          <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1" data-i18n="hero.metric4">Years Experience</div>
         </div>
       </div>
       <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce hidden md:block">
@@ -182,39 +163,6 @@
     </div>
   </section>
 
-  <!-- Latest News -->
-  <section id="news" class="py-24 transition-colors">
-    <div class="max-w-5xl mx-auto px-6">
-      <div class="fade-in">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center" data-i18n="news.heading">Latest News</h2>
-        <div class="w-16 h-1 bg-primary mx-auto mb-12 rounded-full"></div>
-      </div>
-      <div class="max-w-3xl mx-auto space-y-4">
-        <div class="fade-in flex items-start gap-4 p-4 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm news-card transition-all duration-300">
-          <span class="shrink-0 w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary text-sm font-bold">Jul</span>
-          <div>
-            <p class="text-xs text-gray-400" data-i18n="news.item1.date">July 2026</p>
-            <p class="font-medium text-sm" data-i18n="news.item1.title">New paper accepted in Virtual and Physical Prototyping</p>
-          </div>
-        </div>
-        <div class="fade-in flex items-start gap-4 p-4 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm news-card transition-all duration-300">
-          <span class="shrink-0 w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 text-sm font-bold">Jun</span>
-          <div>
-            <p class="text-xs text-gray-400" data-i18n="news.item2.date">June 2026</p>
-            <p class="font-medium text-sm" data-i18n="news.item2.title">Joined PolyU as a Postdoctoral Researcher</p>
-          </div>
-        </div>
-        <div class="fade-in flex items-start gap-4 p-4 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm news-card transition-all duration-300">
-          <span class="shrink-0 w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 text-sm font-bold">Mar</span>
-          <div>
-            <p class="text-xs text-gray-400" data-i18n="news.item3.date">March 2026</p>
-            <p class="font-medium text-sm" data-i18n="news.item3.title">PhD defense at University of Groningen</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Research -->
   <section id="research" class="py-24 transition-colors">
     <div class="max-w-5xl mx-auto px-6">
@@ -223,25 +171,22 @@
         <div class="w-16 h-1 bg-primary mx-auto mb-12 rounded-full"></div>
       </div>
 
-      <div class="flex flex-col md:flex-row gap-8">
-        <!-- Left: Sticky Video -->
-        <div class="md:w-2/5 fade-in">
-          <div class="md:sticky md:top-24 rounded-2xl overflow-hidden shadow-lg border dark:border-gray-700 bg-black">
-            <video src="gallery/merged_4D_then_simultaneous_2x.mp4"
-                   autoplay loop muted playsinline
-                   class="w-full block"
-                   style="max-height:480px;object-fit:contain;"
-                   aria-label="4D printed stimulus-responsive material demonstration">
-            </video>
-          </div>
-          <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-3" data-i18n="research.demoCaption">
-            <i class="fa-solid fa-film mr-1"></i> 4D Printed Stimulus-Responsive Material — UV / Thermal Dual-Response Demo
-          </p>
+      <!-- Research Demo Video -->
+      <div class="fade-in mb-14">
+        <div class="relative rounded-2xl overflow-hidden shadow-lg border dark:border-gray-700 bg-black">
+          <video src="gallery/merged_4D_then_simultaneous_2x.mp4"
+                 autoplay loop muted playsinline
+                 class="w-full block"
+                 style="max-height:480px;object-fit:contain;"
+                 aria-label="4D printed stimulus-responsive material demonstration">
+          </video>
         </div>
+        <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-3" data-i18n="research.demoCaption">
+          <i class="fa-solid fa-film mr-1"></i> 4D Printed Stimulus-Responsive Material — UV / Thermal Dual-Response Demo
+        </p>
+      </div>
 
-        <!-- Right: Research Cards -->
-        <div class="md:w-3/5">
-          <div class="grid md:grid-cols-2 gap-4">
+      <div class="grid md:grid-cols-2 gap-6">
         <!-- Research 1 -->
         <div class="fade-in project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
           <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary mb-4 card-icon">
@@ -319,8 +264,6 @@
           </p>
         </div>
 
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -427,68 +370,58 @@
         <p class="text-center text-gray-500 dark:text-gray-400 mb-12 text-sm" data-i18n="publications.count">13 SCI publications with 900+ citations</p>
       </div>
 
-      <!-- Year Filter Tabs -->
-      <div class="flex flex-wrap justify-center gap-2 mb-8 fade-in" id="pubFilters">
-        <button class="pub-filter-btn active px-4 py-1.5 text-xs font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" data-filter="all" data-i18n="publications.filterAll">All</button>
-        <button class="pub-filter-btn px-4 py-1.5 text-xs font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" data-filter="2026">2026</button>
-        <button class="pub-filter-btn px-4 py-1.5 text-xs font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" data-filter="2025">2025</button>
-        <button class="pub-filter-btn px-4 py-1.5 text-xs font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" data-filter="2021">2021</button>
-        <button class="pub-filter-btn px-4 py-1.5 text-xs font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" data-filter="2020">2020</button>
-        <button class="pub-filter-btn px-4 py-1.5 text-xs font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" data-filter="2019">2019</button>
-      </div>
-
       <div class="space-y-4 fade-in">
         <!-- Pub 1 -->
-        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2025">
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
           <p class="text-sm font-medium text-primary mb-1">Macromolecules, 2025, 58(15), 8249–8259</p>
           <p class="font-medium mb-1"><a href="https://doi.org/10.1021/acs.macromol.5c00567" target="_blank" rel="noopener" class="hover:text-primary transition-colors">3D-Printed Dual Photo- and Thermally Responsive Materials for Smart Adaptability <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
           <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, G. Pacella, K. Chen, T. Ye, G. Portale, V. S. D. Voet, R. Folkersma, K. Loos*</p>
         </div>
 
         <!-- Pub 2 -->
-        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2025">
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
           <p class="text-sm font-medium text-primary mb-1">Biomacromolecules, 2025, 26(11), 8017–8026</p>
           <p class="font-medium mb-1"><a href="https://doi.org/10.1021/acs.biomac.5c01471" target="_blank" rel="noopener" class="hover:text-primary transition-colors">In Situ Photoresin Synthesis via Reactive Diluents for Vat Photopolymerization <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
           <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, V. S. D. Voet, R. Folkersma, K. Loos*</p>
         </div>
 
         <!-- Pub 3 -->
-        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2026">
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
           <p class="text-sm font-medium text-primary mb-1">Virtual and Physical Prototyping, 2026, Just Accepted</p>
           <p class="font-medium mb-1"><a href="https://doi.org/10.1080/17452759.2026.2690309" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Olfactory-Interactive 4D Materials from a Carvone-Based Photocurable Resin <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
           <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, K. Chen, K. Janssen, V. S. D. Voet, R. Folkersma, K. Loos*</p>
         </div>
 
         <!-- Pub 4 -->
-        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2025">
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
           <p class="text-sm font-medium text-primary mb-1">Monatshefte für Chemie, 2025, 309</p>
           <p class="font-medium mb-1"><a href="https://doi.org/10.1007/s00706-025-03376-8" target="_blank" rel="noopener" class="hover:text-primary transition-colors">One-Pot Synthesis of PCL-based Acrylate Photoink for 3D Printing <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
           <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, V. S. D. Voet, R. Folkersma, K. Loos*</p>
         </div>
 
         <!-- Pub 5 -->
-        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2026">
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
           <p class="text-sm font-medium text-primary mb-1">Journal of Materials Science & Technology, 2026, 265, 256–265</p>
           <p class="font-medium mb-1"><a href="Spider-silk-inspired-dynamic-PUN-networks.pdf" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Spider-silk-inspired Dynamic Poly(urethane-urea) Networks with Mechanical Reinforcement via Mismatched Supramolecular Interactions for Luminescent Fibers <i class="fa-solid fa-file-pdf text-xs ml-1"></i></a></p>
           <p class="text-sm text-gray-500 dark:text-gray-400">T. Ye, F. Zhang, T. Zhang, L. Song, J. Tang, C. Zhang, Y. Yin, K. Loos*, C. Wang*</p>
         </div>
 
         <!-- Pub 6 -->
-        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2021">
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
           <p class="text-sm font-medium text-primary mb-1">Journal of Colloid and Interface Science, 2021, 604, 378–389</p>
           <p class="font-medium mb-1"><a href="https://doi.org/10.1016/j.jcis.2021.06.135" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Facilely Produced Highly Adhered, Low Thermal Conductivity and Non-combustible Coatings for Fire Safety <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
           <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, J. Xi, S. Qiu, B. Zhang, Z. Luo, W. Xing, L. Song, Y. Hu*</p>
         </div>
 
         <!-- Pub 7 -->
-        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2020">
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
           <p class="text-sm font-medium text-primary mb-1">Composites Part A, 2020, 128, 105681</p>
           <p class="font-medium mb-1"><a href="https://doi.org/10.1016/j.compositesa.2019.105681" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Hydroxyapatite/Polyurea Nanocomposite: Preparation and Multiple Performance Enhancements <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
           <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, W. Cai, F. Chu, F. Zhou, S. Liang, C. Ma*, Y. Hu*</p>
         </div>
 
         <!-- Pub 8 -->
-        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2019">
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
           <p class="text-sm font-medium text-primary mb-1">Polymer Degradation and Stability, 2019, 165, 207–219</p>
           <p class="font-medium mb-1"><a href="https://doi.org/10.1016/j.polymdegradstab.2019.05.003" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Synthesis of a Hyperbranched Phosphorus-containing Polyurethane as Char Forming Agent Combined with Ammonium Polyphosphate for Reducing Fire Hazard of Polypropylene <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
           <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, Y. Tao, F. Zhou, H. Sheng, S. Qiu, C. Ma*, Y. Hu*</p>
@@ -496,31 +429,31 @@
 
         <!-- More publications toggle -->
         <div id="morePubs" class="hidden space-y-4">
-          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2020">
+          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
             <p class="text-sm font-medium text-primary mb-1">Composites Part B, 2020, 190, 107925</p>
             <p class="font-medium mb-1"><a href="https://doi.org/10.1016/j.compositesb.2020.107925" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Renewable Vanillin-based Flame Retardant Toughening Agent with Ultra-low Phosphorus Loading for the Fabrication of High-performance Epoxy Thermoset <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
             <p class="text-sm text-gray-500 dark:text-gray-400">F. Chu, C. Ma, T. Zhang, Z. Xu, X. Mu, W. Cai, X. Zhou, S. Ma, Y. Zhou, W. Hu*, L. Song*</p>
           </div>
 
-          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2020">
+          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
             <p class="text-sm font-medium text-primary mb-1">Chemical Engineering Journal, 2020, 401, 126058</p>
             <p class="font-medium mb-1"><a href="https://doi.org/10.1016/j.cej.2020.126058" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Integrated Effect of NH2-functionalized/Triazine Based Covalent Organic Framework Black Phosphorus on Reducing Fire Hazards of Epoxy Nanocomposites <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
             <p class="text-sm text-gray-500 dark:text-gray-400">S. Qiu, B. Zou, T. Zhang, X. Ren, B. Yu, Y. Zhou, Y. Kan, Y. Hu*</p>
           </div>
 
-          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2020">
+          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
             <p class="text-sm font-medium text-primary mb-1">Polymer Degradation and Stability, 2020, 171, 109029</p>
             <p class="font-medium mb-1"><a href="https://doi.org/10.1016/j.polymdegradstab.2019.109029" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Synthesis of a Novel Liquid Phosphorus-containing Flame Retardant for Flexible Polyurethane Foam: Combustion Behaviors and Thermal Properties <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
             <p class="text-sm text-gray-500 dark:text-gray-400">F. Zhou, T. Zhang, B. Zou, W. Hu, B. Wang, J. Zhan, C. Ma*, Y. Hu*</p>
           </div>
 
-          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2019">
+          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
             <p class="text-sm font-medium text-primary mb-1">Small, 2019</p>
             <p class="font-medium mb-1"><a href="https://doi.org/10.1002/smll.201805175" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Air-Stable Polyphosphazene-Functionalized Few-Layer Black Phosphorene for Flame Retardancy of Epoxy Resins <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
             <p class="text-sm text-gray-500 dark:text-gray-400">S. Qiu, Y. Zhou, X. Zhou, T. Zhang, Y. Hu*, et al.</p>
           </div>
 
-          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2020">
+          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
             <p class="text-sm font-medium text-primary mb-1">ACS Applied Materials and Interfaces, 2020</p>
             <p class="font-medium mb-1"><a href="https://doi.org/10.1021/acsami.0c09685" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Nacre-Inspired Black Phosphorus/Nanofibrillar Cellulose Composite Film with Enhanced Mechanical Properties and Superior Fire Resistance <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
             <p class="text-sm text-gray-500 dark:text-gray-400">S. Qiu, X. Ren, X. Zhou, T. Zhang, Y. Hu*, et al.</p>
@@ -666,15 +599,18 @@
     </div>
   </section>
 
-  <!-- Puzzle Game Modal -->
-  <div id="puzzleModal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 hidden" style="z-index:200;backdrop-filter:blur(4px);">
-    <div class="relative bg-gray-900 rounded-2xl shadow-2xl w-full max-w-3xl border border-gray-700 animate-fadeIn">
-      <button id="puzzleModalClose" class="absolute -top-3 -right-3 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-lg transition-colors" aria-label="Close game">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-      <div class="p-4 pt-6">
-        <div class="relative rounded-xl overflow-hidden" style="background:#0f172a;">
+  <!-- Polymer Breakout Game -->
+  <section id="puzzle" class="py-24 bg-white dark:bg-gray-900 transition-colors">
+    <div class="max-w-5xl mx-auto px-6">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center text-gray-800 dark:text-gray-100" data-i18n="puzzle.heading">Polymer Breakout</h2>
+      <div class="w-16 h-1 bg-primary mx-auto mb-2 rounded-full"></div>
+      <p class="text-center text-gray-500 dark:text-gray-400 mb-10 text-sm max-w-xl mx-auto" data-i18n="puzzle.desc">Break through reaction barriers to build polymer chains. Use your paddle (catalyst) to bounce the monomer and clear all energy barriers!</p>
+
+      <div class="max-w-2xl mx-auto">
+        <!-- Game canvas -->
+        <div class="relative rounded-xl overflow-hidden shadow-lg border dark:border-gray-700" style="background:#0f172a;">
           <canvas id="puzzleCanvas" class="w-full block" style="aspect-ratio:4/3;cursor:default;"></canvas>
+          <!-- Overlay messages -->
           <div id="gameOverlay" class="absolute inset-0 flex items-center justify-center pointer-events-none" style="background:rgba(0,0,0,0.6);display:none;">
             <div class="text-center">
               <div id="overlayTitle" class="text-2xl font-bold text-white mb-2"></div>
@@ -683,22 +619,25 @@
             </div>
           </div>
         </div>
+
+        <!-- Score bar -->
         <div class="flex items-center justify-between mt-4 px-2">
           <div class="flex items-center gap-4">
-            <span class="text-sm text-gray-400"><i class="fa-solid fa-flask mr-1"></i><span data-i18n="game.score">Score</span>: <b id="gameScore" class="text-white">0</b></span>
-            <span class="text-sm text-gray-400"><i class="fa-solid fa-fire mr-1"></i><span data-i18n="game.combo">Combo</span>: <b id="gameCombo" class="text-white">x1</b></span>
+            <span class="text-sm text-gray-500 dark:text-gray-400"><i class="fa-solid fa-flask mr-1"></i><span data-i18n="game.score">Score</span>: <b id="gameScore" class="text-gray-800 dark:text-gray-200">0</b></span>
+            <span class="text-sm text-gray-500 dark:text-gray-400"><i class="fa-solid fa-fire mr-1"></i><span data-i18n="game.combo">Combo</span>: <b id="gameCombo" class="text-gray-800 dark:text-gray-200">x1</b></span>
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs text-gray-400"><span data-i18n="game.level">Level</span> <b id="gameLevel">1</b></span>
             <span id="gameLives" class="text-xs">❤️❤️❤️</span>
           </div>
         </div>
-        <p class="text-center text-xs text-gray-500 mt-2">
+
+        <p class="text-center text-xs text-gray-400 dark:text-gray-500 mt-2">
           <i class="fa-solid fa-arrow-left mr-1"></i> <span data-i18n="puzzle.hint">Move mouse / touch to control paddle &nbsp;|&nbsp; Press <b>Space</b> to launch</span>
         </p>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- Gallery -->
   <section id="gallery" class="py-24 transition-colors">
@@ -709,9 +648,11 @@
         <p class="text-center text-gray-500 dark:text-gray-400 mb-12 text-sm" data-i18n="gallery.desc">Photos and videos from my research and conferences</p>
       </div>
 
-      <!-- Gallery Grid -->
-      <div id="galleryGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <!-- Populated by JavaScript -->
+      <!-- Gallery filmstrip -->
+      <div id="galleryWrapper" class="rounded-xl">
+        <div id="galleryTrack" class="flex gap-4 gallery-marquee">
+          <!-- Populated by JavaScript -->
+        </div>
       </div>
 
     </div>
@@ -774,9 +715,6 @@
   <footer class="py-8 border-t dark:border-gray-700 transition-colors">
     <div class="max-w-5xl mx-auto px-6 text-center text-sm text-gray-500 dark:text-gray-500">
       <p data-i18n="footer.copyright">&copy; 2026 Dr. Tao Zhang. All rights reserved.</p>
-      <button id="puzzleTrigger" class="mt-2 text-xs text-gray-400 hover:text-primary transition-colors" aria-label="Play Polymer Breakout">
-        <i class="fa-solid fa-gamepad mr-1"></i><span data-i18n="footer.puzzle">Polymer Breakout</span>
-      </button>
     </div>
   </footer>
 

@@ -72,50 +72,167 @@ const galleryData = [
 // RENDERING
 // ============================================================
 
+var galleryWrapper = document.getElementById('galleryWrapper');
+var galleryTrack = document.getElementById('galleryTrack');
+
 function isExternalVideo(src) {
   return /^(https?:)?\/\/(www\.)?(youtube\.com|youtu\.be|vimeo\.com)/.test(src);
 }
 
+function buildItem(item, index) {
+  var media;
+  if (item.type === 'video') {
+    media = '\
+    <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-1 hover:ring-2 hover:ring-primary/40 transition-all duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
+      <div class="absolute inset-0 bg-gray-300 dark:bg-gray-700"' + (item.thumb ? ' style="background-image:url(' + item.thumb + ');background-size:cover;background-position:center"' : '') + '></div>\
+      <div class="absolute inset-0 flex items-center justify-center">\
+        <span class="w-16 h-16 rounded-full bg-black/60 flex items-center justify-center text-white text-2xl group-hover:bg-primary group-hover:scale-110 transition-all duration-300"><i class="fa-solid fa-play ml-0.5"></i></span>\
+      </div>\
+      <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
+        <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
+      </div>\
+    </div>';
+  } else {
+    media = '\
+    <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-1 hover:ring-2 hover:ring-primary/40 transition-all duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
+      <img src="' + item.src + '" alt="' + item.title + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">\
+      <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
+        <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
+      </div>\
+    </div>';
+  }
+  return media;
+}
+
 function renderGallery() {
-  var grid = document.getElementById('galleryGrid');
-  if (!grid) return;
+  if (!galleryTrack || !galleryWrapper) return;
 
   if (galleryData.length === 0) {
-    grid.innerHTML = '\
-      <div class="col-span-full text-center py-16 text-gray-400 dark:text-gray-500">\
+    galleryTrack.innerHTML = '\
+      <div class="w-full text-center py-16 text-gray-400 dark:text-gray-500">\
         <i class="fa-solid fa-images text-5xl mb-4 block"></i>\
         <p class="text-lg">No media yet.</p>\
       </div>';
+    galleryWrapper.className = 'rounded-xl';
     return;
   }
 
-  grid.innerHTML = galleryData.map(function(item, i) {
-    var playIcon = '';
-    var mediaContent = '';
-    if (item.type === 'video') {
-      playIcon = '<div class="play-icon"><span><i class="fa-solid fa-play ml-0.5"></i></span></div>';
-      mediaContent = item.thumb
-        ? '<img src="' + item.thumb + '" alt="' + item.title + '" loading="lazy">'
-        : '<div class="w-full h-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-500"><i class="fa-solid fa-video text-3xl"></i></div>';
-    } else {
-      mediaContent = '<img src="' + item.src + '" alt="' + item.title + '" loading="lazy">';
+  // Render many copies: user can scroll freely in either direction without hitting an edge
+  var oneSet = galleryData.map(function (item, i) { return buildItem(item, i); }).join('');
+  galleryTrack.innerHTML = oneSet.repeat(6); // 30 items, plenty for infinite scroll
+
+  var oneSetWidth = 0;
+  var speed = 0.8; // px per frame
+  var paused = false;
+  var lastTime = 0;
+  var animId = null;
+  var jumping = false; // guard to prevent recursive scroll events during jump
+
+  function measure() {
+    var items = galleryTrack.querySelectorAll('.gallery-item');
+    if (items.length === 0) return;
+    var n = galleryData.length;
+    var startX = items[0].getBoundingClientRect().left;
+    var endX = items[n].getBoundingClientRect().left;
+    oneSetWidth = endX - startX;
+  }
+
+  // --- Infinite scroll: jump when approaching edges ---
+  function handleScroll() {
+    if (jumping || oneSetWidth <= 0) return;
+    var sl = galleryWrapper.scrollLeft;
+    var maxSl = galleryTrack.scrollWidth - galleryWrapper.clientWidth;
+    var buffer = oneSetWidth * 0.4;
+
+    if (sl <= buffer) {
+      jumping = true;
+      galleryWrapper.scrollLeft = sl + oneSetWidth * 2;
+      jumping = false;
+    } else if (maxSl > 0 && sl >= maxSl - buffer) {
+      jumping = true;
+      galleryWrapper.scrollLeft = sl - oneSetWidth * 2;
+      jumping = false;
+    }
+  }
+
+  var scrollFrameId = null;
+  function scheduleHandleScroll() {
+    if (scrollFrameId) return;
+    scrollFrameId = requestAnimationFrame(function () {
+      scrollFrameId = null;
+      handleScroll();
+    });
+  }
+
+  // --- Auto-scroll loop ---
+  function autoScroll(timestamp) {
+    if (!lastTime) lastTime = timestamp;
+    var delta = Math.min(timestamp - lastTime, 50); // cap delta to avoid huge jumps
+    lastTime = timestamp;
+
+    if (!paused) {
+      galleryWrapper.scrollLeft += speed * (delta / 16.67);
+      handleScroll();
     }
 
-    return '\
-      <div class="gallery-grid-item fade-in" data-index="' + i + '">\
-        ' + mediaContent + '\
-        ' + playIcon + '\
-        <div class="gallery-overlay">\
-          <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
-        </div>\
-      </div>';
-  }).join('');
+    animId = requestAnimationFrame(autoScroll);
+  }
 
   // Click events
-  grid.querySelectorAll('.gallery-grid-item').forEach(function(el) {
-    el.addEventListener('click', function() {
+  galleryTrack.querySelectorAll('.gallery-item').forEach(function (el) {
+    el.addEventListener('click', function () {
       openLightbox(parseInt(el.dataset.index));
     });
+  });
+
+  // Pause on hover
+  galleryWrapper.addEventListener('mouseenter', function () { paused = true; });
+  galleryWrapper.addEventListener('mouseleave', function () { paused = false; lastTime = 0; });
+
+  // Pause on touch
+  galleryWrapper.addEventListener('touchstart', function () { paused = true; }, { passive: true });
+  galleryWrapper.addEventListener('touchend', function () {
+    clearTimeout(galleryTrack._resumeTimer);
+    galleryTrack._resumeTimer = setTimeout(function () { paused = false; lastTime = 0; }, 1500);
+  });
+
+  // Scroll listener debounced via rAF to avoid fighting with autoScroll
+  galleryWrapper.addEventListener('scroll', scheduleHandleScroll, { passive: true });
+
+  // Pause when tab not visible
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      paused = true;
+    } else {
+      paused = false;
+      lastTime = 0;
+    }
+  });
+
+  // --- Kick off: defer until layout is stable ---
+  function startGallery() {
+    measure();
+    if (oneSetWidth <= 0) {
+      // Layout not ready yet, retry
+      requestAnimationFrame(startGallery);
+      return;
+    }
+    galleryWrapper.scrollLeft = oneSetWidth * 2;
+    animId = requestAnimationFrame(autoScroll);
+  }
+
+  // Wait 2 frames for images + layout to settle, then start
+  requestAnimationFrame(function () {
+    requestAnimationFrame(startGallery);
+  });
+
+  // Re-measure on resize (debounced)
+  window.addEventListener('resize', function () {
+    clearTimeout(galleryWrapper._resizeTimer);
+    galleryWrapper._resizeTimer = setTimeout(function () {
+      measure();
+      handleScroll();
+    }, 200);
   });
 }
 

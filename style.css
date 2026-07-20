@@ -90,64 +90,21 @@ button:focus-visible {
   border-radius: 4px;
 }
 
-/* Gallery Grid */
-.gallery-grid-item {
-  aspect-ratio: 16/9;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  cursor: pointer;
-  position: relative;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Gallery wrapper — scrollable, infinite loop handled by JS */
+#galleryWrapper {
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.gallery-grid-item:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05);
+#galleryWrapper::-webkit-scrollbar {
+  display: none;
 }
-.gallery-grid-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-}
-.gallery-grid-item:hover img {
-  transform: scale(1.08);
-}
-.gallery-grid-item .gallery-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-  padding: 1rem;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.gallery-grid-item:hover .gallery-overlay {
-  opacity: 1;
-}
-.gallery-grid-item .play-icon {
-  position: absolute;
-  inset: 0;
+
+/* Gallery track — flex row, JS-driven infinite scroll */
+#galleryTrack {
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.gallery-grid-item .play-icon span {
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1.25rem;
-  transition: all 0.3s ease;
-}
-.gallery-grid-item:hover .play-icon span {
-  background: #2563eb;
-  transform: scale(1.1);
+  gap: 1rem;
+  width: max-content;
 }
 
 /* Lightbox fade-in animation */
@@ -229,27 +186,6 @@ button:focus-visible {
   opacity: 0.95;
 }
 
-/* Publication filter tabs */
-.pub-filter-btn.active {
-  background-color: #2563eb;
-  color: white;
-  border-color: #2563eb;
-}
-.dark .pub-filter-btn.active {
-  background-color: #3b82f6;
-  border-color: #3b82f6;
-}
-.pub-filter-btn.active:hover {
-  color: white;
-}
-
-/* News section cards */
-.news-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.06), 0 4px 6px -4px rgba(0,0,0,0.04);
-  border-color: rgba(37,99,235,0.25);
-}
-
 /* Puzzle: temperature slider */
 #tempSlider {
   -webkit-appearance: none;
@@ -281,10 +217,4 @@ button:focus-visible {
   cursor: pointer;
   border: none;
   box-shadow: 0 2px 8px rgba(37,99,235,0.35);
-}
-
-/* Puzzle Modal */
-#puzzleModal {
-  z-index: 200;
-  backdrop-filter: blur(4px);
 }
