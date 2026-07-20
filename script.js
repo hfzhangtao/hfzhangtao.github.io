@@ -166,15 +166,16 @@ pubToggle?.addEventListener('click', () => {
 // Publication year filter
 document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
   btn.addEventListener('click', function() {
+    // Update active button
     document.querySelectorAll('.pub-filter-btn').forEach(function(b) {
       b.classList.remove('active');
     });
     btn.classList.add('active');
 
     var filter = btn.getAttribute('data-filter');
-    var pubItems = document.querySelectorAll('.pub-item');
 
-    pubItems.forEach(function(item) {
+    // Show/hide individual pub items
+    document.querySelectorAll('.pub-item').forEach(function(item) {
       if (filter === 'all' || item.getAttribute('data-year') === filter) {
         item.style.display = '';
       } else {
@@ -182,16 +183,19 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
       }
     });
 
+    // Handle the "morePubs" container and toggle button
     if (filter !== 'all') {
-      // Show all matching items (including hidden ones), hide the toggle button
-      if (morePubs) { morePubs.style.display = ''; morePubs.classList.remove('hidden'); }
+      // Expand hidden section so all matching items are visible
+      if (morePubs) morePubs.classList.remove('hidden');
       if (pubToggle) pubToggle.style.display = 'none';
     } else {
-      // "All" selected: restore normal toggle behavior
-      if (morePubs) { morePubs.style.display = ''; morePubs.classList.add('hidden'); }
-      if (pubToggle) { pubToggle.style.display = ''; }
-      var showMore = window.__getTranslation('publications.showMore') || 'Show All 13 Publications';
-      pubToggle.innerHTML = '<i class="fa-solid fa-chevron-down mr-2"></i>' + showMore;
+      // Collapse back to default state
+      if (morePubs) morePubs.classList.add('hidden');
+      if (pubToggle) {
+        pubToggle.style.display = '';
+        pubToggle.innerHTML = '<i class="fa-solid fa-chevron-down mr-2"></i>' +
+          (window.__getTranslation('publications.showMore') || 'Show All 13 Publications');
+      }
     }
   });
 });
