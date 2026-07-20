@@ -22,6 +22,10 @@ window.TRANS = {
     'hero.affiliation': 'School of Fashion and Textiles · The Hong Kong Polytechnic University',
     'hero.cta1': 'Get in Touch',
     'hero.cta2': 'View Research',
+    'hero.metric1': 'h-index',
+    'hero.metric2': 'Citations',
+    'hero.metric3': 'Publications',
+    'hero.metric4': 'Years Experience',
 
     // About
     'about.heading': 'About Me',
@@ -91,6 +95,7 @@ window.TRANS = {
     // Publications
     'publications.heading': 'Selected Publications',
     'publications.count': '13 SCI publications with 900+ citations',
+    'publications.filterAll': 'All',
     'publications.showMore': 'Show All 13 Publications',
     'publications.showLess': 'Show Less',
     'publications.conf.heading': 'Conference Presentations',
@@ -173,6 +178,10 @@ window.TRANS = {
     'hero.affiliation': '时装与纺织学院 · 香港理工大学',
     'hero.cta1': '联系我',
     'hero.cta2': '查看研究',
+    'hero.metric1': 'h指数',
+    'hero.metric2': '引用次数',
+    'hero.metric3': '发表论文',
+    'hero.metric4': '科研经验',
 
     // About
     'about.heading': '关于我',
@@ -242,6 +251,7 @@ window.TRANS = {
     // Publications
     'publications.heading': '代表性论文',
     'publications.count': '13篇SCI论文，引用900+次',
+    'publications.filterAll': '全部',
     'publications.showMore': '显示全部13篇论文',
     'publications.showLess': '收起',
     'publications.conf.heading': '学术会议报告',

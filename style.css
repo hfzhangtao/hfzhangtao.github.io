@@ -186,6 +186,20 @@ button:focus-visible {
   opacity: 0.95;
 }
 
+/* Publication filter tabs */
+.pub-filter-btn.active {
+  background-color: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+.dark .pub-filter-btn.active {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+.pub-filter-btn.active:hover {
+  color: white;
+}
+
 /* Puzzle: temperature slider */
 #tempSlider {
   -webkit-appearance: none;

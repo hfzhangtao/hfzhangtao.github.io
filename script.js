@@ -162,3 +162,40 @@ pubToggle?.addEventListener('click', () => {
     ? '<i class="fa-solid fa-chevron-up mr-2"></i>' + showLess
     : '<i class="fa-solid fa-chevron-down mr-2"></i>' + showMore;
 });
+
+// Publication year filter
+document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.pub-filter-btn').forEach(function(b) {
+      b.classList.remove('active');
+    });
+    btn.classList.add('active');
+
+    var filter = btn.getAttribute('data-filter');
+    var pubItems = document.querySelectorAll('.pub-item');
+
+    pubItems.forEach(function(item) {
+      if (filter === 'all' || item.getAttribute('data-year') === filter) {
+        item.style.display = '';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    if (filter !== 'all') {
+      // Show all matching items (including hidden ones), hide the toggle button
+      if (morePubs) morePubs.style.display = '';
+      if (pubToggle) pubToggle.style.display = 'none';
+    } else {
+      // "All" selected: restore normal toggle behavior
+      if (morePubs) morePubs.style.display = '';
+      if (pubToggle) pubToggle.style.display = '';
+      var isExpanded = !morePubs.classList.contains('hidden');
+      if (isExpanded) {
+        morePubs.classList.add('hidden');
+        var showMore = window.__getTranslation('publications.showMore') || 'Show All 13 Publications';
+        if (pubToggle) pubToggle.innerHTML = '<i class="fa-solid fa-chevron-down mr-2"></i>' + showMore;
+      }
+    }
+  });
+});
