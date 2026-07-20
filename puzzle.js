@@ -109,6 +109,7 @@
       resetBall();
     }
   }
+  window.__puzzleResize = resize;
 
   // --- Bricks ---
   function buildBricks() {

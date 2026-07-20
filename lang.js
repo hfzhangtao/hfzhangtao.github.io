@@ -12,6 +12,7 @@ window.TRANS = {
     'nav.education': 'Education',
     'nav.publications': 'Publications',
     'nav.skills': 'Skills',
+    'nav.news': 'News',
     'nav.puzzle': '4D Puzzle',
     'nav.gallery': 'Gallery',
     'nav.contact': 'Contact',
@@ -22,6 +23,10 @@ window.TRANS = {
     'hero.affiliation': 'School of Fashion and Textiles · The Hong Kong Polytechnic University',
     'hero.cta1': 'Get in Touch',
     'hero.cta2': 'View Research',
+    'hero.metric1': 'h-index',
+    'hero.metric2': 'Citations',
+    'hero.metric3': 'Publications',
+    'hero.metric4': 'Years Experience',
 
     // About
     'about.heading': 'About Me',
@@ -34,6 +39,15 @@ window.TRANS = {
     'about.fact3': 'PhD in Polymer Science (RUG, 2025)',
     'about.fact4': '13 SCI publications · 900+ citations',
     'about.fact5': 'ORCID: 0000-0002-1845-9990',
+
+    // News
+    'news.heading': 'Latest News',
+    'news.item1.date': 'July 2026',
+    'news.item1.title': 'New paper accepted in Virtual and Physical Prototyping — Olfactory-Interactive 4D Materials from a Carvone-Based Photocurable Resin',
+    'news.item2.date': 'June 2026',
+    'news.item2.title': 'Joined PolyU as a Postdoctoral Researcher in the School of Fashion and Textiles',
+    'news.item3.date': 'March 2026',
+    'news.item3.title': 'PhD defense at University of Groningen — successfully completed doctoral studies',
 
     // Research
     'research.heading': 'Research Interests',
@@ -91,6 +105,7 @@ window.TRANS = {
     // Publications
     'publications.heading': 'Selected Publications',
     'publications.count': '13 SCI publications with 900+ citations',
+    'publications.filterAll': 'All',
     'publications.showMore': 'Show All 13 Publications',
     'publications.showLess': 'Show Less',
     'publications.conf.heading': 'Conference Presentations',
@@ -132,6 +147,7 @@ window.TRANS = {
 
     // Footer
     'footer.copyright': '© 2026 Dr. Tao Zhang. All rights reserved.',
+    'footer.puzzle': 'Polymer Breakout',
 
     // Game overlay texts
     'game.lives': '❤️❤️❤️',
@@ -163,6 +179,7 @@ window.TRANS = {
     'nav.education': '教育经历',
     'nav.publications': '发表论文',
     'nav.skills': '实验技能',
+    'nav.news': '最新动态',
     'nav.puzzle': '4D拼图',
     'nav.gallery': '图库',
     'nav.contact': '联系方式',
@@ -173,6 +190,10 @@ window.TRANS = {
     'hero.affiliation': '时装与纺织学院 · 香港理工大学',
     'hero.cta1': '联系我',
     'hero.cta2': '查看研究',
+    'hero.metric1': 'h指数',
+    'hero.metric2': '引用次数',
+    'hero.metric3': '发表论文',
+    'hero.metric4': '科研经验',
 
     // About
     'about.heading': '关于我',
@@ -185,6 +206,15 @@ window.TRANS = {
     'about.fact3': '高分子科学博士 (格罗宁根大学, 2025)',
     'about.fact4': '13篇SCI论文 · 900+次引用',
     'about.fact5': 'ORCID: 0000-0002-1845-9990',
+
+    // News
+    'news.heading': '最新动态',
+    'news.item1.date': '2026年7月',
+    'news.item1.title': '新论文被Virtual and Physical Prototyping接收 — 基于香芹酮光固化树脂的嗅觉交互4D材料',
+    'news.item2.date': '2026年6月',
+    'news.item2.title': '加入香港理工大学时装与纺织学院，担任博士后研究员',
+    'news.item3.date': '2026年3月',
+    'news.item3.title': '在格罗宁根大学完成博士论文答辩，顺利获得博士学位',
 
     // Research
     'research.heading': '研究方向',
@@ -242,6 +272,7 @@ window.TRANS = {
     // Publications
     'publications.heading': '代表性论文',
     'publications.count': '13篇SCI论文，引用900+次',
+    'publications.filterAll': '全部',
     'publications.showMore': '显示全部13篇论文',
     'publications.showLess': '收起',
     'publications.conf.heading': '学术会议报告',
@@ -282,6 +313,7 @@ window.TRANS = {
 
     // Footer
     'footer.copyright': '© 2026 张涛博士 版权所有',
+    'footer.puzzle': '高分子打砖块',
 
     // Game overlay texts
     'game.lives': '❤️❤️❤️',
