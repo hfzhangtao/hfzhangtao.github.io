@@ -22,7 +22,7 @@ const galleryData = [
     src: "gallery/merged_4D_then_simultaneous_2x.mp4",
     thumb: "gallery/Film1-thumb.jpg",
     title: "4D Stimulus Response",
-    desc: "4D printed smart material — sequential vs simultaneous actuation at 2× speed"
+    desc: "4D printed smart material — UV/thermal dual-response"
   },
   {
     type: "video",
