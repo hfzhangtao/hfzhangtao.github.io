@@ -232,3 +232,195 @@ button:focus-visible {
   border: none;
   box-shadow: 0 2px 8px rgba(37,99,235,0.35);
 }
+
+/* ============================================================
+   PARTICLE BACKGROUND CANVAS
+   ============================================================ */
+#particleBg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ============================================================
+   HERO GRADIENT BLOBS
+   ============================================================ */
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero-blob-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(37,99,235,0.4) 0%, transparent 70%);
+  top: -15%;
+  left: -10%;
+  animation: blobFloat1 14s ease-in-out infinite;
+}
+.hero-blob-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(99,102,241,0.35) 0%, transparent 70%);
+  bottom: -10%;
+  right: -8%;
+  animation: blobFloat2 16s ease-in-out infinite;
+}
+.hero-blob-3 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(14,165,233,0.3) 0%, transparent 70%);
+  top: 40%;
+  left: 50%;
+  animation: blobFloat3 18s ease-in-out infinite;
+}
+@keyframes blobFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(60px, -40px) scale(1.15); }
+  50% { transform: translate(-20px, 30px) scale(0.9); }
+  75% { transform: translate(-50px, -20px) scale(1.1); }
+}
+@keyframes blobFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(-50px, 40px) scale(1.12); }
+  50% { transform: translate(30px, -30px) scale(0.88); }
+  75% { transform: translate(40px, 20px) scale(1.08); }
+}
+@keyframes blobFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-40px, -30px) scale(1.1); }
+  66% { transform: translate(30px, 20px) scale(0.92); }
+}
+
+/* ============================================================
+   AVATAR PULSE GLOW
+   ============================================================ */
+.avatar-ring {
+  animation: avatarPulse 3s ease-in-out infinite;
+}
+@keyframes avatarPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.3); }
+  50% { box-shadow: 0 0 0 14px rgba(37,99,235,0); }
+}
+
+/* ============================================================
+   FLOATING MOLECULAR DECORATIONS
+   ============================================================ */
+.floating-deco {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.12;
+  color: #2563eb;
+}
+.dark .floating-deco {
+  opacity: 0.18;
+  color: #60a5fa;
+}
+.float-slow {
+  animation: floatDeco 8s ease-in-out infinite;
+}
+.float-med {
+  animation: floatDeco 6s ease-in-out infinite;
+}
+.float-fast {
+  animation: floatDeco 4.5s ease-in-out infinite;
+}
+.float-rotate {
+  animation: floatRotate 10s ease-in-out infinite;
+}
+@keyframes floatDeco {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
+}
+@keyframes floatRotate {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(15deg); }
+}
+
+/* ============================================================
+   ENHANCED SCROLL REVEAL VARIANTS
+   ============================================================ */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition-property: opacity, transform;
+  transition-duration: 0.7s, 0.7s;
+  transition-timing-function: ease-out, ease-out;
+}
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition-property: opacity, transform;
+  transition-duration: 0.7s, 0.7s;
+  transition-timing-function: ease-out, ease-out;
+}
+.reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition-property: opacity, transform;
+  transition-duration: 0.6s, 0.6s;
+  transition-timing-function: ease-out, ease-out;
+}
+.reveal-scale.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ============================================================
+   WAVE SECTION DIVIDERS
+   ============================================================ */
+.wave-divider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+.wave-divider svg {
+  display: block;
+  width: 100%;
+  height: 50px;
+}
+.wave-divider-top {
+  margin-top: -1px;
+}
+.wave-divider-bot {
+  margin-bottom: -1px;
+}
+
+/* ============================================================
+   MOUSE GLOW (HERO ONLY)
+   ============================================================ */
+#mouseGlow {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: opacity 0.4s ease;
+  will-change: left, top;
+}
+
+/* ============================================================
+   COUNT-UP NUMBER STYLE
+   ============================================================ */
+.count-up {
+  display: inline-block;
+}

@@ -24,6 +24,11 @@
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
 
+  <!-- Particle network background -->
+  <canvas id="particleBg"></canvas>
+  <!-- Mouse glow (hero only) -->
+  <div id="mouseGlow" style="opacity:0;"></div>
+
   <!-- Navigation -->
   <nav id="navbar" class="fixed top-0 w-full z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm transition-all duration-300">
     <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -68,10 +73,21 @@
   </nav>
 
   <!-- Hero -->
-  <section id="hero" class="min-h-screen flex items-center justify-center pt-16">
-    <div class="max-w-5xl mx-auto px-6 text-center">
+  <section id="hero" class="min-h-screen flex items-center justify-center pt-16 relative overflow-hidden">
+    <!-- Gradient blobs -->
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+    <div class="hero-blob hero-blob-3"></div>
+    <!-- Floating molecular decorations -->
+    <div class="floating-deco float-slow" style="top:12%;left:8%;font-size:42px;">⬡</div>
+    <div class="floating-deco float-med" style="top:22%;right:10%;font-size:28px;">⚛</div>
+    <div class="floating-deco float-fast" style="top:55%;left:5%;font-size:32px;">◇</div>
+    <div class="floating-deco float-rotate" style="top:65%;right:6%;font-size:36px;">⎔</div>
+    <div class="floating-deco float-slow" style="bottom:18%;left:12%;font-size:24px;">⬢</div>
+    <div class="floating-deco float-med" style="bottom:28%;right:14%;font-size:30px;">◎</div>
+    <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
       <div class="fade-in">
-        <div class="w-32 h-32 mx-auto mb-8 rounded-full bg-gradient-to-br from-primary to-secondary p-1">
+        <div class="w-32 h-32 mx-auto mb-8 rounded-full bg-gradient-to-br from-primary to-secondary p-1 avatar-ring">
           <img src="Tao.jpeg" alt="Dr. Tao Zhang" class="w-full h-full rounded-full object-cover" style="object-position: center 25%;">
         </div>
         <h1 class="text-4xl md:text-6xl font-bold mb-4" data-i18n="hero.name">Dr. Tao Zhang</h1>
@@ -102,19 +118,19 @@
       <!-- Metrics Bar -->
       <div class="flex justify-center gap-6 sm:gap-10 mt-10 flex-wrap fade-in">
         <div class="text-center">
-          <div class="text-2xl md:text-3xl font-bold text-primary">8</div>
+          <div class="text-2xl md:text-3xl font-bold text-primary"><span class="count-up" data-target="8" data-suffix="">0</span></div>
           <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1" data-i18n="hero.metric1">h-index</div>
         </div>
         <div class="text-center">
-          <div class="text-2xl md:text-3xl font-bold text-primary">900+</div>
+          <div class="text-2xl md:text-3xl font-bold text-primary"><span class="count-up" data-target="900" data-suffix="+">0</span></div>
           <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1" data-i18n="hero.metric2">Citations</div>
         </div>
         <div class="text-center">
-          <div class="text-2xl md:text-3xl font-bold text-primary">13</div>
+          <div class="text-2xl md:text-3xl font-bold text-primary"><span class="count-up" data-target="13" data-suffix="">0</span></div>
           <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1" data-i18n="hero.metric3">Publications</div>
         </div>
         <div class="text-center">
-          <div class="text-2xl md:text-3xl font-bold text-primary">9+</div>
+          <div class="text-2xl md:text-3xl font-bold text-primary"><span class="count-up" data-target="9" data-suffix="+">0</span></div>
           <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1" data-i18n="hero.metric4">Years Experience</div>
         </div>
       </div>
@@ -124,6 +140,13 @@
     </div>
   </section>
 
+  <!-- Wave divider -->
+  <div class="wave-divider wave-divider-top">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="text-gray-50 dark:text-gray-800/50">
+      <path d="M0,30 C200,0 400,60 600,30 C800,0 1000,60 1200,30 L1200,60 L0,60 Z" fill="currentColor"/>
+    </svg>
+  </div>
+
   <!-- About -->
   <section id="about" class="py-24 bg-gray-50 dark:bg-gray-800/50 transition-colors">
     <div class="max-w-5xl mx-auto px-6">
@@ -131,8 +154,8 @@
         <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center" data-i18n="about.heading">About Me</h2>
         <div class="w-16 h-1 bg-primary mx-auto mb-12 rounded-full"></div>
       </div>
-      <div class="grid md:grid-cols-2 gap-12 items-start fade-in">
-        <div>
+      <div class="grid md:grid-cols-2 gap-12 items-start">
+        <div class="reveal-left">
           <p class="text-lg leading-relaxed mb-4" data-i18n="about.bio1">
             I am a postdoctoral researcher at The Hong Kong Polytechnic University (PolyU), specializing in polymer science and additive manufacturing. My research bridges smart materials, sustainable chemistry, and advanced 3D/4D printing technologies.
           </p>
@@ -143,7 +166,7 @@
             With 13 SCI publications and over 900 citations, I am passionate about advancing next-generation intelligent manufacturing and green printing technologies.
           </p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border dark:border-gray-700 card-hover">
+        <div class="reveal-right bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border dark:border-gray-700 card-hover">
           <h3 class="font-bold text-lg mb-4" data-i18n="about.quickFacts">Quick Facts</h3>
           <ul class="space-y-3 text-sm">
             <li class="flex items-center gap-3">
@@ -182,6 +205,13 @@
     </div>
   </section>
 
+  <!-- Wave divider -->
+  <div class="wave-divider wave-divider-top">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+      <path d="M0,30 C300,60 600,0 900,30 C1050,45 1150,50 1200,30 L1200,60 L0,60 Z" fill="currentColor" class="text-white dark:text-gray-900"/>
+    </svg>
+  </div>
+
   <!-- Research -->
   <section id="research" class="py-24 transition-colors">
     <div class="max-w-5xl mx-auto px-6">
@@ -207,7 +237,7 @@
 
       <div class="grid md:grid-cols-2 gap-6">
         <!-- Research 1 -->
-        <div class="fade-in project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+        <div class="reveal-left project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
           <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary mb-4 card-icon">
             <i class="fa-solid fa-arrows-spin text-xl"></i>
           </div>
@@ -218,7 +248,7 @@
         </div>
 
         <!-- Research 2 -->
-        <div class="fade-in project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+        <div class="reveal-right project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
           <div class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 mb-4 card-icon">
             <i class="fa-solid fa-leaf text-xl"></i>
           </div>
@@ -229,7 +259,7 @@
         </div>
 
         <!-- Research 3 -->
-        <div class="fade-in project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+        <div class="reveal-scale project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
           <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 mb-4 card-icon">
             <i class="fa-solid fa-shield-virus text-xl"></i>
           </div>
@@ -240,7 +270,7 @@
         </div>
 
         <!-- Research 4 -->
-        <div class="fade-in project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+        <div class="reveal-scale project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
           <div class="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 mb-4 card-icon">
             <i class="fa-solid fa-recycle text-xl"></i>
           </div>
@@ -251,7 +281,7 @@
         </div>
 
         <!-- Research 5 -->
-        <div class="fade-in project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+        <div class="reveal-scale project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
           <div class="w-12 h-12 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 mb-4 card-icon">
             <i class="fa-solid fa-fire-extinguisher text-xl"></i>
           </div>
@@ -262,7 +292,7 @@
         </div>
 
         <!-- Research 6 -->
-        <div class="fade-in project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+        <div class="reveal-scale project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
           <div class="w-12 h-12 rounded-xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 mb-4 card-icon">
             <i class="fa-solid fa-lightbulb text-xl"></i>
           </div>
@@ -273,7 +303,7 @@
         </div>
 
         <!-- Research 7 -->
-        <div class="fade-in project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+        <div class="reveal-scale project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
           <div class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 mb-4 card-icon">
             <i class="fa-solid fa-bolt text-xl"></i>
           </div>
@@ -286,6 +316,13 @@
       </div>
     </div>
   </section>
+
+  <!-- Wave divider -->
+  <div class="wave-divider wave-divider-top">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="text-gray-50 dark:text-gray-800/50">
+      <path d="M0,30 C200,0 400,60 600,30 C800,0 1000,60 1200,30 L1200,60 L0,60 Z" fill="currentColor"/>
+    </svg>
+  </div>
 
   <!-- Education -->
   <section id="education" class="py-24 bg-gray-50 dark:bg-gray-800/50 transition-colors">
@@ -379,6 +416,13 @@
       </div>
     </div>
   </section>
+
+  <!-- Wave divider -->
+  <div class="wave-divider wave-divider-top">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="text-white dark:text-gray-900">
+      <path d="M0,30 C300,60 600,0 900,30 C1050,45 1150,50 1200,30 L1200,60 L0,60 Z" fill="currentColor"/>
+    </svg>
+  </div>
 
   <!-- Publications -->
   <section id="publications" class="py-24 transition-colors">
@@ -548,6 +592,13 @@
     </div>
   </section>
 
+  <!-- Wave divider -->
+  <div class="wave-divider wave-divider-top">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="text-gray-50 dark:text-gray-800/50">
+      <path d="M0,30 C200,0 400,60 600,30 C800,0 1000,60 1200,30 L1200,60 L0,60 Z" fill="currentColor"/>
+    </svg>
+  </div>
+
   <!-- Skills -->
   <section id="skills" class="py-24 bg-gray-50 dark:bg-gray-800/50 transition-colors">
     <div class="max-w-5xl mx-auto px-6">
@@ -556,7 +607,7 @@
         <div class="w-16 h-1 bg-primary mx-auto mb-12 rounded-full"></div>
       </div>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="fade-in skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+        <div class="reveal-scale skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
           <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary mb-4 card-icon">
             <i class="fa-solid fa-microscope text-xl"></i>
           </div>
@@ -571,7 +622,7 @@
           </div>
         </div>
 
-        <div class="fade-in skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+        <div class="reveal-scale skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
           <div class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 mb-4 card-icon">
             <i class="fa-solid fa-temperature-high text-xl"></i>
           </div>
@@ -585,7 +636,7 @@
           </div>
         </div>
 
-        <div class="fade-in skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+        <div class="reveal-scale skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
           <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 mb-4 card-icon">
             <i class="fa-solid fa-print text-xl"></i>
           </div>
@@ -598,7 +649,7 @@
           </div>
         </div>
 
-        <div class="fade-in skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+        <div class="reveal-scale skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
           <div class="w-12 h-12 rounded-xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 mb-4 card-icon">
             <i class="fa-solid fa-droplet text-xl"></i>
           </div>
@@ -611,7 +662,7 @@
           </div>
         </div>
 
-        <div class="fade-in skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+        <div class="reveal-scale skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
           <div class="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 mb-4 card-icon">
             <i class="fa-solid fa-code text-xl"></i>
           </div>
@@ -627,6 +678,13 @@
       </div>
     </div>
   </section>
+
+  <!-- Wave divider -->
+  <div class="wave-divider wave-divider-top">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="text-white dark:text-gray-900">
+      <path d="M0,30 C300,60 600,0 900,30 C1050,45 1150,50 1200,30 L1200,60 L0,60 Z" fill="currentColor"/>
+    </svg>
+  </div>
 
   <!-- Polymer Breakout Game -->
   <section id="puzzle" class="py-24 bg-white dark:bg-gray-900 transition-colors">
