@@ -480,41 +480,22 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
         ctx.lineWidth = 1.2;
         ctx.stroke();
 
-        // Small terminal group at end of side chain (O or CH3)
+        // Small terminal group at end of side chain
         var termX = v.x;
         var termY = v.y + sideDir * sideLen;
         ctx.beginPath();
-        ctx.arc(termX, termY, 2.0, 0, Math.PI * 2);
-        var grad = ctx.createRadialGradient(termX - 0.5, termY - 0.5, 0, termX, termY, 2.0);
-        grad.addColorStop(0, 'rgba(255,255,255,' + (mol.opacity * 0.8).toFixed(3) + ')');
-        grad.addColorStop(0.6, 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (mol.opacity * 1.5).toFixed(3) + ')');
-        grad.addColorStop(1, 'rgba(' + Math.max(0,baseR-40) + ',' + Math.max(0,baseG-40) + ',' + Math.max(0,baseB-40) + ',' + (mol.opacity * 1.2).toFixed(3) + ')');
-        ctx.fillStyle = grad;
+        ctx.arc(termX, termY, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (mol.opacity * 1.3).toFixed(3) + ')';
         ctx.fill();
       }
     }
 
-    // --- 3. Draw 3D backbone carbon atoms (ball-and-stick spheres) ---
+    // --- 3. Draw backbone vertices (simple nodes) ---
     for (var i = 0; i < vertices.length; i++) {
       var v = vertices[i];
-      var atomR = 2.3;
-
-      // Shadow (oval offset)
       ctx.beginPath();
-      ctx.ellipse(v.x + 0.6, v.y + 0.8, atomR * 1.1, atomR * 0.8, 0, 0, Math.PI * 2);
-      ctx.fillStyle = dark ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.1)';
-      ctx.fill();
-
-      // 3D sphere with radial gradient (highlight top-left, dark bottom-right)
-      var grad = ctx.createRadialGradient(v.x - atomR * 0.3, v.y - atomR * 0.3, atomR * 0.05, v.x, v.y, atomR);
-      grad.addColorStop(0, 'rgba(255,255,255,' + (mol.opacity * 1.1).toFixed(3) + ')');
-      grad.addColorStop(0.35, 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (mol.opacity * 1.6).toFixed(3) + ')');
-      grad.addColorStop(0.75, 'rgba(' + Math.max(0,baseR-50) + ',' + Math.max(0,baseG-50) + ',' + Math.max(0,baseB-50) + ',' + (mol.opacity * 1.3).toFixed(3) + ')');
-      grad.addColorStop(1, 'rgba(' + Math.max(0,baseR-80) + ',' + Math.max(0,baseG-80) + ',' + Math.max(0,baseB-80) + ',' + (mol.opacity * 0.9).toFixed(3) + ')');
-
-      ctx.beginPath();
-      ctx.arc(v.x, v.y, atomR, 0, Math.PI * 2);
-      ctx.fillStyle = grad;
+      ctx.arc(v.x, v.y, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (mol.opacity * 1.4).toFixed(3) + ')';
       ctx.fill();
     }
 
