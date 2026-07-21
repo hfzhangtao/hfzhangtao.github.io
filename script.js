@@ -209,110 +209,302 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
 });
 
 // ============================================================
-// PARTICLE NETWORK BACKGROUND
+// CHEMISTRY / MATERIALS THEMED BACKGROUND
+// — hexagonal graphene grid + floating molecular structures
+// — polymer chain paths + benzene rings
 // ============================================================
 (function () {
   var canvas = document.getElementById('particleBg');
   if (!canvas) return;
   var ctx = canvas.getContext('2d');
 
-  var particles = [];
-  var PARTICLE_COUNT = 70;
-  var CONNECT_DIST = 140;
-  var PARTICLE_SPEED = 0.25;
-  var mouseX = -1000;
-  var mouseY = -1000;
   var animId = null;
   var running = true;
+  var mouseX = -1000;
+  var mouseY = -1000;
+  var time = 0;
+
+  // Offscreen canvas for static hex grid (cached)
+  var gridCanvas = null;
+  var gridDirty = true;
 
   function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    gridDirty = true;
   }
 
   function isDark() {
     return document.documentElement.classList.contains('dark');
   }
 
-  function createParticles() {
-    particles = [];
-    for (var i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * PARTICLE_SPEED,
-        vy: (Math.random() - 0.5) * PARTICLE_SPEED,
-        r: Math.random() * 1.8 + 0.8
-      });
+  // --- Hex grid helpers ---
+  var HEX_R = 55; // hexagon circumradius
+  var HEX_H = HEX_R * Math.sqrt(3); // vertical spacing
+  var HEX_W = HEX_R * 1.5; // horizontal spacing
+
+  function hexCenter(col, row) {
+    var x = col * HEX_W * 2 + (row % 2) * HEX_W;
+    var y = row * HEX_H;
+    // Offset so grid starts at top-left with some margin
+    return { x: x - HEX_R, y: y - HEX_R };
+  }
+
+  function drawHexagon(ctx, cx, cy, r) {
+    ctx.beginPath();
+    for (var i = 0; i < 6; i++) {
+      var angle = Math.PI / 3 * i - Math.PI / 6;
+      var hx = cx + r * Math.cos(angle);
+      var hy = cy + r * Math.sin(angle);
+      if (i === 0) ctx.moveTo(hx, hy);
+      else ctx.lineTo(hx, hy);
+    }
+    ctx.closePath();
+  }
+
+  // Build static hexagonal grid
+  function buildHexGrid() {
+    if (!gridDirty && gridCanvas) return;
+    gridCanvas = document.createElement('canvas');
+    gridCanvas.width = canvas.width;
+    gridCanvas.height = canvas.height;
+    var gctx = gridCanvas.getContext('2d');
+    var dark = isDark();
+    var strokeColor = dark ? 'rgba(148,163,184,0.12)' : 'rgba(37,99,235,0.08)';
+
+    var cols = Math.ceil(canvas.width / (HEX_W * 2)) + 2;
+    var rows = Math.ceil(canvas.height / HEX_H) + 2;
+
+    for (var row = -1; row < rows; row++) {
+      for (var col = -1; col < cols; col++) {
+        var c = hexCenter(col, row);
+        drawHexagon(gctx, c.x, c.y, HEX_R);
+        gctx.strokeStyle = strokeColor;
+        gctx.lineWidth = 0.8;
+        gctx.stroke();
+      }
+    }
+    gridDirty = false;
+  }
+
+  // --- Floating molecular structures ---
+  var molecules = [];
+  var MOL_COUNT = 18;
+
+  function createMolecule() {
+    var type = Math.random();
+    var mol = {
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.18,
+      vy: (Math.random() - 0.5) * 0.18,
+      rot: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.003,
+      size: Math.random() * 16 + 10,
+      opacity: Math.random() * 0.18 + 0.08
+    };
+
+    if (type < 0.4) {
+      // Benzene ring — hexagon with alternating double bonds
+      mol.type = 'benzene';
+    } else if (type < 0.7) {
+      // Small molecule — 2-3 atoms connected
+      mol.type = 'small';
+      mol.atoms = 2 + Math.floor(Math.random() * 2);
+    } else {
+      // Polymer chain segment — wavy path with nodes
+      mol.type = 'polymer';
+      mol.segments = 3 + Math.floor(Math.random() * 4);
+    }
+    return mol;
+  }
+
+  function initMolecules() {
+    molecules = [];
+    for (var i = 0; i < MOL_COUNT; i++) {
+      molecules.push(createMolecule());
     }
   }
 
-  function draw() {
-    if (!running) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  function drawBenzene(ctx, mol) {
+    ctx.save();
+    ctx.translate(mol.x, mol.y);
+    ctx.rotate(mol.rot);
+    var r = mol.size;
     var dark = isDark();
-    var color = dark ? '160,180,220' : '37,99,235';
-    var lineAlpha = dark ? 0.13 : 0.1;
-    var dotAlpha = dark ? 0.28 : 0.2;
+    var strokeC = dark ? 'rgba(148,163,184,' + mol.opacity + ')' : 'rgba(37,99,235,' + mol.opacity + ')';
+    var fillC = dark ? 'rgba(148,163,184,' + (mol.opacity * 0.4) + ')' : 'rgba(37,99,235,' + (mol.opacity * 0.3) + ')';
+    var atomC = dark ? 'rgba(203,213,225,' + (mol.opacity * 1.6) + ')' : 'rgba(59,130,246,' + (mol.opacity * 1.4) + ')';
 
-    // Update & draw
-    for (var i = 0; i < particles.length; i++) {
-      var p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
+    // Outer hexagon
+    drawHexagon(ctx, 0, 0, r);
+    ctx.strokeStyle = strokeC;
+    ctx.lineWidth = 0.9;
+    ctx.stroke();
 
-      // Wrap around edges
-      if (p.x < -10) p.x = canvas.width + 10;
-      if (p.x > canvas.width + 10) p.x = -10;
-      if (p.y < -10) p.y = canvas.height + 10;
-      if (p.y > canvas.height + 10) p.y = -10;
+    // Inner circle (aromatic ring)
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.65, 0, Math.PI * 2);
+    ctx.strokeStyle = strokeC;
+    ctx.lineWidth = 0.5;
+    ctx.setLineDash([3, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
 
-      // Draw dot
+    // Atoms at vertices
+    for (var i = 0; i < 6; i++) {
+      var angle = Math.PI / 3 * i - Math.PI / 6;
+      var ax = r * Math.cos(angle);
+      var ay = r * Math.sin(angle);
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(' + color + ',' + dotAlpha + ')';
+      ctx.arc(ax, ay, 1.8, 0, Math.PI * 2);
+      ctx.fillStyle = atomC;
       ctx.fill();
     }
+    ctx.restore();
+  }
 
-    // Draw connections
-    for (var i = 0; i < particles.length; i++) {
-      for (var j = i + 1; j < particles.length; j++) {
-        var dx = particles[i].x - particles[j].x;
-        var dy = particles[i].y - particles[j].y;
-        var dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < CONNECT_DIST) {
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          var alpha = (1 - dist / CONNECT_DIST) * lineAlpha;
-          ctx.strokeStyle = 'rgba(' + color + ',' + alpha.toFixed(3) + ')';
-          ctx.lineWidth = 0.6;
-          ctx.stroke();
-        }
+  function drawSmallMol(ctx, mol) {
+    ctx.save();
+    ctx.translate(mol.x, mol.y);
+    ctx.rotate(mol.rot);
+    var dark = isDark();
+    var strokeC = dark ? 'rgba(148,163,184,' + mol.opacity + ')' : 'rgba(37,99,235,' + mol.opacity + ')';
+    var atomC = dark ? 'rgba(203,213,225,' + (mol.opacity * 1.8) + ')' : 'rgba(59,130,246,' + (mol.opacity * 1.6) + ')';
+
+    var r = mol.size * 0.7;
+    var n = mol.atoms;
+    for (var i = 0; i < n; i++) {
+      // Position atoms
+      var ax, ay;
+      if (n === 2) {
+        ax = (i - 0.5) * r * 1.2;
+        ay = 0;
+      } else {
+        var angle = (Math.PI * 2 / n) * i - Math.PI / 2;
+        ax = r * 0.7 * Math.cos(angle);
+        ay = r * 0.7 * Math.sin(angle);
       }
+      // Draw bond between atoms
+      if (i < n - 1) {
+        var bx, by;
+        if (n === 2) {
+          bx = (i + 0.5) * r * 1.2;
+          by = 0;
+        } else {
+          var a2 = (Math.PI * 2 / n) * (i + 1) - Math.PI / 2;
+          bx = r * 0.7 * Math.cos(a2);
+          by = r * 0.7 * Math.sin(a2);
+        }
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(bx, by);
+        ctx.strokeStyle = strokeC;
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      }
+      // If only 2 atoms, also draw bond directly
+      if (n === 2 && i === 0) {
+        // bond already drawn in loop above
+      }
+      // Draw atom
+      ctx.beginPath();
+      ctx.arc(ax, ay, 1.6, 0, Math.PI * 2);
+      ctx.fillStyle = atomC;
+      ctx.fill();
     }
+    ctx.restore();
+  }
 
-    // Mouse interaction — attract nearby particles
-    if (mouseX > 0 && mouseY > 0) {
-      for (var i = 0; i < particles.length; i++) {
-        var dx2 = mouseX - particles[i].x;
-        var dy2 = mouseY - particles[i].y;
-        var dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-        if (dist2 < 200 && dist2 > 0.01) {
-          particles[i].vx += (dx2 / dist2) * 0.015;
-          particles[i].vy += (dy2 / dist2) * 0.015;
-        }
-        // Friction
-        particles[i].vx *= 0.998;
-        particles[i].vy *= 0.998;
+  function drawPolymer(ctx, mol) {
+    ctx.save();
+    ctx.translate(mol.x, mol.y);
+    ctx.rotate(mol.rot);
+    var dark = isDark();
+    var strokeC = dark ? 'rgba(148,163,184,' + mol.opacity + ')' : 'rgba(37,99,235,' + mol.opacity + ')';
+    var atomC = dark ? 'rgba(203,213,225,' + (mol.opacity * 1.6) + ')' : 'rgba(59,130,246,' + (mol.opacity * 1.3) + ')';
+
+    var segLen = mol.size * 0.8;
+    var n = mol.segments;
+    ctx.beginPath();
+    var px = -segLen * (n - 1) / 2;
+    ctx.moveTo(px, 0);
+    for (var i = 1; i < n; i++) {
+      px += segLen;
+      var py = (i % 2 === 0 ? -1 : 1) * segLen * 0.4;
+      ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = strokeC;
+    ctx.lineWidth = 0.9;
+    ctx.stroke();
+
+    // Nodes along chain
+    px = -segLen * (n - 1) / 2;
+    for (var i = 0; i < n; i++) {
+      var py2 = i > 0 ? ((i % 2 === 0 ? -1 : 1) * segLen * 0.4) : 0;
+      ctx.beginPath();
+      ctx.arc(px, py2, 1.7, 0, Math.PI * 2);
+      ctx.fillStyle = atomC;
+      ctx.fill();
+      px += segLen;
+    }
+    ctx.restore();
+  }
+
+  // --- Main draw loop ---
+  function draw(timestamp) {
+    if (!running) return;
+    time = timestamp * 0.001;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 1. Draw static hex grid
+    buildHexGrid();
+    ctx.drawImage(gridCanvas, 0, 0);
+
+    // 2. Update & draw floating molecules
+    var dark = isDark();
+    for (var i = 0; i < molecules.length; i++) {
+      var mol = molecules[i];
+      mol.x += mol.vx;
+      mol.y += mol.vy;
+      mol.rot += mol.rotSpeed;
+
+      // Wrap around
+      var pad = 60;
+      if (mol.x < -pad) mol.x = canvas.width + pad;
+      if (mol.x > canvas.width + pad) mol.x = -pad;
+      if (mol.y < -pad) mol.y = canvas.height + pad;
+      if (mol.y > canvas.height + pad) mol.y = -pad;
+
+      // Mouse interaction — gentle repel
+      var dx = mol.x - mouseX;
+      var dy = mol.y - mouseY;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 150 && dist > 0.01) {
+        mol.vx += (dx / dist) * 0.03;
+        mol.vy += (dy / dist) * 0.03;
       }
+      mol.vx *= 0.998;
+      mol.vy *= 0.998;
+
+      // Clamp speed
+      var speed = Math.sqrt(mol.vx * mol.vx + mol.vy * mol.vy);
+      if (speed > 0.4) {
+        mol.vx *= 0.4 / speed;
+        mol.vy *= 0.4 / speed;
+      }
+
+      // Draw based on type
+      if (mol.type === 'benzene') drawBenzene(ctx, mol);
+      else if (mol.type === 'small') drawSmallMol(ctx, mol);
+      else drawPolymer(ctx, mol);
     }
 
     animId = requestAnimationFrame(draw);
   }
 
-  // Track mouse for interaction
+  // Track mouse
   document.addEventListener('mousemove', function (e) {
     mouseX = e.clientX;
     mouseY = e.clientY;
@@ -322,7 +514,7 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
     mouseY = -1000;
   });
 
-  // Visibility change: pause/resume
+  // Visibility change
   document.addEventListener('visibilitychange', function () {
     running = !document.hidden;
     if (running && !animId) {
@@ -331,20 +523,17 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
   });
 
   // Resize
+  var resizeTimer;
   window.addEventListener('resize', function () {
-    clearTimeout(canvas._resizeTimer);
-    canvas._resizeTimer = setTimeout(function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
       resize();
-      // Re-clamp particles
-      for (var i = 0; i < particles.length; i++) {
-        particles[i].x = Math.min(particles[i].x, canvas.width);
-        particles[i].y = Math.min(particles[i].y, canvas.height);
-      }
-    }, 150);
+      initMolecules();
+    }, 200);
   });
 
   resize();
-  createParticles();
+  initMolecules();
   animId = requestAnimationFrame(draw);
 })();
 
