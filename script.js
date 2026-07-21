@@ -325,17 +325,13 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
       opacity: Math.random() * 0.18 + 0.08
     };
 
-    if (type < 0.3) {
+    if (type < 0.35) {
       // Benzene ring
       mol.type = 'benzene';
-    } else if (type < 0.55) {
-      // Small molecule — 2-3 atoms
-      mol.type = 'small';
-      mol.atoms = 2 + Math.floor(Math.random() * 2);
-    } else if (type < 0.75) {
-      // Polymer chain segment
+    } else if (type < 0.7) {
+      // Polymer chain — realistic carbon backbone with side groups
       mol.type = 'polymer';
-      mol.segments = 3 + Math.floor(Math.random() * 4);
+      mol.units = 4 + Math.floor(Math.random() * 6); // repeating units
     } else {
       // Photocrosslinking monomer pair — two nodes that react under UV
       mol.type = 'photocrosslink';
@@ -391,90 +387,137 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
     ctx.restore();
   }
 
-  function drawSmallMol(ctx, mol) {
-    ctx.save();
-    ctx.translate(mol.x, mol.y);
-    ctx.rotate(mol.rot);
-    var dark = isDark();
-    var strokeC = dark ? 'rgba(148,163,184,' + mol.opacity + ')' : 'rgba(37,99,235,' + mol.opacity + ')';
-    var atomC = dark ? 'rgba(203,213,225,' + (mol.opacity * 1.8) + ')' : 'rgba(59,130,246,' + (mol.opacity * 1.6) + ')';
-
-    var r = mol.size * 0.7;
-    var n = mol.atoms;
-    for (var i = 0; i < n; i++) {
-      // Position atoms
-      var ax, ay;
-      if (n === 2) {
-        ax = (i - 0.5) * r * 1.2;
-        ay = 0;
-      } else {
-        var angle = (Math.PI * 2 / n) * i - Math.PI / 2;
-        ax = r * 0.7 * Math.cos(angle);
-        ay = r * 0.7 * Math.sin(angle);
-      }
-      // Draw bond between atoms
-      if (i < n - 1) {
-        var bx, by;
-        if (n === 2) {
-          bx = (i + 0.5) * r * 1.2;
-          by = 0;
-        } else {
-          var a2 = (Math.PI * 2 / n) * (i + 1) - Math.PI / 2;
-          bx = r * 0.7 * Math.cos(a2);
-          by = r * 0.7 * Math.sin(a2);
-        }
-        ctx.beginPath();
-        ctx.moveTo(ax, ay);
-        ctx.lineTo(bx, by);
-        ctx.strokeStyle = strokeC;
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
-      }
-      // If only 2 atoms, also draw bond directly
-      if (n === 2 && i === 0) {
-        // bond already drawn in loop above
-      }
-      // Draw atom
-      ctx.beginPath();
-      ctx.arc(ax, ay, 1.6, 0, Math.PI * 2);
-      ctx.fillStyle = atomC;
-      ctx.fill();
-    }
-    ctx.restore();
-  }
-
+  // Ball-and-stick 3D polymer chain — carbon backbone zigzag + side groups
   function drawPolymer(ctx, mol) {
     ctx.save();
     ctx.translate(mol.x, mol.y);
     ctx.rotate(mol.rot);
     var dark = isDark();
-    var strokeC = dark ? 'rgba(148,163,184,' + mol.opacity + ')' : 'rgba(37,99,235,' + mol.opacity + ')';
-    var atomC = dark ? 'rgba(203,213,225,' + (mol.opacity * 1.6) + ')' : 'rgba(59,130,246,' + (mol.opacity * 1.3) + ')';
 
-    var segLen = mol.size * 0.8;
-    var n = mol.segments;
-    ctx.beginPath();
-    var px = -segLen * (n - 1) / 2;
-    ctx.moveTo(px, 0);
-    for (var i = 1; i < n; i++) {
-      px += segLen;
-      var py = (i % 2 === 0 ? -1 : 1) * segLen * 0.4;
-      ctx.lineTo(px, py);
+    // Color palette for 3D ball-and-stick model
+    var baseR, baseG, baseB;
+    if (dark) {
+      baseR = 148; baseG = 163; baseB = 184; // gray-blue
+    } else {
+      baseR = 59; baseG = 130; baseB = 246;  // blue-500
     }
-    ctx.strokeStyle = strokeC;
-    ctx.lineWidth = 0.9;
-    ctx.stroke();
 
-    // Nodes along chain
-    px = -segLen * (n - 1) / 2;
-    for (var i = 0; i < n; i++) {
-      var py2 = i > 0 ? ((i % 2 === 0 ? -1 : 1) * segLen * 0.4) : 0;
+    var segLen = mol.size * 0.9;
+    var n = mol.units;
+    var zigAmp = segLen * 0.45; // zigzag amplitude
+
+    // Precompute backbone vertex positions (zigzag)
+    var vertices = [];
+    for (var i = 0; i < n + 1; i++) {
+      vertices.push({
+        x: i * segLen - (n * segLen) / 2,
+        y: (i % 2 === 0 ? -1 : 1) * zigAmp
+      });
+    }
+
+    // --- 1. Draw backbone bonds (thicker, 3D feel) ---
+    for (var i = 0; i < vertices.length - 1; i++) {
+      var v1 = vertices[i];
+      var v2 = vertices[i + 1];
+
+      // Bond shadow (offset slightly down-right)
       ctx.beginPath();
-      ctx.arc(px, py2, 1.7, 0, Math.PI * 2);
-      ctx.fillStyle = atomC;
-      ctx.fill();
-      px += segLen;
+      ctx.moveTo(v1.x + 0.5, v1.y + 0.8);
+      ctx.lineTo(v2.x + 0.5, v2.y + 0.8);
+      ctx.strokeStyle = dark ? 'rgba(0,0,0,0.12)' : 'rgba(0,0,0,0.08)';
+      ctx.lineWidth = 2.2;
+      ctx.stroke();
+
+      // Main bond
+      ctx.beginPath();
+      ctx.moveTo(v1.x, v1.y);
+      ctx.lineTo(v2.x, v2.y);
+      // Double bond every 3rd segment (C=O in urethane/acrylate)
+      var isDouble = (i % 3 === 0);
+      var alpha = mol.opacity * 1.3;
+      ctx.strokeStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + alpha.toFixed(3) + ')';
+      ctx.lineWidth = 1.8;
+      ctx.stroke();
+
+      if (isDouble) {
+        // Parallel second line for double bond
+        ctx.beginPath();
+        var dx = v2.x - v1.x;
+        var dy = v2.y - v1.y;
+        var perpLen = 2.5;
+        var perpX = -dy / Math.sqrt(dx * dx + dy * dy) * perpLen;
+        var perpY = dx / Math.sqrt(dx * dx + dy * dy) * perpLen;
+        ctx.moveTo(v1.x + perpX, v1.y + perpY);
+        ctx.lineTo(v2.x + perpX, v2.y + perpY);
+        ctx.strokeStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (alpha * 0.6).toFixed(3) + ')';
+        ctx.lineWidth = 1.0;
+        ctx.stroke();
+      }
     }
+
+    // --- 2. Draw side groups on alternating carbons ---
+    for (var i = 0; i < vertices.length; i++) {
+      var v = vertices[i];
+      // Side groups on every other carbon, alternating up/down sides
+      if (i % 2 === 1) {
+        var sideDir = (i % 4 === 1) ? -1 : 1; // alternate side
+        var sideLen = segLen * 0.55;
+
+        // Side bond shadow
+        ctx.beginPath();
+        ctx.moveTo(v.x + 0.3, v.y + 0.5);
+        ctx.lineTo(v.x + 0.3, v.y + sideDir * sideLen + 0.5);
+        ctx.strokeStyle = dark ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.06)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Side bond
+        ctx.beginPath();
+        ctx.moveTo(v.x, v.y);
+        ctx.lineTo(v.x, v.y + sideDir * sideLen);
+        var sideAlpha = mol.opacity * 0.9;
+        ctx.strokeStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + sideAlpha.toFixed(3) + ')';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        // Small terminal group at end of side chain (O or CH3)
+        var termX = v.x;
+        var termY = v.y + sideDir * sideLen;
+        ctx.beginPath();
+        ctx.arc(termX, termY, 2.0, 0, Math.PI * 2);
+        var grad = ctx.createRadialGradient(termX - 0.5, termY - 0.5, 0, termX, termY, 2.0);
+        grad.addColorStop(0, 'rgba(255,255,255,' + (mol.opacity * 0.8).toFixed(3) + ')');
+        grad.addColorStop(0.6, 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (mol.opacity * 1.5).toFixed(3) + ')');
+        grad.addColorStop(1, 'rgba(' + Math.max(0,baseR-40) + ',' + Math.max(0,baseG-40) + ',' + Math.max(0,baseB-40) + ',' + (mol.opacity * 1.2).toFixed(3) + ')');
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+    }
+
+    // --- 3. Draw 3D backbone carbon atoms (ball-and-stick spheres) ---
+    for (var i = 0; i < vertices.length; i++) {
+      var v = vertices[i];
+      var atomR = 2.3;
+
+      // Shadow (oval offset)
+      ctx.beginPath();
+      ctx.ellipse(v.x + 0.6, v.y + 0.8, atomR * 1.1, atomR * 0.8, 0, 0, Math.PI * 2);
+      ctx.fillStyle = dark ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.1)';
+      ctx.fill();
+
+      // 3D sphere with radial gradient (highlight top-left, dark bottom-right)
+      var grad = ctx.createRadialGradient(v.x - atomR * 0.3, v.y - atomR * 0.3, atomR * 0.05, v.x, v.y, atomR);
+      grad.addColorStop(0, 'rgba(255,255,255,' + (mol.opacity * 1.1).toFixed(3) + ')');
+      grad.addColorStop(0.35, 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (mol.opacity * 1.6).toFixed(3) + ')');
+      grad.addColorStop(0.75, 'rgba(' + Math.max(0,baseR-50) + ',' + Math.max(0,baseG-50) + ',' + Math.max(0,baseB-50) + ',' + (mol.opacity * 1.3).toFixed(3) + ')');
+      grad.addColorStop(1, 'rgba(' + Math.max(0,baseR-80) + ',' + Math.max(0,baseG-80) + ',' + Math.max(0,baseB-80) + ',' + (mol.opacity * 0.9).toFixed(3) + ')');
+
+      ctx.beginPath();
+      ctx.arc(v.x, v.y, atomR, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+
     ctx.restore();
   }
 
@@ -676,7 +719,6 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
 
       // Draw based on type
       if (mol.type === 'benzene') drawBenzene(ctx, mol);
-      else if (mol.type === 'small') drawSmallMol(ctx, mol);
       else if (mol.type === 'polymer') drawPolymer(ctx, mol);
       else if (mol.type === 'photocrosslink') drawPhotoCrosslink(ctx, mol);
     }
