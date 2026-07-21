@@ -271,7 +271,7 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
     gridCanvas.height = canvas.height;
     var gctx = gridCanvas.getContext('2d');
     var dark = isDark();
-    var strokeColor = dark ? 'rgba(148,163,184,0.07)' : 'rgba(37,99,235,0.05)';
+    var strokeColor = dark ? 'rgba(148,163,184,0.10)' : 'rgba(37,99,235,0.07)';
 
     var cols = Math.ceil(canvas.width / (HEX_W * 2)) + 2;
     var rows = Math.ceil(canvas.height / HEX_H) + 2;
@@ -290,10 +290,10 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
 
   // --- Floating molecular structures ---
   var molecules = [];
-  var MOL_COUNT = 12;
+  var MOL_COUNT = 18;
   // UV beam state
   var uvBeams = [];
-  var UV_BEAM_COUNT = 1;
+  var UV_BEAM_COUNT = 2;
 
   function initUvBeams() {
     uvBeams = [];
@@ -321,8 +321,8 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
       vy: (Math.random() - 0.5) * 0.18,
       rot: Math.random() * Math.PI * 2,
       rotSpeed: (Math.random() - 0.5) * 0.003,
-      size: Math.random() * 14 + 8,
-      opacity: Math.random() * 0.1 + 0.04
+      size: Math.random() * 15 + 9,
+      opacity: Math.random() * 0.1 + 0.05
     };
 
     if (type < 0.35) {
@@ -506,7 +506,7 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
     var uvColor = dark ? '180,130,255' : '139,92,246';
 
     // Animate beam opacity — slow subtle pulse
-    var globalPulse = 0.3 + Math.sin(time * 0.8) * 0.15;
+    var globalPulse = 0.4 + Math.sin(time * 0.8) * 0.2;
 
     for (var i = 0; i < uvBeams.length; i++) {
       var b = uvBeams[i];
@@ -550,8 +550,8 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
   // --- Draw 3D printing layer lines ---
   function drawLayerLines(ctx) {
     var dark = isDark();
-    var lineColor = dark ? 'rgba(148,163,184,0.035)' : 'rgba(37,99,235,0.025)';
-    var layerH = 48;
+    var lineColor = dark ? 'rgba(148,163,184,0.05)' : 'rgba(37,99,235,0.04)';
+    var layerH = 38;
     var layers = Math.floor(canvas.height / layerH);
 
     for (var i = 0; i < layers; i++) {
