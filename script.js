@@ -271,7 +271,7 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
     gridCanvas.height = canvas.height;
     var gctx = gridCanvas.getContext('2d');
     var dark = isDark();
-    var strokeColor = dark ? 'rgba(148,163,184,0.12)' : 'rgba(37,99,235,0.08)';
+    var strokeColor = dark ? 'rgba(148,163,184,0.07)' : 'rgba(37,99,235,0.05)';
 
     var cols = Math.ceil(canvas.width / (HEX_W * 2)) + 2;
     var rows = Math.ceil(canvas.height / HEX_H) + 2;
@@ -290,10 +290,10 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
 
   // --- Floating molecular structures ---
   var molecules = [];
-  var MOL_COUNT = 26;
+  var MOL_COUNT = 12;
   // UV beam state
   var uvBeams = [];
-  var UV_BEAM_COUNT = 3;
+  var UV_BEAM_COUNT = 1;
 
   function initUvBeams() {
     uvBeams = [];
@@ -321,8 +321,8 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
       vy: (Math.random() - 0.5) * 0.18,
       rot: Math.random() * Math.PI * 2,
       rotSpeed: (Math.random() - 0.5) * 0.003,
-      size: Math.random() * 16 + 10,
-      opacity: Math.random() * 0.18 + 0.08
+      size: Math.random() * 14 + 8,
+      opacity: Math.random() * 0.1 + 0.04
     };
 
     if (type < 0.35) {
@@ -387,116 +387,44 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
     ctx.restore();
   }
 
-  // Ball-and-stick 3D polymer chain — carbon backbone zigzag + side groups
+  // Clean polymer chain — simple zigzag backbone
   function drawPolymer(ctx, mol) {
     ctx.save();
     ctx.translate(mol.x, mol.y);
     ctx.rotate(mol.rot);
     var dark = isDark();
 
-    // Color palette for 3D ball-and-stick model
     var baseR, baseG, baseB;
-    if (dark) {
-      baseR = 148; baseG = 163; baseB = 184; // gray-blue
-    } else {
-      baseR = 59; baseG = 130; baseB = 246;  // blue-500
-    }
+    if (dark) { baseR = 148; baseG = 163; baseB = 184; }
+    else      { baseR = 37;  baseG = 99;  baseB = 235; }
 
     var segLen = mol.size * 0.9;
     var n = mol.units;
-    var zigAmp = segLen * 0.45; // zigzag amplitude
+    var zigAmp = segLen * 0.4;
+    var alpha = mol.opacity;
 
-    // Precompute backbone vertex positions (zigzag)
-    var vertices = [];
-    for (var i = 0; i < n + 1; i++) {
-      vertices.push({
-        x: i * segLen - (n * segLen) / 2,
-        y: (i % 2 === 0 ? -1 : 1) * zigAmp
-      });
+    // Backbone zigzag
+    ctx.beginPath();
+    var startX = -(n * segLen) / 2;
+    ctx.moveTo(startX, 0);
+    for (var i = 1; i <= n; i++) {
+      var px = startX + i * segLen;
+      var py = (i % 2 === 0 ? -1 : 1) * zigAmp;
+      ctx.lineTo(px, py);
     }
+    ctx.strokeStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (alpha * 1.2).toFixed(3) + ')';
+    ctx.lineWidth = 1.0;
+    ctx.stroke();
 
-    // --- 1. Draw backbone bonds (thicker, 3D feel) ---
-    for (var i = 0; i < vertices.length - 1; i++) {
-      var v1 = vertices[i];
-      var v2 = vertices[i + 1];
-
-      // Bond shadow (offset slightly down-right)
+    // Small nodes at vertices
+    var nx = startX;
+    for (var i = 0; i <= n; i++) {
+      var ny = i > 0 ? ((i % 2 === 0 ? -1 : 1) * zigAmp) : 0;
       ctx.beginPath();
-      ctx.moveTo(v1.x + 0.5, v1.y + 0.8);
-      ctx.lineTo(v2.x + 0.5, v2.y + 0.8);
-      ctx.strokeStyle = dark ? 'rgba(0,0,0,0.12)' : 'rgba(0,0,0,0.08)';
-      ctx.lineWidth = 2.2;
-      ctx.stroke();
-
-      // Main bond
-      ctx.beginPath();
-      ctx.moveTo(v1.x, v1.y);
-      ctx.lineTo(v2.x, v2.y);
-      // Double bond every 3rd segment (C=O in urethane/acrylate)
-      var isDouble = (i % 3 === 0);
-      var alpha = mol.opacity * 1.3;
-      ctx.strokeStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + alpha.toFixed(3) + ')';
-      ctx.lineWidth = 1.8;
-      ctx.stroke();
-
-      if (isDouble) {
-        // Parallel second line for double bond
-        ctx.beginPath();
-        var dx = v2.x - v1.x;
-        var dy = v2.y - v1.y;
-        var perpLen = 2.5;
-        var perpX = -dy / Math.sqrt(dx * dx + dy * dy) * perpLen;
-        var perpY = dx / Math.sqrt(dx * dx + dy * dy) * perpLen;
-        ctx.moveTo(v1.x + perpX, v1.y + perpY);
-        ctx.lineTo(v2.x + perpX, v2.y + perpY);
-        ctx.strokeStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (alpha * 0.6).toFixed(3) + ')';
-        ctx.lineWidth = 1.0;
-        ctx.stroke();
-      }
-    }
-
-    // --- 2. Draw side groups on alternating carbons ---
-    for (var i = 0; i < vertices.length; i++) {
-      var v = vertices[i];
-      // Side groups on every other carbon, alternating up/down sides
-      if (i % 2 === 1) {
-        var sideDir = (i % 4 === 1) ? -1 : 1; // alternate side
-        var sideLen = segLen * 0.55;
-
-        // Side bond shadow
-        ctx.beginPath();
-        ctx.moveTo(v.x + 0.3, v.y + 0.5);
-        ctx.lineTo(v.x + 0.3, v.y + sideDir * sideLen + 0.5);
-        ctx.strokeStyle = dark ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.06)';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-
-        // Side bond
-        ctx.beginPath();
-        ctx.moveTo(v.x, v.y);
-        ctx.lineTo(v.x, v.y + sideDir * sideLen);
-        var sideAlpha = mol.opacity * 0.9;
-        ctx.strokeStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + sideAlpha.toFixed(3) + ')';
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-
-        // Small terminal group at end of side chain
-        var termX = v.x;
-        var termY = v.y + sideDir * sideLen;
-        ctx.beginPath();
-        ctx.arc(termX, termY, 1.5, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (mol.opacity * 1.3).toFixed(3) + ')';
-        ctx.fill();
-      }
-    }
-
-    // --- 3. Draw backbone vertices (simple nodes) ---
-    for (var i = 0; i < vertices.length; i++) {
-      var v = vertices[i];
-      ctx.beginPath();
-      ctx.arc(v.x, v.y, 1.5, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (mol.opacity * 1.4).toFixed(3) + ')';
+      ctx.arc(nx, ny, 1.2, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (alpha * 1.3).toFixed(3) + ')';
       ctx.fill();
+      nx += segLen;
     }
 
     ctx.restore();
@@ -577,8 +505,8 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
     var dark = isDark();
     var uvColor = dark ? '180,130,255' : '139,92,246';
 
-    // Animate beam opacity — slow pulse
-    var globalPulse = 0.5 + Math.sin(time * 0.8) * 0.3;
+    // Animate beam opacity — slow subtle pulse
+    var globalPulse = 0.3 + Math.sin(time * 0.8) * 0.15;
 
     for (var i = 0; i < uvBeams.length; i++) {
       var b = uvBeams[i];
@@ -593,8 +521,8 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
       ctx.save();
       var grad = ctx.createLinearGradient(b.sx, b.sy, endX, endY);
       grad.addColorStop(0, 'rgba(' + uvColor + ',0)');
-      grad.addColorStop(0.35, 'rgba(' + uvColor + ',' + (b.opacity * 0.06).toFixed(3) + ')');
-      grad.addColorStop(0.65, 'rgba(' + uvColor + ',' + (b.opacity * 0.04).toFixed(3) + ')');
+      grad.addColorStop(0.35, 'rgba(' + uvColor + ',' + (b.opacity * 0.035).toFixed(3) + ')');
+      grad.addColorStop(0.65, 'rgba(' + uvColor + ',' + (b.opacity * 0.025).toFixed(3) + ')');
       grad.addColorStop(1, 'rgba(' + uvColor + ',0)');
 
       ctx.beginPath();
@@ -612,7 +540,7 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
       ctx.beginPath();
       ctx.moveTo(b.sx, b.sy);
       ctx.lineTo(endX, endY);
-      ctx.strokeStyle = 'rgba(' + uvColor + ',' + (b.opacity * 0.07).toFixed(3) + ')';
+      ctx.strokeStyle = 'rgba(' + uvColor + ',' + (b.opacity * 0.04).toFixed(3) + ')';
       ctx.lineWidth = 1.2;
       ctx.stroke();
       ctx.restore();
@@ -622,8 +550,8 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
   // --- Draw 3D printing layer lines ---
   function drawLayerLines(ctx) {
     var dark = isDark();
-    var lineColor = dark ? 'rgba(148,163,184,0.05)' : 'rgba(37,99,235,0.04)';
-    var layerH = 32;
+    var lineColor = dark ? 'rgba(148,163,184,0.035)' : 'rgba(37,99,235,0.025)';
+    var layerH = 48;
     var layers = Math.floor(canvas.height / layerH);
 
     for (var i = 0; i < layers; i++) {
