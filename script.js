@@ -290,10 +290,12 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
 
   // --- Floating molecular structures ---
   var molecules = [];
-  var MOL_COUNT = 18;
+  var MOL_COUNT = 22;
   // UV beam state
   var uvBeams = [];
   var UV_BEAM_COUNT = 2;
+  // UV photon particles flowing along beams
+  var uvPhotons = [];
 
   function initUvBeams() {
     uvBeams = [];
@@ -312,6 +314,20 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
     }
   }
 
+  function initUvPhotons() {
+    uvPhotons = [];
+    for (var i = 0; i < 12; i++) {
+      uvPhotons.push({
+        beamIndex: i % UV_BEAM_COUNT,
+        t: Math.random(),
+        speed: 0.002 + Math.random() * 0.003,
+        offset: (Math.random() - 0.5) * 0.6,
+        size: 0.5 + Math.random() * 1.0,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
   function createMolecule() {
     var type = Math.random();
     var mol = {
@@ -325,18 +341,45 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
       opacity: Math.random() * 0.1 + 0.05
     };
 
-    if (type < 0.35) {
+    // Liquid color palette for glassware
+    var liqColors = [
+      { r: 139, g: 92, b: 246 },   // purple (UV resin)
+      { r: 96, g: 165, b: 250 },    // blue (catalyst)
+      { r: 74, g: 222, b: 128 },    // green (bio-ink)
+      { r: 250, g: 204, b: 21 },    // yellow (photoinitiator)
+      { r: 244, g: 114, b: 182 }    // pink (fluorescent dye)
+    ];
+
+    if (type < 0.25) {
       // Benzene ring
       mol.type = 'benzene';
-    } else if (type < 0.7) {
+    } else if (type < 0.50) {
       // Polymer chain — realistic carbon backbone with side groups
       mol.type = 'polymer';
-      mol.units = 4 + Math.floor(Math.random() * 6); // repeating units
-    } else {
+      mol.units = 4 + Math.floor(Math.random() * 6);
+    } else if (type < 0.65) {
       // Photocrosslinking monomer pair — two nodes that react under UV
       mol.type = 'photocrosslink';
       mol.active = Math.random() > 0.5;
       mol.glowPhase = Math.random() * Math.PI * 2;
+    } else if (type < 0.85) {
+      // Beaker (烧杯) — lab glassware
+      mol.type = 'beaker';
+      mol.size = Math.random() * 12 + 14;  // larger for recognizability
+      mol.liquidLevel = Math.random() * 0.4 + 0.25;
+      var lc = liqColors[Math.floor(Math.random() * liqColors.length)];
+      mol.liquidR = lc.r;
+      mol.liquidG = lc.g;
+      mol.liquidB = lc.b;
+    } else {
+      // Erlenmeyer flask (锥形瓶) — conical flask
+      mol.type = 'erlenmeyer';
+      mol.size = Math.random() * 12 + 14;
+      mol.liquidLevel = Math.random() * 0.4 + 0.25;
+      var lc2 = liqColors[Math.floor(Math.random() * liqColors.length)];
+      mol.liquidR = lc2.r;
+      mol.liquidG = lc2.g;
+      mol.liquidB = lc2.b;
     }
     return mol;
   }
@@ -347,6 +390,7 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
       molecules.push(createMolecule());
     }
     initUvBeams();
+    initUvPhotons();
   }
 
   function drawBenzene(ctx, mol) {
@@ -500,7 +544,213 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
     ctx.restore();
   }
 
+  // --- Draw beaker (烧杯) ---
+  function drawBeaker(ctx, mol) {
+    ctx.save();
+    ctx.translate(mol.x, mol.y);
+    ctx.rotate(mol.rot);
+
+    var dark = isDark();
+    var baseR, baseG, baseB;
+    if (dark) { baseR = 148; baseG = 163; baseB = 184; }
+    else      { baseR = 37;  baseG = 99;  baseB = 235; }
+    var alpha = mol.opacity;
+
+    var w = mol.size * 1.4;         // beaker width
+    var h = mol.size * 2.2;         // beaker height
+    var wallThick = 1.0;
+    var lipSize = mol.size * 0.25;  // spout protrusion
+
+    // --- Beaker body outline ---
+    ctx.beginPath();
+    // Top-left, open top (no rim on left side)
+    ctx.moveTo(-w / 2, -h / 2);
+    // Left wall (slight outward taper)
+    ctx.lineTo(-w / 2 * 0.95, h / 2);
+    // Bottom edge
+    ctx.lineTo(w / 2 * 0.95, h / 2);
+    // Right wall
+    ctx.lineTo(w / 2, -h / 2);
+    // Spout lip: small outward curve at top-right
+    ctx.quadraticCurveTo(w / 2 + lipSize, -h / 2 - lipSize * 0.5, w / 2 + lipSize * 0.6, -h / 2 + lipSize * 0.3);
+
+    ctx.strokeStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (alpha * 1.2).toFixed(3) + ')';
+    ctx.lineWidth = wallThick;
+    ctx.stroke();
+
+    // --- Top rim mark (left side only, right has the spout) ---
+    ctx.beginPath();
+    ctx.moveTo(-w / 2 - 3, -h / 2);
+    ctx.lineTo(-w / 2 + 3, -h / 2);
+    ctx.strokeStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (alpha * 0.8).toFixed(3) + ')';
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+
+    // --- Liquid fill ---
+    if (mol.liquidLevel > 0) {
+      var liquidY = -h / 2 + (1 - mol.liquidLevel) * h;
+      var liquidR = mol.liquidR, liquidG = mol.liquidG, liquidB = mol.liquidB;
+      var inset = wallThick + 1;
+
+      // Fill path (inside beaker walls + meniscus)
+      ctx.beginPath();
+      ctx.moveTo(-w / 2 * 0.95 + inset, h / 2);
+      ctx.lineTo(-w / 2 * 0.95 + inset, liquidY);
+      // Meniscus: concave upward
+      ctx.quadraticCurveTo(0, liquidY - 2.5, w / 2 * 0.95 - inset, liquidY);
+      ctx.lineTo(w / 2 * 0.95 - inset, h / 2);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(' + liquidR + ',' + liquidG + ',' + liquidB + ',' + (alpha * 0.45).toFixed(3) + ')';
+      ctx.fill();
+
+      // Meniscus surface line
+      ctx.beginPath();
+      ctx.moveTo(-w / 2 * 0.95 + inset, liquidY);
+      ctx.quadraticCurveTo(0, liquidY - 2.5, w / 2 * 0.95 - inset, liquidY);
+      ctx.strokeStyle = 'rgba(' + liquidR + ',' + liquidG + ',' + liquidB + ',' + (alpha * 0.8).toFixed(3) + ')';
+      ctx.lineWidth = 0.6;
+      ctx.stroke();
+    }
+
+    // --- Measurement lines (right side) ---
+    var measureCount = 3;
+    for (var i = 0; i < measureCount; i++) {
+      var mlY = -h / 2 * 0.6 + (i + 1) * (h * 0.7) / (measureCount + 1);
+      var mlLen = (i % 2 === 0) ? 5 : 3;
+      ctx.beginPath();
+      ctx.moveTo(w / 2 * 0.95 - wallThick - mlLen, mlY);
+      ctx.lineTo(w / 2 * 0.95 - wallThick, mlY);
+      ctx.strokeStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (alpha * 0.8).toFixed(3) + ')';
+      ctx.lineWidth = 0.4;
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  // --- Draw Erlenmeyer flask (锥形瓶) ---
+  function drawErlenmeyer(ctx, mol) {
+    ctx.save();
+    ctx.translate(mol.x, mol.y);
+    ctx.rotate(mol.rot);
+
+    var dark = isDark();
+    var baseR, baseG, baseB;
+    if (dark) { baseR = 148; baseG = 163; baseB = 184; }
+    else      { baseR = 37;  baseG = 99;  baseB = 235; }
+    var alpha = mol.opacity;
+
+    var totalH = mol.size * 2.4;
+    var bodyW = mol.size * 1.1;       // width at bottom
+    var neckW = mol.size * 0.4;       // width at neck
+    var neckH = totalH * 0.25;        // neck height
+    var bodyH = totalH - neckH;       // body (tapered) height
+
+    // --- Flask body outline ---
+    ctx.beginPath();
+    // Top-left of neck
+    ctx.moveTo(-neckW / 2, -totalH / 2);
+    // Left side of neck going down
+    ctx.lineTo(-neckW / 2, -totalH / 2 + neckH);
+    // Tapered left side to bottom
+    ctx.lineTo(-bodyW / 2, -totalH / 2 + totalH);
+    // Bottom edge
+    ctx.lineTo(bodyW / 2, -totalH / 2 + totalH);
+    // Tapered right side up to neck
+    ctx.lineTo(neckW / 2, -totalH / 2 + neckH);
+    // Right side of neck going up
+    ctx.lineTo(neckW / 2, -totalH / 2);
+
+    ctx.strokeStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (alpha * 1.2).toFixed(3) + ')';
+    ctx.lineWidth = 1.0;
+    ctx.stroke();
+
+    // --- Neck rim (two small horizontal marks) ---
+    ctx.beginPath();
+    ctx.moveTo(-neckW / 2 - 3, -totalH / 2);
+    ctx.lineTo(-neckW / 2 + 2, -totalH / 2);
+    ctx.moveTo(neckW / 2 - 2, -totalH / 2);
+    ctx.lineTo(neckW / 2 + 3, -totalH / 2);
+    ctx.strokeStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (alpha * 0.8).toFixed(3) + ')';
+    ctx.lineWidth = 0.7;
+    ctx.stroke();
+
+    // --- Liquid fill (in the body only, below neck) ---
+    if (mol.liquidLevel > 0) {
+      var liquidBodyRatio = mol.liquidLevel;
+      var neckBaseY = -totalH / 2 + neckH;
+      var liquidY = neckBaseY + (1 - liquidBodyRatio) * bodyH;
+      var liquidR = mol.liquidR, liquidG = mol.liquidG, liquidB = mol.liquidB;
+
+      // Width at liquid Y (linear taper interpolation)
+      var bodyProgress = (liquidY - neckBaseY) / bodyH;
+      var liquidHW = neckW / 2 + (bodyW / 2 - neckW / 2) * bodyProgress;
+
+      // Liquid fill
+      ctx.beginPath();
+      ctx.moveTo(-liquidHW + 0.5, liquidY);
+      ctx.quadraticCurveTo(0, liquidY - 2.5, liquidHW - 0.5, liquidY);
+      ctx.lineTo(bodyW / 2 - 0.5, -totalH / 2 + totalH);
+      ctx.lineTo(-bodyW / 2 + 0.5, -totalH / 2 + totalH);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(' + liquidR + ',' + liquidG + ',' + liquidB + ',' + (alpha * 0.45).toFixed(3) + ')';
+      ctx.fill();
+
+      // Meniscus line
+      ctx.beginPath();
+      ctx.moveTo(-liquidHW + 0.5, liquidY);
+      ctx.quadraticCurveTo(0, liquidY - 2.5, liquidHW - 0.5, liquidY);
+      ctx.strokeStyle = 'rgba(' + liquidR + ',' + liquidG + ',' + liquidB + ',' + (alpha * 0.8).toFixed(3) + ')';
+      ctx.lineWidth = 0.6;
+      ctx.stroke();
+    }
+
+    // --- Measurement lines on the tapered body ---
+    var measureCount = 4;
+    for (var i = 0; i < measureCount; i++) {
+      var mlY = (-totalH / 2 + neckH + 2) + (i + 1) * (bodyH - 4) / (measureCount + 1);
+      var mlProgress = (mlY - (-totalH / 2 + neckH)) / bodyH;
+      var mlHW = neckW / 2 + (bodyW / 2 - neckW / 2) * mlProgress;
+      ctx.beginPath();
+      ctx.moveTo(mlHW - 1, mlY);
+      ctx.lineTo(mlHW - 6, mlY);
+      ctx.strokeStyle = 'rgba(' + baseR + ',' + baseG + ',' + baseB + ',' + (alpha * 0.6).toFixed(3) + ')';
+      ctx.lineWidth = 0.4;
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
   // --- Draw UV light beams ---
+  // --- Draw small UV source lamp icon ---
+  function drawUvSource(ctx, x, y, angle, op) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    var dark = isDark();
+    var uvC = dark ? '180,130,255' : '139,92,246';
+    // Lamp housing
+    ctx.strokeStyle = 'rgba(' + uvC + ',' + (op * 0.45).toFixed(3) + ')';
+    ctx.lineWidth = 0.8;
+    ctx.strokeRect(-4, -3, 8, 6);
+    // Filament cross
+    ctx.beginPath();
+    ctx.moveTo(-2, 0);
+    ctx.lineTo(2, 0);
+    ctx.moveTo(0, -2);
+    ctx.lineTo(0, 2);
+    ctx.strokeStyle = 'rgba(' + uvC + ',' + (op * 0.7).toFixed(3) + ')';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+    // Glow dot at center
+    ctx.beginPath();
+    ctx.arc(0, 0, 1.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(' + uvC + ',' + (op * 0.5).toFixed(3) + ')';
+    ctx.fill();
+    ctx.restore();
+  }
+
   function drawUvBeams(ctx) {
     var dark = isDark();
     var uvColor = dark ? '180,130,255' : '139,92,246';
@@ -517,12 +767,22 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
       var endX = b.sx + Math.cos(b.angle) * b.length;
       var endY = b.sy + Math.sin(b.angle) * b.length;
 
+      // --- Curing zone glow at beam impact point ---
+      var cureGrad = ctx.createRadialGradient(endX, endY, 0, endX, endY, 38);
+      cureGrad.addColorStop(0, 'rgba(' + uvColor + ',' + (b.opacity * 0.035).toFixed(3) + ')');
+      cureGrad.addColorStop(0.55, 'rgba(' + uvColor + ',' + (b.opacity * 0.018).toFixed(3) + ')');
+      cureGrad.addColorStop(1, 'rgba(' + uvColor + ',0)');
+      ctx.fillStyle = cureGrad;
+      ctx.beginPath();
+      ctx.arc(endX, endY, 38, 0, Math.PI * 2);
+      ctx.fill();
+
       // Soft glow along beam
       ctx.save();
       var grad = ctx.createLinearGradient(b.sx, b.sy, endX, endY);
       grad.addColorStop(0, 'rgba(' + uvColor + ',0)');
-      grad.addColorStop(0.35, 'rgba(' + uvColor + ',' + (b.opacity * 0.035).toFixed(3) + ')');
-      grad.addColorStop(0.65, 'rgba(' + uvColor + ',' + (b.opacity * 0.025).toFixed(3) + ')');
+      grad.addColorStop(0.35, 'rgba(' + uvColor + ',' + (b.opacity * 0.04).toFixed(3) + ')');
+      grad.addColorStop(0.65, 'rgba(' + uvColor + ',' + (b.opacity * 0.03).toFixed(3) + ')');
       grad.addColorStop(1, 'rgba(' + uvColor + ',0)');
 
       ctx.beginPath();
@@ -540,35 +800,137 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
       ctx.beginPath();
       ctx.moveTo(b.sx, b.sy);
       ctx.lineTo(endX, endY);
-      ctx.strokeStyle = 'rgba(' + uvColor + ',' + (b.opacity * 0.04).toFixed(3) + ')';
+      ctx.strokeStyle = 'rgba(' + uvColor + ',' + (b.opacity * 0.05).toFixed(3) + ')';
       ctx.lineWidth = 1.2;
       ctx.stroke();
       ctx.restore();
+
+      // --- UV source lamp at beam origin ---
+      drawUvSource(ctx, b.sx, b.sy, b.angle, b.opacity);
     }
   }
 
-  // --- Draw 3D printing layer lines ---
-  function drawLayerLines(ctx) {
+  // --- Draw UV photon particles flowing along beams ---
+  function drawUvPhotons(ctx) {
     var dark = isDark();
-    var lineColor = dark ? 'rgba(148,163,184,0.05)' : 'rgba(37,99,235,0.04)';
-    var layerH = 38;
-    var layers = Math.floor(canvas.height / layerH);
+    var uvColor = dark ? '180,130,255' : '139,92,246';
 
-    for (var i = 0; i < layers; i++) {
-      var y = i * layerH + (time * 8) % layerH; // slowly drift upward
-      // Vary the dash to suggest partially cured layers
-      var dashLen = 4 + Math.sin(i * 1.7) * 2;
-      var gapLen = 6 + Math.cos(i * 2.3) * 3;
+    for (var i = 0; i < uvPhotons.length; i++) {
+      var p = uvPhotons[i];
+      var b = uvBeams[p.beamIndex];
+      if (!b) continue;
+
+      p.t += p.speed;
+      if (p.t > 1) {
+        p.t = 0;
+        p.beamIndex = Math.floor(Math.random() * uvBeams.length);
+      }
+
+      // Position along beam
+      var bx = b.sx + Math.cos(b.angle) * b.length * p.t;
+      var by = b.sy + Math.sin(b.angle) * b.length * p.t;
+
+      // Lateral jitter
+      var perpX = Math.cos(b.angle + Math.PI / 2) * b.width * p.offset;
+      var perpY = Math.sin(b.angle + Math.PI / 2) * b.width * p.offset;
+      var px = bx + perpX;
+      var py = by + perpY;
+
+      var twinkle = 0.4 + Math.sin(time * 5 + p.phase) * 0.6;
 
       ctx.beginPath();
-      ctx.setLineDash([dashLen, gapLen]);
-      ctx.moveTo(0, y);
-      ctx.lineTo(canvas.width, y);
-      ctx.strokeStyle = lineColor;
+      ctx.arc(px, py, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + uvColor + ',' + (b.opacity * twinkle * 0.18).toFixed(3) + ')';
+      ctx.fill();
+    }
+  }
+
+  // --- Enhanced 3D printing: build platform + object + layer lines ---
+  function draw3dPrinting(ctx) {
+    var dark = isDark();
+    var baseR, baseG, baseB;
+    if (dark) { baseR = 148; baseG = 163; baseB = 184; }
+    else      { baseR = 37;  baseG = 99;  baseB = 235; }
+
+    // --- Build platform ---
+    var platformY = canvas.height * 0.92;
+    var platformLeft = canvas.width * 0.30;
+    var platformRight = canvas.width * 0.70;
+    var platformThick = 3;
+
+    ctx.fillStyle = dark ? 'rgba(148,163,184,0.04)' : 'rgba(37,99,235,0.03)';
+    ctx.fillRect(platformLeft, platformY - platformThick,
+                 platformRight - platformLeft, platformThick);
+    ctx.strokeStyle = dark ? 'rgba(148,163,184,0.08)' : 'rgba(37,99,235,0.06)';
+    ctx.lineWidth = 0.8;
+    ctx.strokeRect(platformLeft, platformY - platformThick,
+                   platformRight - platformLeft, platformThick);
+
+    // --- Object being printed (height oscillates) ---
+    var maxBuildH = canvas.height * 0.42;
+    // Eased oscillation: smooth build-up and pause at max
+    var rawOsc = Math.sin(time * 0.35) * 0.5 + 0.5; // 0..1
+    rawOsc = Math.pow(rawOsc, 0.7); // ease-in-out feel
+    var buildH = rawOsc * maxBuildH;
+
+    var objCenterX = canvas.width * 0.5;
+    var objTopY = platformY - platformThick - buildH;
+    var objBottomW = 32 + Math.sin(time * 0.15) * 8;
+    var objTopW = objBottomW * 0.68;
+
+    if (buildH > 2) {
+      // --- Layer lines within the printed object ---
+      var layerH = 5;
+      var layerCount = Math.floor(buildH / layerH);
+
+      for (var i = 0; i < layerCount; i++) {
+        var ly = platformY - platformThick - i * layerH;
+        var progress = i / Math.max(layerCount - 1, 1);
+        var lw = objBottomW / 2 + (objTopW / 2 - objBottomW / 2) * progress;
+
+        var lyAlpha = 0.02 + 0.035 * (1 - Math.abs(progress - 0.5) * 1.3);
+        var isTopLayer = (i === layerCount - 1);
+
+        ctx.beginPath();
+        if (isTopLayer) {
+          ctx.setLineDash([]);
+        } else {
+          ctx.setLineDash([3 + Math.sin(i * 1.3) * 1, 3 + Math.cos(i * 2.1) * 1.5]);
+        }
+        ctx.moveTo(objCenterX - lw, ly);
+        ctx.lineTo(objCenterX + lw, ly);
+        ctx.strokeStyle = isTopLayer
+          ? (dark ? 'rgba(180,130,255,' + (0.09).toFixed(3) + ')'
+                  : 'rgba(139,92,246,' + (0.07).toFixed(3) + ')')
+          : (dark ? 'rgba(148,163,184,' + lyAlpha.toFixed(3) + ')'
+                  : 'rgba(37,99,235,' + lyAlpha.toFixed(3) + ')');
+        ctx.lineWidth = isTopLayer ? 1.0 : 0.5;
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+
+      // --- Object outline (faint) ---
+      ctx.beginPath();
+      ctx.moveTo(objCenterX - objBottomW / 2, platformY - platformThick);
+      ctx.lineTo(objCenterX - objTopW / 2, objTopY);
+      ctx.lineTo(objCenterX + objTopW / 2, objTopY);
+      ctx.lineTo(objCenterX + objBottomW / 2, platformY - platformThick);
+      ctx.closePath();
+      ctx.strokeStyle = dark ? 'rgba(148,163,184,0.025)' : 'rgba(37,99,235,0.02)';
       ctx.lineWidth = 0.5;
       ctx.stroke();
+
+      // --- Fresh layer UV glow at the top ---
+      if (buildH > 8) {
+        var glowGrad = ctx.createRadialGradient(objCenterX, objTopY, 0, objCenterX, objTopY, objTopW);
+        glowGrad.addColorStop(0, dark ? 'rgba(180,130,255,0.03)' : 'rgba(139,92,246,0.025)');
+        glowGrad.addColorStop(1, 'rgba(180,130,255,0)');
+        ctx.fillStyle = glowGrad;
+        ctx.beginPath();
+        ctx.arc(objCenterX, objTopY, objTopW, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
-    ctx.setLineDash([]);
   }
 
   // --- Main draw loop ---
@@ -582,13 +944,16 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
     buildHexGrid();
     ctx.drawImage(gridCanvas, 0, 0);
 
-    // 2. Draw 3D printing layer lines
-    drawLayerLines(ctx);
+    // 2. Draw enhanced 3D printing (build platform + object + layer lines)
+    draw3dPrinting(ctx);
 
-    // 3. Draw UV light beams
+    // 3. Draw UV light beams (with curing zones + source lamps)
     drawUvBeams(ctx);
 
-    // 4. Update & draw floating molecules
+    // 4. Draw UV photon particles
+    drawUvPhotons(ctx);
+
+    // 5. Update & draw floating molecules (including glassware)
     var dark = isDark();
     for (var i = 0; i < molecules.length; i++) {
       var mol = molecules[i];
@@ -630,6 +995,8 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
       if (mol.type === 'benzene') drawBenzene(ctx, mol);
       else if (mol.type === 'polymer') drawPolymer(ctx, mol);
       else if (mol.type === 'photocrosslink') drawPhotoCrosslink(ctx, mol);
+      else if (mol.type === 'beaker') drawBeaker(ctx, mol);
+      else if (mol.type === 'erlenmeyer') drawErlenmeyer(ctx, mol);
     }
 
     animId = requestAnimationFrame(draw);
@@ -661,6 +1028,15 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
       resize();
       initMolecules();
     }, 200);
+  });
+
+  // Theme change listener — redraw hex grid when switching dark/light
+  var themeObserver = new MutationObserver(function () {
+    gridDirty = true;
+  });
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class']
   });
 
   resize();
