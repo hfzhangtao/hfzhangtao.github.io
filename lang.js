@@ -31,12 +31,12 @@ window.TRANS = {
     'about.heading': 'About Me',
     'about.bio1': 'I am a postdoctoral researcher at The Hong Kong Polytechnic University (PolyU), specializing in polymer science and additive manufacturing. My research bridges smart materials, sustainable chemistry, and advanced 3D/4D printing technologies.',
     'about.bio2': 'I received my PhD in Polymer Science from the University of Groningen (RUG) in 2025, where I worked on stimuli-responsive materials and vat photopolymerization. Prior to that, I earned my MSc from the University of Science and Technology of China (USTC) and my BEng from Dalian University of Technology (DLUT).',
-    'about.bio3': 'With 13 SCI publications and over 900 citations, I am passionate about advancing next-generation intelligent manufacturing and green printing technologies.',
+    'about.bio3': 'With 14 SCI publications and over 900 citations, I am passionate about advancing next-generation intelligent manufacturing and green printing technologies.',
     'about.quickFacts': 'Quick Facts',
     'about.fact1': 'Hong Kong SAR',
     'about.fact2': 'The Hong Kong Polytechnic University',
     'about.fact3': 'PhD in Polymer Science (RUG, 2025)',
-    'about.fact4': '13 SCI publications · 900+ citations',
+    'about.fact4': '14 SCI publications · 900+ citations',
     'about.fact5': 'ORCID: 0000-0002-1845-9990',
 
     // Research
@@ -94,9 +94,9 @@ window.TRANS = {
 
     // Publications
     'publications.heading': 'Selected Publications',
-    'publications.count': '13 SCI publications with 900+ citations',
+    'publications.count': '14 SCI publications with 900+ citations',
     'publications.filterAll': 'All',
-    'publications.showMore': 'Show All 13 Publications',
+    'publications.showMore': 'Show All 14 Publications',
     'publications.showLess': 'Show Less',
     'publications.conf.heading': 'Conference Presentations',
     'publications.conf.oral': 'Oral Presentation',
@@ -187,12 +187,12 @@ window.TRANS = {
     'about.heading': '关于我',
     'about.bio1': '我是香港理工大学（PolyU）的博士后研究员，专注于高分子科学与增材制造。我的研究横跨智能材料、可持续化学和先进的3D/4D打印技术。',
     'about.bio2': '我于2025年在荷兰格罗宁根大学（RUG）获得高分子科学博士学位，研究方向为刺激响应材料和光固化3D打印。此前，我在中国科学技术大学（USTC）获得硕士学位，在大连理工大学（DLUT）获得学士学位。',
-    'about.bio3': '已发表13篇SCI论文，被引用超过900次，我致力于推动下一代智能制造和绿色打印技术的发展。',
+    'about.bio3': '已发表14篇SCI论文，被引用超过900次，我致力于推动下一代智能制造和绿色打印技术的发展。',
     'about.quickFacts': '基本信息',
     'about.fact1': '香港特别行政区',
     'about.fact2': '香港理工大学',
     'about.fact3': '高分子科学博士 (格罗宁根大学, 2025)',
-    'about.fact4': '13篇SCI论文 · 900+次引用',
+    'about.fact4': '14篇SCI论文 · 900+次引用',
     'about.fact5': 'ORCID: 0000-0002-1845-9990',
 
     // Research
@@ -250,9 +250,9 @@ window.TRANS = {
 
     // Publications
     'publications.heading': '代表性论文',
-    'publications.count': '13篇SCI论文，引用900+次',
+    'publications.count': '14篇SCI论文，引用900+次',
     'publications.filterAll': '全部',
-    'publications.showMore': '显示全部13篇论文',
+    'publications.showMore': '显示全部14篇论文',
     'publications.showLess': '收起',
     'publications.conf.heading': '学术会议报告',
     'publications.conf.oral': '口头报告',

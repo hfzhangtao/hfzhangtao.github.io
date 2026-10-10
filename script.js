@@ -164,7 +164,7 @@ const morePubs = document.getElementById('morePubs');
 pubToggle?.addEventListener('click', () => {
   morePubs.classList.toggle('hidden');
   const isExpanded = !morePubs.classList.contains('hidden');
-  var showMore = window.__getTranslation('publications.showMore') || 'Show All 13 Publications';
+  var showMore = window.__getTranslation('publications.showMore') || 'Show All 14 Publications';
   var showLess = window.__getTranslation('publications.showLess') || 'Show Less';
   pubToggle.innerHTML = isExpanded
     ? '<i class="fa-solid fa-chevron-up mr-2"></i>' + showLess
@@ -210,7 +210,7 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
       if (pubToggleBtn) {
         pubToggleBtn.style.display = '';
         pubToggleBtn.innerHTML = '<i class="fa-solid fa-chevron-down mr-2"></i>' +
-          (window.__getTranslation('publications.showMore') || 'Show All 13 Publications');
+          (window.__getTranslation('publications.showMore') || 'Show All 14 Publications');
       }
     }
   });
