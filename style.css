@@ -438,3 +438,17 @@ button:focus-visible {
 .count-up {
   display: inline-block;
 }
+
+/* ============================================================
+   LANGUAGE FLAG ICONS (CN / EN toggle)
+   ============================================================ */
+.lang-flag {
+  width: 15px;
+  height: 10px;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  flex-shrink: 0;
+}
+.dark .lang-flag {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+}

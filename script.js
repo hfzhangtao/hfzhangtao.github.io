@@ -9,6 +9,13 @@ window.__getTranslation = function (key, lang) {
   return d[key];
 };
 
+// Inline SVG flags (Windows does not render flag emojis, so use SVG)
+window.__langFlag = function (code) {
+  return code === 'zh'
+    ? '<svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#DE2910"/><g fill="#FFDE00"><g transform="translate(5 5) scale(3)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g><g transform="translate(10 2) rotate(149)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g><g transform="translate(12 4) rotate(172)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g><g transform="translate(12 7) rotate(-164)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g><g transform="translate(10 9) rotate(-141)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g></g></svg>'
+    : '<svg class="lang-flag" viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#012169"/><path d="M0 0L60 40M60 0L0 40" stroke="#fff" stroke-width="8"/><path d="M0 0L60 40M60 0L0 40" stroke="#C8102E" stroke-width="3.2"/><path d="M30 0V40M0 20H60" stroke="#fff" stroke-width="13"/><path d="M30 0V40M0 20H60" stroke="#C8102E" stroke-width="8"/></svg>';
+};
+
 window.applyLanguage = function (lang) {
   lang = lang || window.__currentLang;
   // Update all [data-i18n] elements
@@ -19,10 +26,11 @@ window.applyLanguage = function (lang) {
     var val = window.__getTranslation(key, lang);
     if (val !== undefined) el.textContent = val;
   }
-  // Update toggle button text
+  // Update toggle button (flag + label of the language you switch TO)
   var toggles = document.querySelectorAll('#langToggle, #mobileLangToggle');
   for (var j = 0; j < toggles.length; j++) {
-    toggles[j].textContent = lang === 'en' ? 'CN' : 'EN';
+    var targetLang = lang === 'en' ? 'zh' : 'en';
+    toggles[j].innerHTML = window.__langFlag(targetLang) + '<span>' + (targetLang === 'zh' ? 'CN' : 'EN') + '</span>';
   }
   // Update HTML lang attribute
   document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
