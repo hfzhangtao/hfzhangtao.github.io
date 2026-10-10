@@ -60,10 +60,106 @@ window.toggleLanguage = function () {
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', function () {
     window.applyLanguage(window.__currentLang);
+    window.loadCitationCounts();
   });
 } else {
   window.applyLanguage(window.__currentLang);
+  window.loadCitationCounts();
 }
+
+// ------------------------------------------------------------
+// Per-paper citation counts (Google-Scholar style, OpenAlex API)
+// ------------------------------------------------------------
+window.__citeTTL = 7 * 24 * 60 * 60 * 1000; // 7-day localStorage cache
+window.__citeCache = {};
+try { window.__citeCache = JSON.parse(localStorage.getItem('citeCache') || '{}'); } catch (e) {}
+
+window.__normTitle = function (t) {
+  return (t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+};
+
+window.__renderCiteBadge = function (pub, count, workUrl) {
+  if (!count || count <= 0) return; // Google Scholar hides "Cited by" for 0 citations
+  var authors = pub.querySelector('p.text-gray-500');
+  if (!authors) return;
+  var old = pub.querySelector('.cite-badge');
+  if (old) {
+    if (parseInt(old.getAttribute('data-cite-n'), 10) === count) return;
+    old.remove();
+  }
+  var badge = document.createElement('a');
+  badge.className = 'cite-badge';
+  badge.setAttribute('data-cite-n', count);
+  badge.setAttribute('aria-label', 'Cited by ' + count);
+  if (workUrl) {
+    badge.href = workUrl;
+    badge.target = '_blank';
+    badge.rel = 'noopener';
+  }
+  var label = window.__getTranslation('publications.citedBy', window.__currentLang) || 'Cited by';
+  badge.innerHTML = '<i class="fa-solid fa-quote-left"></i> <span data-i18n="publications.citedBy">' + label + '</span> <span class="cite-num">0</span>';
+  authors.appendChild(badge);
+  // count-up animation, same easing family as hero stats
+  var num = badge.querySelector('.cite-num');
+  var startTime = null;
+  var duration = 900;
+  function step(ts) {
+    if (!startTime) startTime = ts;
+    var p = Math.min((ts - startTime) / duration, 1);
+    num.textContent = Math.round((1 - Math.pow(1 - p, 3)) * count);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+};
+
+window.__fetchCiteCount = function (pub, doi, title, delay) {
+  var key = doi || ('t:' + window.__normTitle(title).slice(0, 80));
+  var cached = window.__citeCache[key];
+  var fresh = cached && (Date.now() - cached.t) < window.__citeTTL;
+  if (cached) window.__renderCiteBadge(pub, cached.n, cached.u);
+  if (fresh) return;
+  var url = doi
+    ? 'https://api.openalex.org/works/doi:' + encodeURIComponent(doi)
+    : 'https://api.openalex.org/works?filter=title.search:' + encodeURIComponent(title) + '&per-page=5';
+  setTimeout(function () {
+    fetch(url)
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var work = null;
+        if (data.id) {
+          work = data; // direct hit by DOI
+        } else if (data.results && data.results.length) {
+          // title search: only accept a strong title match to avoid wrong papers
+          var q = window.__normTitle(title);
+          for (var i = 0; i < data.results.length; i++) {
+            var rt = window.__normTitle(data.results[i].title);
+            if (rt === q || (rt.length > 30 && rt.slice(0, 30) === q.slice(0, 30))) {
+              work = data.results[i];
+              break;
+            }
+          }
+        }
+        if (!work || typeof work.cited_by_count !== 'number') return;
+        window.__citeCache[key] = { n: work.cited_by_count, u: work.id || null, t: Date.now() };
+        try { localStorage.setItem('citeCache', JSON.stringify(window.__citeCache)); } catch (e2) {}
+        window.__renderCiteBadge(pub, work.cited_by_count, work.id);
+      })
+      .catch(function () { /* offline or rate-limited: badge stays absent */ });
+  }, delay || 0);
+};
+
+window.loadCitationCounts = function () {
+  var pubs = document.querySelectorAll('.pub-item');
+  for (var i = 0; i < pubs.length; i++) {
+    var pub = pubs[i];
+    var doiLink = pub.querySelector('a[href^="https://doi.org/"]');
+    var doi = doiLink ? doiLink.getAttribute('href').replace('https://doi.org/', '') : null;
+    var titleEl = pub.querySelector('p.font-medium:not(.text-primary)');
+    var title = titleEl ? titleEl.textContent.replace(/\s+/g, ' ').trim() : '';
+    if (!doi && !title) continue;
+    window.__fetchCiteCount(pub, doi, title, i * 300); // stagger requests to be polite to the API
+  }
+};
 
 // Theme toggle
 const themeToggle = document.getElementById('themeToggle');

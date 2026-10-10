@@ -452,3 +452,42 @@ button:focus-visible {
 .dark .lang-flag {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
 }
+
+/* ============================================================
+   CITATION BADGE (Google-Scholar style "Cited by N")
+   ============================================================ */
+.cite-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 8px;
+  padding: 1px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.08);
+  white-space: nowrap;
+  vertical-align: middle;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.cite-badge:hover {
+  background: rgba(37, 99, 235, 0.16);
+  color: #1d4ed8;
+}
+.cite-badge i {
+  font-size: 9px;
+  opacity: 0.65;
+}
+.cite-num {
+  font-variant-numeric: tabular-nums;
+}
+.dark .cite-badge {
+  color: #60a5fa;
+  background: rgba(59, 130, 246, 0.15);
+}
+.dark .cite-badge:hover {
+  background: rgba(59, 130, 246, 0.25);
+  color: #93c5fd;
+}

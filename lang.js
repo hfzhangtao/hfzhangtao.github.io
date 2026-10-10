@@ -95,6 +95,7 @@ window.TRANS = {
     // Publications
     'publications.heading': 'Selected Publications',
     'publications.count': '14 SCI publications with 950+ citations',
+    'publications.citedBy': 'Cited by',
     'publications.filterAll': 'All',
     'publications.showMore': 'Show All 14 Publications',
     'publications.showLess': 'Show Less',
@@ -251,6 +252,7 @@ window.TRANS = {
     // Publications
     'publications.heading': '代表性论文',
     'publications.count': '14篇SCI论文，引用950+次',
+    'publications.citedBy': '被引用',
     'publications.filterAll': '全部',
     'publications.showMore': '显示全部14篇论文',
     'publications.showLess': '收起',
