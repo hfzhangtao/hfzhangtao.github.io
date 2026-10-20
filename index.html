@@ -20,7 +20,7 @@
     }
   </script>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
 
@@ -229,8 +229,8 @@
       <!-- Research Demo Video -->
       <div class="fade-in mb-14">
         <div class="relative rounded-2xl overflow-hidden shadow-lg border dark:border-gray-700 bg-black">
-          <video src="gallery/merged_4D_then_simultaneous_2x.mp4"
-                 autoplay loop muted playsinline
+          <video id="researchVideo" src="gallery/merged_4D_then_simultaneous_2x.mp4"
+                 loop muted playsinline preload="none" poster="gallery/poster-4d-demo.jpg"
                  class="w-full block"
                  style="max-height:480px;object-fit:contain;"
                  aria-label="4D printed stimulus-responsive material demonstration">

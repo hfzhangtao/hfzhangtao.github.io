@@ -6,14 +6,14 @@ const galleryData = [
   {
     type: "image",
     src: "gallery/Fig1.jpg",
-    thumb: "gallery/Fig1.jpg",
+    thumb: "gallery/thumbs/Fig1.jpg",
     title: "Figure 1",
     desc: ""
   },
   {
     type: "image",
     src: "gallery/Fig2.jpg",
-    thumb: "gallery/Fig2.jpg",
+    thumb: "gallery/thumbs/Fig2.jpg",
     title: "Figure 2",
     desc: ""
   },
@@ -27,28 +27,28 @@ const galleryData = [
   {
     type: "image",
     src: "gallery/Fig3.jpg",
-    thumb: "gallery/Fig3.jpg",
+    thumb: "gallery/thumbs/Fig3.jpg",
     title: "Figure 3",
     desc: ""
   },
   {
     type: "image",
     src: "gallery/Fig4.jpg",
-    thumb: "gallery/Fig4.jpg",
+    thumb: "gallery/thumbs/Fig4.jpg",
     title: "Figure 4",
     desc: ""
   },
   {
     type: "image",
     src: "gallery/Fig5.png",
-    thumb: "gallery/Fig5.png",
+    thumb: "gallery/thumbs/Fig5.jpg",
     title: "Figure 5",
     desc: ""
   },
   {
     type: "image",
     src: "gallery/Fig6.png",
-    thumb: "gallery/Fig6.png",
+    thumb: "gallery/thumbs/Fig6.jpg",
     title: "Figure 6",
     desc: ""
   },
@@ -62,7 +62,7 @@ const galleryData = [
   {
     type: "image",
     src: "gallery/Fig7.png",
-    thumb: "gallery/Fig7.png",
+    thumb: "gallery/thumbs/Fig7.jpg",
     title: "Figure 7",
     desc: ""
   },
@@ -95,7 +95,7 @@ function buildItem(item, index) {
   } else {
     media = '\
     <div class="gallery-item group relative shrink-0 w-80 md:w-96 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-1 hover:ring-2 hover:ring-primary/40 transition-all duration-300" style="aspect-ratio:16/9" data-index="' + index + '">\
-      <img src="' + item.src + '" alt="' + item.title + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">\
+      <img src="' + item.thumb + '" alt="' + item.title + '" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">\
       <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">\
         <p class="text-white text-sm font-medium truncate">' + item.title + '</p>\
       </div>\

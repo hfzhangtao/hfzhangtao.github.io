@@ -1246,3 +1246,22 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
     revealObserver.observe(reveals[i]);
   }
 })();
+
+// ============================================================
+// LAZY RESEARCH VIDEO — only download/play when scrolled into view
+// ============================================================
+(function () {
+  var video = document.getElementById('researchVideo');
+  if (!video) return;
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        var p = video.play();
+        if (p && p.catch) p.catch(function () { /* not ready yet: retried on next intersection */ });
+      } else {
+        video.pause();
+      }
+    });
+  }, { threshold: 0.15 });
+  observer.observe(video);
+})();
