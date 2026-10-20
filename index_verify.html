@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Dr. Tao Zhang - Personal Website</title>
+  <meta name="description" content="Dr. Tao Zhang — Postdoctoral Researcher at The Hong Kong Polytechnic University. Polymer science, 3D/4D printing, stimuli-responsive materials.">
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="tailwind.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="fa/css/all.min.css">
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+
+  <!-- Particle network background -->
+  <canvas id="particleBg"></canvas>
+  <!-- Mouse glow (hero only) -->
+  <div id="mouseGlow" style="opacity:0;"></div>
+
+  <!-- Navigation -->
+  <nav id="navbar" class="fixed top-0 w-full z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm transition-all duration-300">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="#hero" class="text-xl font-bold text-primary">Tao Zhang</a>
+
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#about" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.about">About</a>
+        <a href="#research" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.research">Research</a>
+        <a href="#education" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.education">Education</a>
+        <a href="#publications" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.publications">Publications</a>
+        <a href="#skills" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.skills">Skills</a>
+        <a href="#puzzle" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.puzzle">4D Puzzle</a>
+        <a href="#gallery" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.gallery">Gallery</a>
+        <a href="#contact" class="nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.contact">Contact</a>
+        <button id="langToggle" onclick="toggleLanguage()" class="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" aria-label="Switch language"><svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#DE2910"/><g fill="#FFDE00"><g transform="translate(5 5) scale(3)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g><g transform="translate(10 2) rotate(149)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g><g transform="translate(12 4) rotate(172)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g><g transform="translate(12 7) rotate(-164)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g><g transform="translate(10 9) rotate(-141)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g></g></svg><span>CN</span></button>
+        <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="Toggle theme">
+          <i id="themeIcon" class="fa-solid fa-moon text-lg"></i>
+        </button>
+      </div>
+
+      <button id="menuBtn" class="md:hidden p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="Menu">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+    </div>
+
+    <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-900 border-t dark:border-gray-700 shadow-lg">
+      <div class="px-6 py-4 flex flex-col gap-4">
+        <a href="#about" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.about">About</a>
+        <a href="#research" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.research">Research</a>
+        <a href="#education" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.education">Education</a>
+        <a href="#publications" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.publications">Publications</a>
+        <a href="#skills" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.skills">Skills</a>
+        <a href="#puzzle" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.puzzle">4D Puzzle</a>
+        <a href="#gallery" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.gallery">Gallery</a>
+        <a href="#contact" class="mobile-nav-link text-sm font-medium hover:text-primary transition-colors" data-i18n="nav.contact">Contact</a>
+        <button id="mobileLangToggle" onclick="toggleLanguage()" class="self-start inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" aria-label="Switch language"><svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#DE2910"/><g fill="#FFDE00"><g transform="translate(5 5) scale(3)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g><g transform="translate(10 2) rotate(149)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g><g transform="translate(12 4) rotate(172)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g><g transform="translate(12 7) rotate(-164)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g><g transform="translate(10 9) rotate(-141)"><polygon points="0,-1 .951,-.309 .588,.809 -.588,.809 -.951,-.309"/></g></g></svg><span>CN</span></button>
+        <button id="mobileThemeToggle" class="self-start p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="Toggle theme">
+          <i id="mobileThemeIcon" class="fa-solid fa-moon text-lg"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section id="hero" class="min-h-screen flex items-center justify-center pt-16 relative overflow-hidden">
+    <!-- Gradient blobs -->
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+    <div class="hero-blob hero-blob-3"></div>
+    <div class="hero-blob hero-blob-4"></div>
+    <!-- Floating molecular decorations -->
+    <div class="floating-deco float-slow" style="top:12%;left:8%;font-size:42px;">⬡</div>
+    <div class="floating-deco float-fast" style="top:55%;left:5%;font-size:32px;">◇</div>
+    <div class="floating-deco float-rotate" style="top:65%;right:6%;font-size:36px;">⎔</div>
+    <div class="floating-deco float-slow" style="bottom:18%;left:12%;font-size:24px;">⬢</div>
+    <div class="floating-deco float-med" style="bottom:28%;right:14%;font-size:30px;">◎</div>
+    <!-- Additional chemistry lab themed decorations -->
+    <div class="floating-deco float-slow" style="top:18%;right:20%;font-size:28px;">⚗</div>
+    <div class="floating-deco float-fast" style="top:40%;left:3%;font-size:22px;">⚛</div>
+    <div class="floating-deco float-rotate" style="top:72%;left:9%;font-size:30px;">⊛</div>
+    <div class="floating-deco float-med" style="bottom:22%;right:8%;font-size:20px;">⎊</div>
+    <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
+      <div class="fade-in">
+        <div class="w-32 h-32 mx-auto mb-8 rounded-full bg-gradient-to-br from-primary to-secondary p-1 avatar-ring">
+          <img src="Tao.jpeg" alt="Dr. Tao Zhang" class="w-full h-full rounded-full object-cover" style="object-position: center 25%;">
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold mb-4" data-i18n="hero.name">Dr. Tao Zhang</h1>
+        <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-2" data-i18n="hero.title">Postdoctoral Researcher</p>
+        <p class="text-lg text-gray-500 dark:text-gray-500 mb-8 max-w-2xl mx-auto leading-relaxed" data-i18n="hero.affiliation">
+          School of Fashion and Textiles · The Hong Kong Polytechnic University
+        </p>
+        <div class="flex justify-center gap-4 flex-wrap">
+          <a href="#contact" class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/25">
+            <i class="fa-solid fa-envelope mr-2"></i><span data-i18n="hero.cta1">Get in Touch</span>
+          </a>
+          <a href="#research" class="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-full font-medium hover:border-primary hover:text-primary transition-colors">
+            <i class="fa-solid fa-flask mr-2"></i><span data-i18n="hero.cta2">View Research</span>
+          </a>
+        </div>
+        <div class="flex justify-center gap-4 mt-6">
+          <a href="https://scholar.google.com/citations?user=rdPTbQIAAAAJ&hl=en" target="_blank" rel="noopener" class="text-gray-500 hover:text-primary transition-colors text-2xl" title="Google Scholar">
+            <i class="fa-brands fa-google-scholar"></i>
+          </a>
+          <a href="https://orcid.org/0000-0002-1845-9990" target="_blank" rel="noopener" class="text-gray-500 hover:text-primary transition-colors text-2xl" title="ORCID">
+            <i class="fa-brands fa-orcid"></i>
+          </a>
+          <a href="https://nl.linkedin.com/in/tao-zhang-094980294" target="_blank" rel="noopener" class="text-gray-500 hover:text-primary transition-colors text-2xl" title="LinkedIn">
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+        </div>
+      </div>
+      <!-- Metrics Bar -->
+      <div class="flex justify-center gap-6 sm:gap-10 mt-10 flex-wrap fade-in">
+        <div class="text-center">
+          <div class="text-2xl md:text-3xl font-bold text-primary"><span class="count-up" data-target="9" data-suffix="">0</span></div>
+          <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1" data-i18n="hero.metric1">h-index</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl md:text-3xl font-bold text-primary"><span class="count-up" data-target="950" data-suffix="+">0</span></div>
+          <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1" data-i18n="hero.metric2">Citations</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl md:text-3xl font-bold text-primary"><span class="count-up" data-target="14" data-suffix="">0</span></div>
+          <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1" data-i18n="hero.metric3">Publications</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl md:text-3xl font-bold text-primary"><span class="count-up" data-target="9" data-suffix="+">0</span></div>
+          <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1" data-i18n="hero.metric4">Years Experience</div>
+        </div>
+      </div>
+    </div>
+    <!-- Scroll-down indicator — positioned relative to hero section -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce hidden md:block z-10">
+      <i class="fa-solid fa-chevron-down text-gray-400 text-xl"></i>
+    </div>
+  </section>
+
+  <!-- Wave divider -->
+  <div class="wave-divider wave-divider-top">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="text-gray-50 dark:text-gray-800/50">
+      <path d="M0,30 C200,0 400,60 600,30 C800,0 1000,60 1200,30 L1200,60 L0,60 Z" fill="currentColor"/>
+    </svg>
+  </div>
+
+  <!-- About -->
+  <section id="about" class="py-24 bg-gray-50 dark:bg-gray-800/50 transition-colors">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="fade-in">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center" data-i18n="about.heading">About Me</h2>
+        <div class="w-16 h-1 bg-primary mx-auto mb-12 rounded-full"></div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-12 items-start">
+        <div class="reveal-left">
+          <p class="text-lg leading-relaxed mb-4" data-i18n="about.bio1">
+            I am a postdoctoral researcher at The Hong Kong Polytechnic University (PolyU), specializing in polymer science and additive manufacturing. My research bridges smart materials, sustainable chemistry, and advanced 3D/4D printing technologies.
+          </p>
+          <p class="text-lg leading-relaxed mb-4" data-i18n="about.bio2">
+            I received my PhD in Polymer Science from the University of Groningen (RUG) in 2025, where I worked on stimuli-responsive materials and vat photopolymerization. Prior to that, I earned my MSc from the University of Science and Technology of China (USTC) and my BEng from Dalian University of Technology (DLUT).
+          </p>
+          <p class="text-lg leading-relaxed" data-i18n="about.bio3">
+            With 14 SCI publications and over 950 citations, I am passionate about advancing next-generation intelligent manufacturing and green printing technologies.
+          </p>
+        </div>
+        <div class="reveal-right bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border dark:border-gray-700 card-hover">
+          <h3 class="font-bold text-lg mb-4" data-i18n="about.quickFacts">Quick Facts</h3>
+          <ul class="space-y-3 text-sm">
+            <li class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary shrink-0">
+                <i class="fa-solid fa-location-dot"></i>
+              </span>
+              <span data-i18n="about.fact1">Hong Kong SAR</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary shrink-0">
+                <i class="fa-solid fa-building-columns"></i>
+              </span>
+              <span data-i18n="about.fact2">The Hong Kong Polytechnic University</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary shrink-0">
+                <i class="fa-solid fa-graduation-cap"></i>
+              </span>
+              <span data-i18n="about.fact3">PhD in Polymer Science (RUG, 2025)</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary shrink-0">
+                <i class="fa-solid fa-quote-right"></i>
+              </span>
+              <span data-i18n="about.fact4">14 SCI publications · 950+ citations</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary shrink-0">
+                <i class="fa-solid fa-id-card"></i>
+              </span>
+              <span data-i18n="about.fact5">ORCID: 0000-0002-1845-9990</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wave divider -->
+  <div class="wave-divider wave-divider-top">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+      <path d="M0,30 C300,60 600,0 900,30 C1050,45 1150,50 1200,30 L1200,60 L0,60 Z" fill="currentColor" class="text-white dark:text-gray-900"/>
+    </svg>
+  </div>
+
+  <!-- Research -->
+  <section id="research" class="py-24 transition-colors">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="fade-in">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center" data-i18n="research.heading">Research Interests</h2>
+        <div class="w-16 h-1 bg-primary mx-auto mb-12 rounded-full"></div>
+      </div>
+
+      <!-- Research Demo Video -->
+      <div class="fade-in mb-14">
+        <div class="relative rounded-2xl overflow-hidden shadow-lg border dark:border-gray-700 bg-black">
+          <video id="researchVideo" src="gallery/merged_4D_then_simultaneous_2x.mp4"
+                 loop muted playsinline preload="none" poster="gallery/poster-4d-demo.jpg"
+                 class="w-full block"
+                 style="max-height:480px;object-fit:contain;"
+                 aria-label="4D printed stimulus-responsive material demonstration">
+          </video>
+        </div>
+        <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-3" data-i18n="research.demoCaption">
+          <i class="fa-solid fa-film mr-1"></i> 4D Printed Stimulus-Responsive Material — UV / Thermal Dual-Response Demo
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Research 1 -->
+        <div class="reveal-left project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary mb-4 card-icon">
+            <i class="fa-solid fa-arrows-spin text-xl"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-3" data-i18n="research.card1.title">4D Printing & Smart Materials</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed" data-i18n="research.card1.desc">
+            Transition from conventional 3D printing to 4D materials via vat photopolymerization and two-photon polymerization — developing smart materials with dynamic covalent chemistry, preset shape memory, and color-changing effects that respond to external stimuli such as UV light and temperature, expanding their potential in intelligent and adaptive applications.
+          </p>
+        </div>
+
+        <!-- Research 2 -->
+        <div class="reveal-right project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 mb-4 card-icon">
+            <i class="fa-solid fa-leaf text-xl"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-3" data-i18n="research.card2.title">Sustainable Polymer Inks</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed" data-i18n="research.card2.desc">
+            Designing and preparing eco-friendly UV-curable polymer inks derived from natural plant-based resources. Optimizing production processes to enhance environmental sustainability, reduce carbon footprint, and improve life cycle assessment.
+          </p>
+        </div>
+
+        <!-- Research 3 -->
+        <div class="reveal-scale project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 mb-4 card-icon">
+            <i class="fa-solid fa-shield-virus text-xl"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-3" data-i18n="research.card3.title">Multifunctional 3D Printing Materials</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed" data-i18n="research.card3.desc">
+            Developing multifunctional additive manufacturing materials with antibacterial properties, enhancing their applicability in real-world scenarios while reducing volatile organic compound (VOC) emissions during preparation.
+          </p>
+        </div>
+
+        <!-- Research 4 -->
+        <div class="reveal-scale project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 mb-4 card-icon">
+            <i class="fa-solid fa-recycle text-xl"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-3" data-i18n="research.card4.title">Recyclable Aerogels</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed" data-i18n="research.card4.desc">
+            Development of closed-loop recyclable polyimide aerogels with sustainable end-of-life management, contributing to circular economy principles in advanced materials.
+          </p>
+        </div>
+
+        <!-- Research 5 -->
+        <div class="reveal-scale project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 mb-4 card-icon">
+            <i class="fa-solid fa-fire-extinguisher text-xl"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-3" data-i18n="research.card5.title">Flame Retardant Composites & Coatings</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed" data-i18n="research.card5.desc">
+            Development of flame retardant engineering plastics and coatings (polypropylene, polyurethane, epoxy resin) with enhanced fire safety performance for structural and industrial applications.
+          </p>
+        </div>
+
+        <!-- Research 6 -->
+        <div class="reveal-scale project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 mb-4 card-icon">
+            <i class="fa-solid fa-lightbulb text-xl"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-3" data-i18n="research.card6.title">Stimuli-Responsive & Luminescent Fibers</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed" data-i18n="research.card6.desc">
+            Vat photopolymerization of luminescent fibers and stimuli-responsive materials with dynamic optical and mechanical responses for smart textile and sensing applications.
+          </p>
+        </div>
+
+        <!-- Research 7 -->
+        <div class="reveal-scale project-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 mb-4 card-icon">
+            <i class="fa-solid fa-bolt text-xl"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-3" data-i18n="research.card7.title">Electroluminescent Materials & Strain Sensors</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed" data-i18n="research.card7.desc">
+            Development of alternating current electroluminescent (ACEL) materials and ion gel-based resistive strain sensors for flexible electronics, wearable devices, and smart textile applications.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Wave divider -->
+  <div class="wave-divider wave-divider-top">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="text-gray-50 dark:text-gray-800/50">
+      <path d="M0,30 C200,0 400,60 600,30 C800,0 1000,60 1200,30 L1200,60 L0,60 Z" fill="currentColor"/>
+    </svg>
+  </div>
+
+  <!-- Education -->
+  <section id="education" class="py-24 bg-gray-50 dark:bg-gray-800/50 transition-colors">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="fade-in">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center" data-i18n="education.heading">Education & Experience</h2>
+        <div class="w-16 h-1 bg-primary mx-auto mb-12 rounded-full"></div>
+      </div>
+      <div class="space-y-8">
+
+        <div class="fade-in flex gap-6 relative timeline-item">
+          <img src="logos/polyu.png" alt="" aria-hidden="true" class="edu-watermark wm-polyu">
+          <div class="flex flex-col items-center shrink-0">
+            <div class="w-4 h-4 rounded-full bg-primary mt-1.5 ring-4 ring-blue-100 dark:ring-blue-900/30"></div>
+            <div class="w-0.5 h-full bg-gray-300 dark:bg-gray-600 mt-2"></div>
+          </div>
+          <div class="flex-1 pb-8 timeline-text">
+            <span class="text-sm text-primary font-medium" data-i18n="education.item1.date">2026 – Present</span>
+            <h3 class="text-lg font-bold mt-1" data-i18n="education.item1.title">Postdoctoral Researcher</h3>
+            <p class="text-gray-600 dark:text-gray-400 mt-1" data-i18n="education.item1.school">The Hong Kong Polytechnic University (PolyU)</p>
+            <p class="text-sm text-gray-500 dark:text-gray-500 mt-2 leading-relaxed" data-i18n="education.item1.desc">
+              School of Fashion and Textiles. Continuing research in polymer science and advanced manufacturing.
+            </p>
+          </div>
+        </div>
+
+        <div class="fade-in flex gap-6 relative timeline-item">
+          <img src="logos/rug-monogram.svg" alt="" aria-hidden="true" class="edu-watermark wm-rug">
+          <div class="flex flex-col items-center shrink-0">
+            <div class="w-4 h-4 rounded-full bg-primary mt-1.5 ring-4 ring-blue-100 dark:ring-blue-900/30"></div>
+            <div class="w-0.5 h-full bg-gray-300 dark:bg-gray-600 mt-2"></div>
+          </div>
+          <div class="flex-1 pb-8 timeline-text">
+            <span class="text-sm text-primary font-medium" data-i18n="education.item2.date">2022 – 2025</span>
+            <h3 class="text-lg font-bold mt-1" data-i18n="education.item2.title">PhD in Polymer Science</h3>
+            <p class="text-gray-600 dark:text-gray-400 mt-1" data-i18n="education.item2.school">University of Groningen (RUG), The Netherlands</p>
+            <p class="text-sm text-gray-500 dark:text-gray-500 mt-2 leading-relaxed" data-i18n="education.item2.desc">
+              Dissertation: Smart stimuli-responsive materials, vat photopolymerization, and sustainable 3D/4D printing. Combined intelligent responsiveness, multifunctionality, and sustainable manufacturing for next-generation green printing technologies.
+            </p>
+          </div>
+        </div>
+
+        <div class="fade-in flex gap-6 relative timeline-item">
+          <img src="logos/ustc.png" alt="" aria-hidden="true" class="edu-watermark wm-ustc">
+          <div class="flex flex-col items-center shrink-0">
+            <div class="w-4 h-4 rounded-full bg-primary mt-1.5 ring-4 ring-blue-100 dark:ring-blue-900/30"></div>
+            <div class="w-0.5 h-full bg-gray-300 dark:bg-gray-600 mt-2"></div>
+          </div>
+          <div class="flex-1 pb-8 timeline-text">
+            <span class="text-sm text-primary font-medium" data-i18n="education.item3.date">2017 – 2020</span>
+            <h3 class="text-lg font-bold mt-1" data-i18n="education.item3.title">MSc in Polymer Chemistry and Physics</h3>
+            <p class="text-gray-600 dark:text-gray-400 mt-1" data-i18n="education.item3.school">University of Science and Technology of China (USTC)</p>
+            <p class="text-sm text-gray-500 dark:text-gray-500 mt-2 leading-relaxed" data-i18n="education.item3.desc">
+              Focused on flame retardant applications of engineering plastics and coatings (polypropylene, polyurethane, epoxy resin).
+            </p>
+          </div>
+        </div>
+
+        <div class="fade-in flex gap-6 relative timeline-item">
+          <img src="logos/dlut.png" alt="" aria-hidden="true" class="edu-watermark wm-dlut">
+          <div class="flex flex-col items-center shrink-0">
+            <div class="w-4 h-4 rounded-full bg-primary mt-1.5 ring-4 ring-blue-100 dark:ring-blue-900/30"></div>
+          </div>
+          <div class="timeline-text">
+            <span class="text-sm text-primary font-medium" data-i18n="education.item4.date">2013 – 2017</span>
+            <h3 class="text-lg font-bold mt-1" data-i18n="education.item4.title">BEng in Chemical Engineering and Technology</h3>
+            <p class="text-gray-600 dark:text-gray-400 mt-1" data-i18n="education.item4.school">Dalian University of Technology (DLUT)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Awards -->
+      <div class="mt-16 fade-in">
+        <h3 class="text-2xl font-bold mb-6 text-center" data-i18n="education.awards.heading">Awards & Honors</h3>
+        <div class="max-w-2xl mx-auto space-y-4">
+          <div class="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
+            <span class="w-10 h-10 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 shrink-0">
+              <i class="fa-solid fa-trophy"></i>
+            </span>
+            <div>
+              <p class="font-medium" data-i18n="education.award1.name">China Scholarship Council (CSC) Scholarship</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="education.award1.year">2021</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover">
+            <span class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 shrink-0">
+              <i class="fa-solid fa-medal"></i>
+            </span>
+            <div>
+              <p class="font-medium" data-i18n="education.award2.name">Academic Excellence Scholarship (Second Class)</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="education.award2.year">Dalian University of Technology, 2015 & 2016</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wave divider -->
+  <div class="wave-divider wave-divider-top">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="text-white dark:text-gray-900">
+      <path d="M0,30 C300,60 600,0 900,30 C1050,45 1150,50 1200,30 L1200,60 L0,60 Z" fill="currentColor"/>
+    </svg>
+  </div>
+
+  <!-- Publications -->
+  <section id="publications" class="py-24 transition-colors">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="fade-in">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center" data-i18n="publications.heading">Selected Publications</h2>
+        <div class="w-16 h-1 bg-primary mx-auto mb-2 rounded-full"></div>
+        <p class="text-center text-gray-500 dark:text-gray-400 mb-12 text-sm" data-i18n="publications.count">14 SCI publications with 950+ citations</p>
+      </div>
+
+      <!-- Year Filter Tabs -->
+      <div class="flex flex-wrap justify-center gap-2 mb-8 fade-in" id="pubFilters">
+        <button class="pub-filter-btn active px-4 py-1.5 text-xs font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" data-filter="all" data-i18n="publications.filterAll">All</button>
+        <button class="pub-filter-btn px-4 py-1.5 text-xs font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" data-filter="2026">2026</button>
+        <button class="pub-filter-btn px-4 py-1.5 text-xs font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" data-filter="2025">2025</button>
+        <button class="pub-filter-btn px-4 py-1.5 text-xs font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" data-filter="2021">2021</button>
+        <button class="pub-filter-btn px-4 py-1.5 text-xs font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" data-filter="2020">2020</button>
+        <button class="pub-filter-btn px-4 py-1.5 text-xs font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors" data-filter="2019">2019</button>
+      </div>
+
+      <div class="space-y-4 fade-in">
+        <!-- Pub 1 -->
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2026">
+          <p class="text-sm font-medium text-primary mb-1">Materials Horizons, 2026, Advance Article</p>
+          <div class="flex items-start justify-between gap-3 mb-1">
+            <p class="font-medium"><a href="https://doi.org/10.1039/D6MH01907B" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Jellyfish-Inspired Multilayered Responsive Hydrogels via Micelle-Confined Photopolymerization for Underwater Communication and Emergency Rescue <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+            <a href="Jellyfish-inspired-multilayered-responsive-hydrogels.pdf" target="_blank" rel="noopener" class="shrink-0 inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors whitespace-nowrap" title="PDF (direct view)"><i class="fa-solid fa-file-pdf"></i>PDF</a>
+          </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">F. Sun, T. Zhang*, J. Yu, A. Deng, X. Zhao, B. Fei, K. Loos*, K. Chen*</p>
+        </div>
+
+        <!-- Pub 2 -->
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2025">
+          <p class="text-sm font-medium text-primary mb-1">Macromolecules, 2025, 58(15), 8249–8259</p>
+          <p class="font-medium mb-1"><a href="https://doi.org/10.1021/acs.macromol.5c00567" target="_blank" rel="noopener" class="hover:text-primary transition-colors">3D-Printed Dual Photo- and Thermally Responsive Materials for Smart Adaptability <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, G. Pacella, K. Chen, T. Ye, G. Portale, V. S. D. Voet, R. Folkersma, K. Loos*</p>
+        </div>
+
+        <!-- Pub 3 -->
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2025">
+          <p class="text-sm font-medium text-primary mb-1">Biomacromolecules, 2025, 26(11), 8017–8026</p>
+          <p class="font-medium mb-1"><a href="https://doi.org/10.1021/acs.biomac.5c01471" target="_blank" rel="noopener" class="hover:text-primary transition-colors">In Situ Photoresin Synthesis via Reactive Diluents for Vat Photopolymerization <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, V. S. D. Voet, R. Folkersma, K. Loos*</p>
+        </div>
+
+        <!-- Pub 4 -->
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2026">
+          <p class="text-sm font-medium text-primary mb-1">Virtual and Physical Prototyping, 2026, 21(1)</p>
+          <p class="font-medium mb-1"><a href="https://doi.org/10.1080/17452759.2026.2690309" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Olfactory-Interactive 4D Materials from a Carvone-Based Photocurable Resin <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, K. Chen, K. Janssen, V. S. D. Voet, R. Folkersma, K. Loos*</p>
+        </div>
+
+        <!-- Pub 5 -->
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2025">
+          <p class="text-sm font-medium text-primary mb-1">Monatshefte für Chemie, 2025, 309</p>
+          <p class="font-medium mb-1"><a href="https://doi.org/10.1007/s00706-025-03376-8" target="_blank" rel="noopener" class="hover:text-primary transition-colors">One-Pot Synthesis of PCL-based Acrylate Photoink for 3D Printing <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, V. S. D. Voet, R. Folkersma, K. Loos*</p>
+        </div>
+
+        <!-- Pub 6 -->
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2026">
+          <p class="text-sm font-medium text-primary mb-1">Journal of Materials Science & Technology, 2026, 265, 256–265</p>
+          <div class="flex items-start justify-between gap-3 mb-1">
+            <p class="font-medium"><a href="https://doi.org/10.1016/j.jmst.2025.10.075" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Spider-silk-inspired Dynamic Poly(urethane-urea) Networks with Mechanical Reinforcement via Mismatched Supramolecular Interactions for Luminescent Fibers <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+            <a href="Spider-silk-inspired-dynamic-PUN-networks.pdf" target="_blank" rel="noopener" class="shrink-0 inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full border border-gray-300 dark:border-gray-600 hover:border-primary hover:text-primary transition-colors whitespace-nowrap" title="PDF (direct view)"><i class="fa-solid fa-file-pdf"></i>PDF</a>
+          </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">T. Ye, F. Zhang, T. Zhang, L. Song, J. Tang, C. Zhang, Y. Yin, K. Loos*, C. Wang*</p>
+        </div>
+
+        <!-- Pub 7 -->
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2021">
+          <p class="text-sm font-medium text-primary mb-1">Journal of Colloid and Interface Science, 2021, 604, 378–389</p>
+          <p class="font-medium mb-1"><a href="https://doi.org/10.1016/j.jcis.2021.06.135" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Facilely Produced Highly Adhered, Low Thermal Conductivity and Non-combustible Coatings for Fire Safety <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, J. Xi, S. Qiu, B. Zhang, Z. Luo, W. Xing, L. Song, Y. Hu*</p>
+        </div>
+
+        <!-- Pub 8 -->
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2020">
+          <p class="text-sm font-medium text-primary mb-1">Composites Part A, 2020, 128, 105681</p>
+          <p class="font-medium mb-1"><a href="https://doi.org/10.1016/j.compositesa.2019.105681" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Hydroxyapatite/Polyurea Nanocomposite: Preparation and Multiple Performance Enhancements <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, W. Cai, F. Chu, F. Zhou, S. Liang, C. Ma*, Y. Hu*</p>
+        </div>
+
+        <!-- Pub 9 -->
+        <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2019">
+          <p class="text-sm font-medium text-primary mb-1">Polymer Degradation and Stability, 2019, 165, 207–219</p>
+          <p class="font-medium mb-1"><a href="https://doi.org/10.1016/j.polymdegradstab.2019.05.003" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Synthesis of a Hyperbranched Phosphorus-containing Polyurethane as Char Forming Agent Combined with Ammonium Polyphosphate for Reducing Fire Hazard of Polypropylene <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">T. Zhang, Y. Tao, F. Zhou, H. Sheng, S. Qiu, C. Ma*, Y. Hu*</p>
+        </div>
+
+        <!-- More publications toggle -->
+        <div id="morePubs" class="hidden space-y-4">
+          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2020">
+            <p class="text-sm font-medium text-primary mb-1">Composites Part B, 2020, 190, 107925</p>
+            <p class="font-medium mb-1"><a href="https://doi.org/10.1016/j.compositesb.2020.107925" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Renewable Vanillin-based Flame Retardant Toughening Agent with Ultra-low Phosphorus Loading for the Fabrication of High-performance Epoxy Thermoset <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">F. Chu, C. Ma, T. Zhang, Z. Xu, X. Mu, W. Cai, X. Zhou, S. Ma, Y. Zhou, W. Hu*, L. Song*</p>
+          </div>
+
+          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2020">
+            <p class="text-sm font-medium text-primary mb-1">Chemical Engineering Journal, 2020, 401, 126058</p>
+            <p class="font-medium mb-1"><a href="https://doi.org/10.1016/j.cej.2020.126058" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Integrated Effect of NH2-functionalized/Triazine Based Covalent Organic Framework Black Phosphorus on Reducing Fire Hazards of Epoxy Nanocomposites <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">S. Qiu, B. Zou, T. Zhang, X. Ren, B. Yu, Y. Zhou, Y. Kan, Y. Hu*</p>
+          </div>
+
+          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2020">
+            <p class="text-sm font-medium text-primary mb-1">Polymer Degradation and Stability, 2020, 171, 109029</p>
+            <p class="font-medium mb-1"><a href="https://doi.org/10.1016/j.polymdegradstab.2019.109029" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Synthesis of a Novel Liquid Phosphorus-containing Flame Retardant for Flexible Polyurethane Foam: Combustion Behaviors and Thermal Properties <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">F. Zhou, T. Zhang, B. Zou, W. Hu, B. Wang, J. Zhan, C. Ma*, Y. Hu*</p>
+          </div>
+
+          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2019">
+            <p class="text-sm font-medium text-primary mb-1">Small, 2019</p>
+            <p class="font-medium mb-1"><a href="https://doi.org/10.1002/smll.201805175" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Air-Stable Polyphosphazene-Functionalized Few-Layer Black Phosphorene for Flame Retardancy of Epoxy Resins <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">S. Qiu, Y. Zhou, X. Zhou, T. Zhang, Y. Hu*, et al.</p>
+          </div>
+
+          <div class="pub-item p-5 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm card-hover" data-year="2020">
+            <p class="text-sm font-medium text-primary mb-1">ACS Applied Materials and Interfaces, 2020</p>
+            <p class="font-medium mb-1"><a href="https://doi.org/10.1021/acsami.0c09685" target="_blank" rel="noopener" class="hover:text-primary transition-colors">Nacre-Inspired Black Phosphorus/Nanofibrillar Cellulose Composite Film with Enhanced Mechanical Properties and Superior Fire Resistance <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a></p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">S. Qiu, X. Ren, X. Zhou, T. Zhang, Y. Hu*, et al.</p>
+          </div>
+        </div>
+
+        <button id="pubToggle" class="w-full py-3 text-sm font-medium text-primary hover:text-blue-700 transition-colors border border-dashed border-gray-300 dark:border-gray-600 rounded-xl hover:border-primary">
+          <i class="fa-solid fa-chevron-down mr-2"></i>Show All 14 Publications
+        </button>
+      </div>
+
+      <!-- Conferences -->
+      <div class="mt-16 fade-in">
+        <h3 class="text-2xl font-bold mb-6 text-center" data-i18n="publications.conf.heading">Conference Presentations</h3>
+        <div class="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+          <div class="p-4 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm conf-row flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary text-xs shrink-0">
+              <i class="fa-solid fa-chalkboard-user"></i>
+            </span>
+            <div>
+              <p class="font-medium text-sm">European Polymer Congress 2025</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="pub.conf1">Oral Presentation · Groningen, Netherlands</p>
+            </div>
+          </div>
+          <div class="p-4 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm conf-row flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary text-xs shrink-0">
+              <i class="fa-solid fa-chalkboard-user"></i>
+            </span>
+            <div>
+              <p class="font-medium text-sm">Dynamic Polymer Network 2025</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="pub.conf2">Oral Presentation · Iceland</p>
+            </div>
+          </div>
+          <div class="p-4 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm conf-row flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 text-xs shrink-0">
+              <i class="fa-solid fa-poster"></i>
+            </span>
+            <div>
+              <p class="font-medium text-sm">Dutch Polymer Days 2023</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="pub.conf3">Poster Presentation · Netherlands</p>
+            </div>
+          </div>
+          <div class="p-4 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm conf-row flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 text-xs shrink-0">
+              <i class="fa-solid fa-poster"></i>
+            </span>
+            <div>
+              <p class="font-medium text-sm">IUPAC NWO Chains 2023</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="pub.conf4">Poster Presentation · Netherlands</p>
+            </div>
+          </div>
+          <div class="p-4 rounded-xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm conf-row flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 text-xs shrink-0">
+              <i class="fa-solid fa-poster"></i>
+            </span>
+            <div>
+              <p class="font-medium text-sm">Vlieland 2024</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="pub.conf5">Poster Presentation · Netherlands</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wave divider -->
+  <div class="wave-divider wave-divider-top">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="text-gray-50 dark:text-gray-800/50">
+      <path d="M0,30 C200,0 400,60 600,30 C800,0 1000,60 1200,30 L1200,60 L0,60 Z" fill="currentColor"/>
+    </svg>
+  </div>
+
+  <!-- Skills -->
+  <section id="skills" class="py-24 bg-gray-50 dark:bg-gray-800/50 transition-colors">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="fade-in">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center" data-i18n="skills.heading">Technical Skills</h2>
+        <div class="w-16 h-1 bg-primary mx-auto mb-12 rounded-full"></div>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="reveal-scale skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary mb-4 card-icon">
+            <i class="fa-solid fa-microscope text-xl"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-3" data-i18n="skills.cat1">Spectroscopy & Analysis</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-blue-50 dark:bg-blue-900/20 text-primary">ATR-FTIR</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-blue-50 dark:bg-blue-900/20 text-primary">UV-Vis</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-blue-50 dark:bg-blue-900/20 text-primary">Raman</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-blue-50 dark:bg-blue-900/20 text-primary">NMR</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-blue-50 dark:bg-blue-900/20 text-primary">XRD</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-blue-50 dark:bg-blue-900/20 text-primary">BET</span>
+          </div>
+        </div>
+
+        <div class="reveal-scale skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 mb-4 card-icon">
+            <i class="fa-solid fa-temperature-high text-xl"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-3" data-i18n="skills.cat2">Thermal & Mechanical</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-green-50 dark:bg-green-900/20 text-green-600">TGA</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-green-50 dark:bg-green-900/20 text-green-600">DSC</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-green-50 dark:bg-green-900/20 text-green-600">Cone Calorimeter</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-green-50 dark:bg-green-900/20 text-green-600">Mechanical Test</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-green-50 dark:bg-green-900/20 text-green-600">HFM Thermal Conductivity</span>
+          </div>
+        </div>
+
+        <div class="reveal-scale skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 mb-4 card-icon">
+            <i class="fa-solid fa-print text-xl"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-3" data-i18n="skills.cat3">3D Printing & Microscopy</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600">DLP</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600">mSLA</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600">SEM (Tescan MAIA3)</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600">POM Microscope</span>
+          </div>
+        </div>
+
+        <div class="reveal-scale skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 mb-4 card-icon">
+            <i class="fa-solid fa-droplet text-xl"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-3" data-i18n="skills.cat4">Materials Processing</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-teal-50 dark:bg-teal-900/20 text-teal-600">Supercritical CO<sub>2</sub> Drying</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-teal-50 dark:bg-teal-900/20 text-teal-600">Hot Press</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-teal-50 dark:bg-teal-900/20 text-teal-600">Mold Injection</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-teal-50 dark:bg-teal-900/20 text-teal-600">Twin-screw Extrusion</span>
+          </div>
+        </div>
+
+        <div class="reveal-scale skill-card card-hover p-6 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 mb-4 card-icon">
+            <i class="fa-solid fa-code text-xl"></i>
+          </div>
+          <h3 class="font-bold text-lg mb-3" data-i18n="skills.cat5">Computational & Design</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-orange-50 dark:bg-orange-900/20 text-orange-600">Claude Code/Codex</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-orange-50 dark:bg-orange-900/20 text-orange-600">COMSOL Multiphysics</span>
+            <span class="skill-tag px-3 py-1 text-xs rounded-full bg-orange-50 dark:bg-orange-900/20 text-orange-600">OpenSCAD</span>
+          </div>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wave divider -->
+  <div class="wave-divider wave-divider-top">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="text-white dark:text-gray-900">
+      <path d="M0,30 C300,60 600,0 900,30 C1050,45 1150,50 1200,30 L1200,60 L0,60 Z" fill="currentColor"/>
+    </svg>
+  </div>
+
+  <!-- Polymer Breakout Game -->
+  <section id="puzzle" class="py-24 bg-white dark:bg-gray-900 transition-colors">
+    <div class="max-w-5xl mx-auto px-6">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center text-gray-800 dark:text-gray-100" data-i18n="puzzle.heading">Polymer Breakout</h2>
+      <div class="w-16 h-1 bg-primary mx-auto mb-2 rounded-full"></div>
+      <p class="text-center text-gray-500 dark:text-gray-400 mb-10 text-sm max-w-xl mx-auto" data-i18n="puzzle.desc">Break through reaction barriers to build polymer chains. Use your paddle (catalyst) to bounce the monomer and clear all energy barriers!</p>
+
+      <div class="max-w-2xl mx-auto">
+        <!-- Game canvas -->
+        <div class="relative rounded-xl overflow-hidden shadow-lg border dark:border-gray-700" style="background:#0f172a;">
+          <canvas id="puzzleCanvas" class="w-full block" style="aspect-ratio:4/3;cursor:default;"></canvas>
+          <!-- Overlay messages -->
+          <div id="gameOverlay" class="absolute inset-0 flex items-center justify-center pointer-events-none" style="background:rgba(0,0,0,0.6);display:none;">
+            <div class="text-center">
+              <div id="overlayTitle" class="text-2xl font-bold text-white mb-2"></div>
+              <div id="overlaySub" class="text-sm text-gray-300 mb-4"></div>
+              <button id="overlayBtn" class="pointer-events-auto px-6 py-2 bg-primary text-white rounded-full font-medium hover:bg-blue-700 transition-colors"></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Score bar -->
+        <div class="flex items-center justify-between mt-4 px-2">
+          <div class="flex items-center gap-4">
+            <span class="text-sm text-gray-500 dark:text-gray-400"><i class="fa-solid fa-flask mr-1"></i><span data-i18n="game.score">Score</span>: <b id="gameScore" class="text-gray-800 dark:text-gray-200">0</b></span>
+            <span class="text-sm text-gray-500 dark:text-gray-400"><i class="fa-solid fa-fire mr-1"></i><span data-i18n="game.combo">Combo</span>: <b id="gameCombo" class="text-gray-800 dark:text-gray-200">x1</b></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-400"><span data-i18n="game.level">Level</span> <b id="gameLevel">1</b></span>
+            <span id="gameLives" class="text-xs">❤️❤️❤️</span>
+          </div>
+        </div>
+
+        <p class="text-center text-xs text-gray-400 dark:text-gray-500 mt-2">
+          <i class="fa-solid fa-arrow-left mr-1"></i> <span data-i18n="puzzle.hint">Move mouse / touch to control paddle &nbsp;|&nbsp; Press <b>Space</b> to launch</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section id="gallery" class="py-24 transition-colors">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="fade-in">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center" data-i18n="gallery.heading">Gallery</h2>
+        <div class="w-16 h-1 bg-primary mx-auto mb-2 rounded-full"></div>
+        <p class="text-center text-gray-500 dark:text-gray-400 mb-12 text-sm" data-i18n="gallery.desc">Photos and videos from my research and conferences</p>
+      </div>
+
+      <!-- Gallery filmstrip -->
+      <div id="galleryWrapper" class="rounded-xl">
+        <div id="galleryTrack" class="flex gap-4 gallery-marquee">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="py-24 transition-colors">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="fade-in">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center" data-i18n="contact.heading">Contact</h2>
+        <div class="w-16 h-1 bg-primary mx-auto mb-12 rounded-full"></div>
+      </div>
+      <div class="max-w-2xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-6 fade-in">
+          <a href="mailto:zhangt94@163.com" class="flex items-center gap-4 p-5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm hover:shadow-md hover:border-primary transition-all duration-300 group">
+            <span class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+              <i class="fa-solid fa-envelope text-xl"></i>
+            </span>
+            <div>
+              <p class="font-medium" data-i18n="contact.email.label">Email</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">zhangt94@163.com</p>
+            </div>
+          </a>
+
+          <a href="https://scholar.google.com/citations?user=rdPTbQIAAAAJ&hl=en" target="_blank" rel="noopener" class="flex items-center gap-4 p-5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm hover:shadow-md hover:border-primary transition-all duration-300 group">
+            <span class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors">
+              <i class="fa-brands fa-google-scholar text-xl"></i>
+            </span>
+            <div>
+              <p class="font-medium" data-i18n="contact.scholar.label">Google Scholar</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="contact.scholar.desc">View my publications</p>
+            </div>
+          </a>
+
+          <a href="https://orcid.org/0000-0002-1845-9990" target="_blank" rel="noopener" class="flex items-center gap-4 p-5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm hover:shadow-md hover:border-primary transition-all duration-300 group">
+            <span class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+              <i class="fa-brands fa-orcid text-xl"></i>
+            </span>
+            <div>
+              <p class="font-medium" data-i18n="contact.orcid.label">ORCID</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">0000-0002-1845-9990</p>
+            </div>
+          </a>
+
+          <a href="https://nl.linkedin.com/in/tao-zhang-094980294" target="_blank" rel="noopener" class="flex items-center gap-4 p-5 rounded-2xl bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm hover:shadow-md hover:border-primary transition-all duration-300 group">
+            <span class="w-12 h-12 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 group-hover:bg-yellow-600 group-hover:text-white transition-colors">
+              <i class="fa-brands fa-linkedin-in text-xl"></i>
+            </span>
+            <div>
+              <p class="font-medium" data-i18n="contact.linkedin.label">LinkedIn</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="contact.linkedin.desc">Connect with me</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-8 border-t dark:border-gray-700 transition-colors">
+    <div class="max-w-5xl mx-auto px-6 text-center text-sm text-gray-500 dark:text-gray-500">
+      <p data-i18n="footer.copyright">&copy; 2026 Dr. Tao Zhang. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="lang.js"></script>
+  <script src="gallery.js"></script>
+  <script src="puzzle.js"></script>
+  <script src="script.js"></script>
+<style>.fade-in{opacity:1!important;transform:none!important}#hero{min-height:auto!important}</style></body>
+</html>

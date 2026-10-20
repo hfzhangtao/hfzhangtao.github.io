@@ -515,14 +515,18 @@ button:focus-visible {
   user-select: none;
   transition: opacity 0.35s ease;
 }
+.wm-polyu { transform: translateY(-50%) scale(1); }
+.wm-rug { transform: translateY(-50%) scale(1.3); }
+.wm-ustc { transform: translateY(-50%) scale(1.15); }
+.wm-dlut { transform: translateY(-50%) scale(1); }
 .timeline-item:hover .edu-watermark {
-  opacity: 0.28;
+  opacity: 0.36;
 }
 .dark .edu-watermark {
   opacity: 0.13;
 }
 .dark .timeline-item:hover .edu-watermark {
-  opacity: 0.4;
+  opacity: 0.52;
 }
 @media (max-width: 640px) {
   .edu-watermark {
