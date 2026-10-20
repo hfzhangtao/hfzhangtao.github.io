@@ -1,0 +1,24 @@
+{
+  "name": "personal-website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gallery.js",
+  "scripts": {
+    "build:css": "tailwindcss -i tailwind.input.css -o tailwind.css --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hfzhangtao/hfzhangtao.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/hfzhangtao/hfzhangtao.github.io/issues"
+  },
+  "homepage": "https://github.com/hfzhangtao/hfzhangtao.github.io#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

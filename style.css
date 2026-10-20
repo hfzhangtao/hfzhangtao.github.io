@@ -3,13 +3,16 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Fade-in animation on scroll */
+/* Fade-in animation on scroll (hidden initial state only when JS is active) */
 .fade-in {
-  opacity: 0;
-  transform: translateY(20px);
   transition-property: opacity, transform;
   transition-duration: 0.6s;
   transition-timing-function: ease-out;
+}
+
+.js .fade-in {
+  opacity: 0;
+  transform: translateY(20px);
 }
 
 .fade-in.visible {
@@ -362,33 +365,39 @@ button:focus-visible {
    ENHANCED SCROLL REVEAL VARIANTS
    ============================================================ */
 .reveal-left {
-  opacity: 0;
-  transform: translateX(-30px);
   transition-property: opacity, transform;
   transition-duration: 0.7s, 0.7s;
   transition-timing-function: ease-out, ease-out;
+}
+.js .reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
 }
 .reveal-left.visible {
   opacity: 1;
   transform: translateX(0);
 }
 .reveal-right {
-  opacity: 0;
-  transform: translateX(30px);
   transition-property: opacity, transform;
   transition-duration: 0.7s, 0.7s;
   transition-timing-function: ease-out, ease-out;
+}
+.js .reveal-right {
+  opacity: 0;
+  transform: translateX(30px);
 }
 .reveal-right.visible {
   opacity: 1;
   transform: translateX(0);
 }
 .reveal-scale {
-  opacity: 0;
-  transform: scale(0.92);
   transition-property: opacity, transform;
   transition-duration: 0.6s, 0.6s;
   transition-timing-function: ease-out, ease-out;
+}
+.js .reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
 }
 .reveal-scale.visible {
   opacity: 1;

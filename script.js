@@ -207,19 +207,23 @@ document.querySelectorAll('.mobile-nav-link').forEach((link) => {
   });
 });
 
-// Scroll-triggered fade-in animation
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  },
-  { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-);
+// Scroll-triggered fade-in animation (fallback: show everything if IO unsupported)
+if (!('IntersectionObserver' in window)) {
+  document.querySelectorAll('.fade-in').forEach((el) => el.classList.add('visible'));
+} else {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+  );
 
-document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
+  document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
+}
 
 // Active nav link highlight on scroll
 const sections = document.querySelectorAll('section[id]');
@@ -1233,6 +1237,11 @@ document.querySelectorAll('.pub-filter-btn').forEach(function(btn) {
 // EXTEND SCROLL REVEAL — observe new reveal classes
 // ============================================================
 (function () {
+  if (!('IntersectionObserver' in window)) {
+    var fallback = document.querySelectorAll('.reveal-left, .reveal-right, .reveal-scale');
+    for (var i = 0; i < fallback.length; i++) fallback[i].classList.add('visible');
+    return;
+  }
   var revealObserver = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
