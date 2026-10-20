@@ -507,30 +507,27 @@ button:focus-visible {
   right: 0;
   top: 50%;
   transform: translateY(-50%);
+  width: 9rem;
   height: 9rem;
-  width: auto;
+  object-fit: contain;
   opacity: 0.07;
   pointer-events: none;
   user-select: none;
+  transition: opacity 0.35s ease;
+}
+.timeline-item:hover .edu-watermark {
+  opacity: 0.28;
 }
 .dark .edu-watermark {
   opacity: 0.13;
 }
+.dark .timeline-item:hover .edu-watermark {
+  opacity: 0.4;
+}
 @media (max-width: 640px) {
   .edu-watermark {
+    width: 6rem;
     height: 6rem;
     opacity: 0.05;
   }
-}
-
-/* School motto caption */
-.edu-motto {
-  margin-top: 0.25rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  letter-spacing: 0.05em;
-  color: rgb(156 163 175);
-}
-.dark .edu-motto {
-  color: rgb(107 114 128);
 }
