@@ -67,7 +67,7 @@ window.TRANS = {
     // Education
     'education.heading': 'Education & Experience',
 
-    'education.item1.date': '2026 – Present',
+    'education.item1.date': '2026 – October',
     'education.item1.title': 'Postdoctoral Researcher',
     'education.item1.school': 'The Hong Kong Polytechnic University (PolyU)',
     'education.item1.desc': 'School of Fashion and Textiles. Continuing research in polymer science and advanced manufacturing.',
@@ -224,7 +224,7 @@ window.TRANS = {
     // Education
     'education.heading': '教育及工作经历',
 
-    'education.item1.date': '2026 – 至今',
+    'education.item1.date': '2026 – 10月',
     'education.item1.title': '博士后研究员',
     'education.item1.school': '香港理工大学 (PolyU)',
     'education.item1.desc': '时装与纺织学院。继续从事高分子科学与先进制造研究。',
