@@ -133,8 +133,8 @@ window.TRANS = {
     'contact.scholar.label': 'Google Scholar',
     'contact.scholar.desc': 'View my publications',
     'contact.orcid.label': 'ORCID',
-    'contact.linkedin.label': 'LinkedIn',
-    'contact.linkedin.desc': 'Connect with me',
+    'contact.homepage.label': 'Homepage',
+    'contact.homepage.desc': 'University of Groningen staff page',
 
     // Footer
     'footer.copyright': '© 2026 Dr. Tao Zhang. All rights reserved.',
@@ -289,8 +289,8 @@ window.TRANS = {
     'contact.scholar.label': 'Google Scholar',
     'contact.scholar.desc': '查看我的论文',
     'contact.orcid.label': 'ORCID',
-    'contact.linkedin.label': 'LinkedIn',
-    'contact.linkedin.desc': '与我联系',
+    'contact.homepage.label': '个人主页',
+    'contact.homepage.desc': '格罗宁根大学教职主页',
 
     // Footer
     'footer.copyright': '© 2026 张涛博士 版权所有',
