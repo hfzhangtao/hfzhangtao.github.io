@@ -519,6 +519,7 @@ button:focus-visible {
 .wm-rug { transform: translateY(-50%) scale(1.3); }
 .wm-ustc { transform: translateY(-50%) scale(1.15); }
 .wm-dlut { transform: translateY(-50%) scale(1); }
+.wm-nhl { transform: translateY(-50%) scale(1.1); }
 .timeline-item:hover .edu-watermark {
   opacity: 0.36;
 }

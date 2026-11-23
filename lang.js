@@ -76,7 +76,7 @@ window.TRANS = {
     'education.item2.desc': 'School of Fashion and Textiles. Research in polymer science and advanced manufacturing.',
 
     'education.item3.date': 'Dec 2025 – Oct 2026',
-    'education.item3.title': 'Visiting Researcher',
+    'education.item3.title': 'Guest Researcher',
     'education.item3.school': 'University of Groningen (RUG), The Netherlands',
     'education.item3.desc': 'Collaborative research on smart photopolymer materials and 3D/4D printing.',
 
