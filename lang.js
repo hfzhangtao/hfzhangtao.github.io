@@ -18,8 +18,6 @@ window.TRANS = {
 
     // Hero
     'hero.name': 'Dr. Tao Zhang',
-    'hero.title': 'Postdoctoral Researcher',
-    'hero.affiliation': 'School of Fashion and Textiles · The Hong Kong Polytechnic University',
     'hero.cta1': 'Get in Touch',
     'hero.cta2': 'View Research',
     'hero.metric1': 'h-index',
@@ -67,24 +65,39 @@ window.TRANS = {
     // Education
     'education.heading': 'Education & Experience',
 
-    'education.item1.date': '2026 – October',
-    'education.item1.title': 'Postdoctoral Researcher',
-    'education.item1.school': 'The Hong Kong Polytechnic University (PolyU)',
-    'education.item1.desc': 'School of Fashion and Textiles. Continuing research in polymer science and advanced manufacturing.',
+    'education.item1.date': 'Nov 2026 – Present',
+    'education.item1.title': 'Researcher',
+    'education.item1.school': 'University of Groningen (RUG), The Netherlands',
+    'education.item1.desc': 'Continuing research in polymer science, stimuli-responsive materials, and sustainable 3D/4D printing.',
 
-    'education.item2.date': '2022 – 2025',
-    'education.item2.title': 'PhD in Polymer Science',
-    'education.item2.school': 'University of Groningen (RUG), The Netherlands',
-    'education.item2.desc': 'Dissertation: Smart stimuli-responsive materials, vat photopolymerization, and sustainable 3D/4D printing. Combined intelligent responsiveness, multifunctionality, and sustainable manufacturing for next-generation green printing technologies.',
+    'education.item2.date': 'Mar 2026 – Oct 2026',
+    'education.item2.title': 'Postdoctoral Researcher',
+    'education.item2.school': 'The Hong Kong Polytechnic University (PolyU)',
+    'education.item2.desc': 'School of Fashion and Textiles. Research in polymer science and advanced manufacturing.',
 
-    'education.item3.date': '2017 – 2020',
-    'education.item3.title': 'MSc in Polymer Chemistry and Physics',
-    'education.item3.school': 'University of Science and Technology of China (USTC)',
-    'education.item3.desc': 'Focused on flame retardant applications of engineering plastics and coatings (polypropylene, polyurethane, epoxy resin).',
+    'education.item3.date': 'Dec 2025 – Oct 2026',
+    'education.item3.title': 'Visiting Researcher',
+    'education.item3.school': 'University of Groningen (RUG), The Netherlands',
+    'education.item3.desc': 'Collaborative research on smart photopolymer materials and 3D/4D printing.',
 
-    'education.item4.date': '2013 – 2017',
-    'education.item4.title': 'BEng in Chemical Engineering and Technology',
-    'education.item4.school': 'Dalian University of Technology (DLUT)',
+    'education.item4.date': 'Oct 2022 – Nov 2025',
+    'education.item4.title': 'Researcher',
+    'education.item4.school': 'NHL Stenden University of Applied Sciences, The Netherlands',
+    'education.item4.desc': 'Research on photopolymer materials and 3D/4D printing technologies.',
+
+    'education.item5.date': '2022 – 2025',
+    'education.item5.title': 'PhD in Polymer Science',
+    'education.item5.school': 'University of Groningen (RUG), The Netherlands',
+    'education.item5.desc': 'Dissertation: Smart stimuli-responsive materials, vat photopolymerization, and sustainable 3D/4D printing. Combined intelligent responsiveness, multifunctionality, and sustainable manufacturing for next-generation green printing technologies.',
+
+    'education.item6.date': '2017 – 2020',
+    'education.item6.title': 'MSc in Polymer Chemistry and Physics',
+    'education.item6.school': 'University of Science and Technology of China (USTC)',
+    'education.item6.desc': 'Focused on flame retardant applications of engineering plastics and coatings (polypropylene, polyurethane, epoxy resin).',
+
+    'education.item7.date': '2013 – 2017',
+    'education.item7.title': 'BEng in Chemical Engineering and Technology',
+    'education.item7.school': 'Dalian University of Technology (DLUT)',
 
     'education.awards.heading': 'Awards & Honors',
     'education.award1.name': 'China Scholarship Council (CSC) Scholarship',
@@ -175,8 +188,6 @@ window.TRANS = {
 
     // Hero
     'hero.name': '张涛博士',
-    'hero.title': '博士后研究员',
-    'hero.affiliation': '时装与纺织学院 · 香港理工大学',
     'hero.cta1': '联系我',
     'hero.cta2': '查看研究',
     'hero.metric1': 'h指数',
@@ -224,24 +235,39 @@ window.TRANS = {
     // Education
     'education.heading': '教育及工作经历',
 
-    'education.item1.date': '2026 – 10月',
-    'education.item1.title': '博士后研究员',
-    'education.item1.school': '香港理工大学 (PolyU)',
-    'education.item1.desc': '时装与纺织学院。继续从事高分子科学与先进制造研究。',
+    'education.item1.date': '2026年11月 – 至今',
+    'education.item1.title': '研究员',
+    'education.item1.school': '格罗宁根大学 (RUG)，荷兰',
+    'education.item1.desc': '继续从事高分子科学、刺激响应材料与可持续3D/4D打印研究。',
 
-    'education.item2.date': '2022 – 2025',
-    'education.item2.title': '高分子科学博士',
-    'education.item2.school': '格罗宁根大学 (RUG)，荷兰',
-    'education.item2.desc': '博士论文：智能刺激响应材料、光固化3D打印与可持续3D/4D打印。将智能响应性、多功能性和可持续制造相结合，用于下一代绿色打印技术。',
+    'education.item2.date': '2026年3月 – 2026年10月',
+    'education.item2.title': '博士后研究员',
+    'education.item2.school': '香港理工大学 (PolyU)',
+    'education.item2.desc': '时装与纺织学院。从事高分子科学与先进制造研究。',
 
-    'education.item3.date': '2017 – 2020',
-    'education.item3.title': '高分子化学与物理硕士',
-    'education.item3.school': '中国科学技术大学 (USTC)',
-    'education.item3.desc': '专注于工程塑料和涂层（聚丙烯、聚氨酯、环氧树脂）的阻燃应用研究。',
+    'education.item3.date': '2025年12月 – 2026年10月',
+    'education.item3.title': '客座研究员',
+    'education.item3.school': '格罗宁根大学 (RUG)，荷兰',
+    'education.item3.desc': '合作开展智能光固化材料与3D/4D打印研究。',
 
-    'education.item4.date': '2013 – 2017',
-    'education.item4.title': '化学工程与工艺学士',
-    'education.item4.school': '大连理工大学 (DLUT)',
+    'education.item4.date': '2022年10月 – 2025年11月',
+    'education.item4.title': '研究员',
+    'education.item4.school': 'NHL Stenden应用科学大学，荷兰',
+    'education.item4.desc': '从事光固化高分子材料与3D/4D打印技术研究。',
+
+    'education.item5.date': '2022 – 2025',
+    'education.item5.title': '高分子科学博士',
+    'education.item5.school': '格罗宁根大学 (RUG)，荷兰',
+    'education.item5.desc': '博士论文：智能刺激响应材料、光固化3D打印与可持续3D/4D打印。将智能响应性、多功能性和可持续制造相结合，用于下一代绿色打印技术。',
+
+    'education.item6.date': '2017 – 2020',
+    'education.item6.title': '高分子化学与物理硕士',
+    'education.item6.school': '中国科学技术大学 (USTC)',
+    'education.item6.desc': '专注于工程塑料和涂层（聚丙烯、聚氨酯、环氧树脂）的阻燃应用研究。',
+
+    'education.item7.date': '2013 – 2017',
+    'education.item7.title': '化学工程与工艺学士',
+    'education.item7.school': '大连理工大学 (DLUT)',
 
     'education.awards.heading': '获奖与荣誉',
     'education.award1.name': '国家留学基金委 (CSC) 奖学金',
