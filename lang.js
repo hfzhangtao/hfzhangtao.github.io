@@ -68,7 +68,7 @@ window.TRANS = {
     'education.item1.date': 'Nov 2026 – Present',
     'education.item1.title': 'Researcher',
     'education.item1.school': 'University of Groningen (RUG), The Netherlands',
-    'education.item1.desc': 'Continuing research in polymer science, stimuli-responsive materials, and sustainable 3D/4D printing.',
+    'education.item1.desc': 'Efficient and environmentally sustainable 3D Printing technology.',
 
     'education.item2.date': 'Mar 2026 – Oct 2026',
     'education.item2.title': 'Postdoctoral Researcher',
@@ -238,7 +238,7 @@ window.TRANS = {
     'education.item1.date': '2026年11月 – 至今',
     'education.item1.title': '研究员',
     'education.item1.school': '格罗宁根大学 (RUG)，荷兰',
-    'education.item1.desc': '继续从事高分子科学、刺激响应材料与可持续3D/4D打印研究。',
+    'education.item1.desc': '高效且环境可持续的3D打印技术。',
 
     'education.item2.date': '2026年3月 – 2026年10月',
     'education.item2.title': '博士后研究员',
